@@ -6,6 +6,7 @@ import NewStudent from '~/pages/NewStudent';
 //
 import Page404 from '~/pages/Page404';
 import Profile from '~/pages/Profile';
+import Classes from '~/pages/Classes';
 
 const CommonRoutes = [
   {
@@ -27,6 +28,10 @@ const CommonRoutes = [
   {
     path: '/students/edit/:id',
     element: <EditStudent />,
+  },
+  {
+    path: '/classes',
+    element: <Classes />,
   },
   {
     path: '*',

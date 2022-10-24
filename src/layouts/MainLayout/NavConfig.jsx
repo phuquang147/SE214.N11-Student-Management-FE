@@ -18,6 +18,11 @@ const navConfig = [
   {
     title: 'Học sinh',
     path: '/students',
+    icon: getIcon('eva:person-fill'),
+  },
+  {
+    title: 'Lớp học',
+    path: '/classes',
     icon: getIcon('eva:people-fill'),
   },
   {
