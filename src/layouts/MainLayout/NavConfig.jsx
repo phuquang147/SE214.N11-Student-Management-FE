@@ -8,16 +8,16 @@ const navConfig = [
     title: 'dashboard',
     path: '/',
     icon: getIcon('eva:pie-chart-2-fill'),
-    children: [
-      {
-        title: 'user',
-        path: '/user',
-      },
-    ],
+    // children: [
+    //   {
+    //     title: 'user',
+    //     path: '/user',
+    //   },
+    // ],
   },
   {
-    title: 'user',
-    path: '/user',
+    title: 'Học sinh',
+    path: '/students',
     icon: getIcon('eva:people-fill'),
   },
   {

@@ -12,7 +12,7 @@ const MENU_OPTIONS = [
   {
     label: 'Thông tin tài khoản',
     icon: 'eva:person-fill',
-    linkTo: '#',
+    linkTo: '/profile',
   },
 ];
 

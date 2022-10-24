@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { matchPath, NavLink as RouterLink, useLocation } from 'react-router-dom';
+import { NavLink as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { Box, Collapse, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { alpha, styled, useTheme } from '@mui/material/styles';
@@ -138,7 +138,11 @@ NavSection.propTypes = {
 export default function NavSection({ navConfig, ...other }) {
   const { pathname } = useLocation();
 
-  const match = (path) => (path ? !!matchPath({ path, end: false }, pathname) : false);
+  const match = (path) => {
+    const pathFirstPart = path.split('/')[1];
+    const pathnameFirstPart = pathname.split('/')[1];
+    return pathFirstPart === pathnameFirstPart;
+  };
 
   return (
     <Box {...other}>
