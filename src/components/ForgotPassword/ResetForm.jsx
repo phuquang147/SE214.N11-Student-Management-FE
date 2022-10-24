@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
@@ -13,17 +11,14 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/Iconify';
 
-export default function LoginForm() {
-  const navigate = useNavigate();
+export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email không hợp lệ!').required('Vui lòng nhập email'),
     password: Yup.string().required('Vui lòng nhập mật khẩu'),
   });
 
   const defaultValues = {
-    email: '',
     password: '',
   };
 
@@ -37,15 +32,11 @@ export default function LoginForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onSubmit = async () => {
-    navigate('/dashboard', { replace: true });
-  };
+  const onSubmit = async () => {};
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email" />
-
         <RHFTextField
           name="password"
           label="Mật khẩu"
@@ -62,12 +53,8 @@ export default function LoginForm() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="end" sx={{ my: 2 }}>
-        <Link to="/forgot-password">Quên mật khẩu?</Link>
-      </Stack>
-
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Đăng Nhập
+      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting} sx={{ mt: 3 }}>
+        Xác nhận
       </LoadingButton>
     </FormProvider>
   );
