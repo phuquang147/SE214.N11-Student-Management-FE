@@ -1,4 +1,5 @@
 import MinimalLayout from '~/layouts/MinimalLayout';
+import ForgotPassword from '~/pages/ForgotPassword';
 import Login from '~/pages/Login';
 
 const AuthenticationRoutes = {
@@ -8,6 +9,14 @@ const AuthenticationRoutes = {
     {
       path: '/login',
       element: <Login />,
+    },
+    {
+      path: '/forgot-password',
+      element: <ForgotPassword />,
+    },
+    {
+      path: '/reset-password/:token',
+      element: <ForgotPassword />,
     },
   ],
 };

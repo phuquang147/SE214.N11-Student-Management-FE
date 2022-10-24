@@ -1,10 +1,32 @@
 import Dashboard from '~/pages/Dashboard';
+// Student
+import Students from '~/pages/Students';
+import EditStudent from '~/pages/EditStudent';
+import NewStudent from '~/pages/NewStudent';
+//
 import Page404 from '~/pages/Page404';
+import Profile from '~/pages/Profile';
 
 const CommonRoutes = [
   {
     path: '/',
     element: <Dashboard />,
+  },
+  {
+    path: '/profile',
+    element: <Profile />,
+  },
+  {
+    path: '/students',
+    element: <Students />,
+  },
+  {
+    path: '/students/new',
+    element: <NewStudent />,
+  },
+  {
+    path: '/students/edit/:id',
+    element: <EditStudent />,
   },
   {
     path: '*',
