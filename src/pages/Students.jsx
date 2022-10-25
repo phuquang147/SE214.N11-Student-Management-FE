@@ -1,13 +1,151 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Button, Card, Container, Stack, Typography } from '@mui/material';
+import { Button, Card, Container, Stack, Typography, Avatar, Chip } from '@mui/material';
 // components
 import Iconify from '~/components/Iconify';
-import Filters from '~/components/Students/Filters';
-import TableStudents from '~/components/Students/TableStudents';
+import Filters from '~/components/Filters';
+import Table from '~/components/Table';
 // mock
 import students from '~/_mock/students';
+// filters
+import * as filters from '~/constants/filters';
+// import { useDispatch } from 'react-redux';
+import ActionsMenu from '~/components/ActionsMenu';
+
+const columns = [
+  {
+    field: 'name',
+    headerName: 'Tên học sinh',
+    minWidth: 200,
+    renderCell: (params) => {
+      const { row } = params;
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Avatar alt={row.name} src={row.avatar} />
+          <Typography variant="subtitle2" noWrap>
+            {row.name}
+          </Typography>
+        </Stack>
+      );
+    },
+  },
+  {
+    field: 'gender',
+    headerName: 'Giới tính',
+    minWidth: 120,
+    renderCell: (params) => {
+      const { row } = params;
+      return row.gender === 'Nam' ? (
+        <Chip
+          label="Nam"
+          color="primary"
+          sx={{
+            bgcolor: 'primary.light',
+            color: 'primary.dark',
+            fontSize: '13px',
+            fontWeight: 'bold',
+            width: '60px',
+          }}
+        />
+      ) : (
+        <Chip
+          label="Nữ"
+          color="error"
+          sx={{
+            bgcolor: 'error.light',
+            color: 'error.dark',
+            fontSize: '13px',
+            fontWeight: 'bold',
+            width: '60px',
+          }}
+        />
+      );
+    },
+  },
+  {
+    field: 'birthdate',
+    headerName: 'Ngày sinh',
+    minWidth: 150,
+  },
+  {
+    field: 'phone',
+    headerName: 'Số điện thoại',
+    minWidth: 150,
+  },
+  {
+    field: 'email',
+    headerName: 'Email',
+    minWidth: 150,
+  },
+  {
+    field: 'address',
+    headerName: 'Địa chỉ',
+    minWidth: 150,
+  },
+  {
+    field: 'status',
+    headerName: 'Tình trạng',
+    minWidth: 130,
+    renderCell: (params) => {
+      const { row } = params;
+      switch (row.status) {
+        case 'Đang học':
+          return (
+            <Chip
+              label="Đang học"
+              color="primary"
+              sx={{
+                bgcolor: 'primary.light',
+                color: 'primary.dark',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                width: '130px',
+              }}
+            />
+          );
+        case 'Đã tốt nghiệp':
+          return (
+            <Chip
+              label="Đã tốt nghiệp"
+              color="success"
+              sx={{
+                bgcolor: 'success.light',
+                color: 'success.dark',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                width: '130px',
+              }}
+            />
+          );
+        default:
+          return (
+            <Chip
+              label="Đã nghỉ học"
+              color="error"
+              sx={{
+                bgcolor: 'error.light',
+                color: 'error.dark',
+                fontSize: '13px',
+                fontWeight: 'bold',
+                width: '130px',
+              }}
+            />
+          );
+      }
+    },
+  },
+  {
+    field: 'Hành động',
+    headerName: '',
+    sortable: false,
+    hideable: false,
+    filterable: false,
+    renderCell: (params) => {
+      return <ActionsMenu />;
+    },
+  },
+];
 
 export default function Students() {
   const [openFilter, setOpenFilter] = useState(false);
@@ -23,7 +161,12 @@ export default function Students() {
     <Container>
       <Typography variant="h4">Quản lý học sinh</Typography>
       <Stack direction="row" alignItems="center" justifyContent="end" mb={5} columnGap={2}>
-        <Filters isOpenFilter={openFilter} onOpenFilter={handleOpenFilter} onCloseFilter={handleCloseFilter} />
+        <Filters
+          isOpenFilter={openFilter}
+          onOpenFilter={handleOpenFilter}
+          onCloseFilter={handleCloseFilter}
+          filters={filters.studentFilters}
+        />
         <Button
           variant="contained"
           component={RouterLink}
@@ -35,7 +178,7 @@ export default function Students() {
       </Stack>
 
       <Card>
-        <TableStudents data={students} />
+        <Table data={students} columns={columns} />
       </Card>
     </Container>
   );

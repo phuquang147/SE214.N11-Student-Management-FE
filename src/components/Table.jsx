@@ -1,62 +1,22 @@
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useState } from 'react';
-import { DATA_GRID_DEFAULT_LOCALE_TEXT } from '~/utils/datagrid-default-locale-text';
+// import * as SagaActionTypes from '~/redux/constants/constantSaga';
+import DataGridView from './DataGrid';
 
-export default function Table({ columns, rows }) {
-  const [pageSize, setPageSize] = useState(10);
+export default function Table({ data, columns }) {
+  // const dispatch = useDispatch();
 
-  return (
-    <DataGrid
-      //Data
-      rows={rows}
-      columns={columns}
-      //Style
-      sx={{
-        height: '500px',
-        p: 2,
-        '& .super-app-theme--cell': {
-          padding: '10px',
-        },
-        '.MuiDataGrid-columnSeparator': {
-          display: 'none',
-        },
-        '& .MuiDataGrid-columnHeaders': {
-          fontSize: 14,
-          color: '#666',
-        },
-        '&.MuiDataGrid-root .MuiDataGrid-cell:focus': {
-          outline: 'none',
-        },
-      }}
-      //Locale text
-      localeText={DATA_GRID_DEFAULT_LOCALE_TEXT}
-      //Pagination
-      pagination
-      pageSize={pageSize}
-      onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-      rowsPerPageOptions={[10, 20, 30]}
-      //Selection
-      isRowSelectable={() => false}
-      isCellEditable={() => false}
-      disableSelectionOnClick
-      //
-      getRowHeight={() => 60}
-      disableColumnMenu
-      components={{ Toolbar: GridToolbar }}
-      disableDensitySelector
-      disableColumnFilter
-      getCellClassName={() => 'super-app-theme--cell'}
-      componentsProps={{
-        pagination: {
-          labelRowsPerPage: 'Số dòng trên trang',
-        },
-        toolbar: {
-          showQuickFilter: true,
-          printOptions: { disableToolbarButton: true },
-          csvOptions: { disableToolbarButton: true },
-          quickFilterProps: { debounceMs: 500 },
-        },
-      }}
-    />
-  );
+  const handleDelete = (student) => {
+    // dispatch({
+    //   type: SagaActionTypes.DELETE_PROPERTY_SAGA,
+    //   propertyId: property.id,
+    // });
+  };
+
+  const modifiedRows = data.map((element) => {
+    return {
+      ...element,
+      handleDelete: handleDelete,
+    };
+  });
+
+  return <DataGridView columns={columns} rows={modifiedRows} />;
 }
