@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
@@ -12,10 +12,14 @@ import { IconButton, InputAdornment, Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/Iconify';
+// request
+import request from '~/utils/request';
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const usernameInputRef = useRef();
+  const passwordInputRef = useRef();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email không hợp lệ!').required('Vui lòng nhập email'),

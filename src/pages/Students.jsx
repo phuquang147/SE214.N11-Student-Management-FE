@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Button, Card, Container, Stack, Typography, Avatar, Chip } from '@mui/material';
+import { Button, Card, Container, Stack, Typography, Chip } from '@mui/material';
 // components
 import Iconify from '~/components/Iconify';
 import Filters from '~/components/Filters';
@@ -17,12 +17,14 @@ const columns = [
   {
     field: 'name',
     headerName: 'Tên học sinh',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 200,
     renderCell: (params) => {
       const { row } = params;
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar alt={row.name} src={row.avatar} />
           <Typography variant="subtitle2" noWrap>
             {row.name}
           </Typography>
@@ -31,8 +33,27 @@ const columns = [
     },
   },
   {
+    field: 'id',
+    headerName: 'Mã học sinh',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
+    minWidth: 200,
+    renderCell: (params) => {
+      const { row } = params;
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography noWrap>{row.id.slice(0, 8).toUpperCase()}</Typography>
+        </Stack>
+      );
+    },
+  },
+  {
     field: 'gender',
     headerName: 'Giới tính',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 120,
     renderCell: (params) => {
       const { row } = params;
@@ -66,26 +87,41 @@ const columns = [
   {
     field: 'birthdate',
     headerName: 'Ngày sinh',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 150,
   },
   {
     field: 'phone',
     headerName: 'Số điện thoại',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 150,
   },
   {
     field: 'email',
     headerName: 'Email',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 150,
   },
   {
     field: 'address',
     headerName: 'Địa chỉ',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 150,
   },
   {
     field: 'status',
     headerName: 'Tình trạng',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     minWidth: 130,
     renderCell: (params) => {
       const { row } = params;
@@ -138,6 +174,9 @@ const columns = [
   {
     field: 'Hành động',
     headerName: '',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
     sortable: false,
     hideable: false,
     filterable: false,
@@ -177,7 +216,15 @@ export default function Students() {
         </Button>
       </Stack>
 
-      <Card>
+      <Card
+        sx={{
+          width: '100%',
+          '& .super-app-theme--header': {
+            backgroundColor: '#5e94ca',
+            color: 'white',
+          },
+        }}
+      >
         <Table data={students} columns={columns} />
       </Card>
     </Container>
