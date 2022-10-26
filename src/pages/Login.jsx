@@ -61,9 +61,6 @@ export default function Login() {
 
       {mdUp && (
         <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
-            Chào mừng đã quay trở lại
-          </Typography>
           <img src={illustrationLoginImg} alt="login" />
         </SectionStyle>
       )}

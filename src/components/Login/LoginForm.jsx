@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
@@ -14,20 +14,20 @@ import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/Iconify';
 // request
 import request from '~/utils/request';
+// cookies
+import Cookies from 'js-cookie';
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const usernameInputRef = useRef();
-  const passwordInputRef = useRef();
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email không hợp lệ!').required('Vui lòng nhập email'),
-    password: Yup.string().required('Vui lòng nhập mật khẩu'),
+    username: Yup.string().required('Vui lòng điền tên đăng nhập'),
+    password: Yup.string().required('Vui lòng điền mật khẩu'),
   });
 
   const defaultValues = {
-    email: '',
+    username: '',
     password: '',
   };
 
@@ -39,16 +39,32 @@ export default function LoginForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
   } = methods;
 
   const onSubmit = async () => {
-    navigate('/dashboard', { replace: true });
+    const { username, password } = getValues();
+    const res = await request.post('/auth/login', {
+      username,
+      password,
+    });
+
+    if (res.status === 200) {
+      const { token, accountId } = res.data;
+
+      const expiryDate = new Date(new Date().getTime() + 60 * 60 * 1000);
+      Cookies.set('token', token, { expires: expiryDate });
+      Cookies.set('accountId', accountId, { expires: expiryDate });
+      Cookies.set('expiryDate', expiryDate.toISOString(), { expires: expiryDate });
+
+      navigate('/', { replace: true });
+    }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField name="email" label="Email" />
+        <RHFTextField name="username" label="Tên đăng nhập" />
 
         <RHFTextField
           name="password"
