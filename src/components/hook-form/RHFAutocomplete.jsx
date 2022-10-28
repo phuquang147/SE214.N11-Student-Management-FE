@@ -19,12 +19,13 @@ export default function RHFAutocomplete({ name, ...other }) {
         return (
           <Autocomplete
             {...field}
+            value={other.options[0]}
             fullWidth
             disableClearable
             onChange={(e, value) => {
               field.onChange(value);
             }}
-            renderInput={(params) => <TextField {...params} label={other.label} value={field.value} />}
+            renderInput={(params) => <TextField {...params} label={other.label} />}
             {...other}
           />
         );

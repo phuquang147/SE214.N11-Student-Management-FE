@@ -2,7 +2,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { DATA_GRID_DEFAULT_LOCALE_TEXT } from '~/utils/datagrid-default-locale-text';
 
-export default function DataGridView({ columns, rows }) {
+export default function DataGridView({ columns, rows, ...other }) {
   const [pageSize, setPageSize] = useState(10);
 
   return (
@@ -57,6 +57,7 @@ export default function DataGridView({ columns, rows }) {
           quickFilterProps: { debounceMs: 500 },
         },
       }}
+      {...other}
     />
   );
 }

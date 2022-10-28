@@ -112,31 +112,37 @@ export const columnGroupingModel = [
   {
     groupId: 'Họ và tên',
     headerClassName: 'ho-ten',
+    headerAlign: 'center',
     children: [{ field: 'name' }],
   },
   {
     groupId: 'Điểm miệng',
     headerClassName: 'diem-mieng',
+    headerAlign: 'center',
     children: [{ field: 'oral1' }, { field: 'oral2' }, { field: 'oral3' }, { field: 'oral4' }, { field: 'oral5' }],
   },
   {
     groupId: 'Điểm 15 phút',
     headerClassName: 'muoi-lam-phut',
+    headerAlign: 'center',
     children: [{ field: 'm151' }, { field: 'm152' }, { field: 'm153' }, { field: 'm154' }, { field: 'm155' }],
   },
   {
     groupId: 'Điểm 1 tiết',
     headerClassName: 'mot-tiet',
+    headerAlign: 'center',
     children: [{ field: 'm451' }, { field: 'm452' }, { field: 'm453' }, { field: 'm454' }, { field: 'm455' }],
   },
   {
     groupId: 'Cuối kỳ',
     headerClassName: 'cuoi-ky',
+    headerAlign: 'center',
     children: [{ field: 'final' }],
   },
   {
     groupId: 'Trung bình',
     headerClassName: 'trung-binh',
+    headerAlign: 'center',
     children: [{ field: 'average' }],
   },
 ];

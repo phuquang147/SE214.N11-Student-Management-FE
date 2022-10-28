@@ -5,11 +5,11 @@ import * as Yup from 'yup';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 
-const schoolYears = ['2021', '2022'];
-const grades = ['10', '11', '12'];
-const classes = ['12a1', '12a2'];
-const semesters = ['Học kì 1', 'Học kì 2'];
-const subjects = ['Toán', 'Văn'];
+const schoolYears = ['Mọi năm học', '2021', '2022'];
+const grades = ['Mọi khối', '10', '11', '12'];
+const classes = ['Mọi lớp', '12a1', '12a2'];
+const semesters = ['Mọi học kỳ', 'Học kì 1', 'Học kì 2'];
+const subjects = ['Mọi môn học', 'Toán', 'Văn'];
 
 export default function Filters() {
   const StudentSchema = Yup.object().shape({});
