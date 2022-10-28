@@ -30,11 +30,6 @@ const navConfig = [
     path: '/login',
     icon: getIcon('eva:lock-fill'),
   },
-  {
-    title: 'Not found',
-    path: '/404',
-    icon: getIcon('eva:alert-triangle-fill'),
-  },
 ];
 
 export default navConfig;

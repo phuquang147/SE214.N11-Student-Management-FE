@@ -10,7 +10,11 @@ const Auth = () => {
 
 const AuthGuard = () => {
   let isAuth = Auth();
-  return isAuth ? <MainLayout /> : <Navigate to="/login" />;
+  return isAuth ? (
+    <MainLayout />
+  ) : (
+    <Navigate to="/login" state={{ message: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại' }} />
+  );
 };
 
 export default AuthGuard;
