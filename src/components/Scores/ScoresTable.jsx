@@ -32,7 +32,7 @@ export default function ScoresTable({ processRowUpdate }) {
       }}
     >
       <Table
-        rows={scores}
+        data={scores}
         columns={columns(false)}
         processRowUpdate={processRowUpdate}
         experimentalFeatures={{ newEditingApi: true, columnGrouping: true }}
