@@ -7,6 +7,7 @@ import NewStudent from '~/pages/NewStudent';
 import Page404 from '~/pages/Page404';
 import Profile from '~/pages/Profile';
 import Classes from '~/pages/Classes';
+import Scores from '~/pages/Scores';
 
 const CommonRoutes = [
   {
@@ -32,6 +33,10 @@ const CommonRoutes = [
   {
     path: '/classes',
     element: <Classes />,
+  },
+  {
+    path: '/scores',
+    element: <Scores />,
   },
   {
     path: '*',

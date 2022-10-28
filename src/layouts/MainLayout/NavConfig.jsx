@@ -26,6 +26,11 @@ const navConfig = [
     icon: getIcon('eva:people-fill'),
   },
   {
+    title: 'Điểm số',
+    path: '/scores',
+    icon: getIcon('carbon:table-split'),
+  },
+  {
     title: 'login',
     path: '/login',
     icon: getIcon('eva:lock-fill'),

@@ -1,7 +1,7 @@
 // import * as SagaActionTypes from '~/redux/constants/constantSaga';
 import DataGridView from './DataGrid';
 
-export default function Table({ data, columns }) {
+export default function Table({ data, columns, sx, ...other }) {
   // const dispatch = useDispatch();
 
   const handleDelete = (student) => {
@@ -18,5 +18,5 @@ export default function Table({ data, columns }) {
     };
   });
 
-  return <DataGridView columns={columns} rows={modifiedRows} />;
+  return <DataGridView columns={columns} rows={modifiedRows} {...other} />;
 }
