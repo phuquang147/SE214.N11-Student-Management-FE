@@ -7,7 +7,7 @@ import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 
 const schoolYears = ['Mọi năm học', '2021', '2022'];
 const grades = ['Mọi khối', '10', '11', '12'];
-const classes = ['Mọi lớp', '12a1', '12a2'];
+const classes = ['Mọi lớp', '12A1', '12A2'];
 const semesters = ['Mọi học kỳ', 'Học kì 1', 'Học kì 2'];
 const subjects = ['Mọi môn học', 'Toán', 'Văn'];
 
