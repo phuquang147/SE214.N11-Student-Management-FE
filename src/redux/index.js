@@ -1,12 +1,18 @@
-import { applyMiddleware, combineReducers, createStore } from 'redux';
-import createMiddlewareSaga from 'redux-saga';
+import createSagaMiddleware from '@redux-saga/core';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+import roleReducer from './role';
 import rootSaga from './sagas/rootSaga';
 
-const middlewareSaga = createMiddlewareSaga();
-const rootReducer = combineReducers({});
+const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(rootReducer, applyMiddleware(middlewareSaga));
+const rootReducer = combineReducers({
+  role: roleReducer,
+});
 
-middlewareSaga.run(rootSaga);
+export const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
+});
 
-export { store };
+sagaMiddleware.run(rootSaga);
