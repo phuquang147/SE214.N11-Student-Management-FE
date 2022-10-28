@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
 // components
 import MenuPopover from '~/HOC/MenuPopover';
 // mocks_
 import account from '~/_mock/account';
+// cookies
+import Cookies from 'js-cookie';
 
 const MENU_OPTIONS = [
   {
@@ -18,6 +19,7 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const anchorRef = useRef(null);
+  const navigate = useNavigate();
 
   const [open, setOpen] = useState(null);
 
@@ -27,6 +29,14 @@ export default function AccountPopover() {
 
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLogout = () => {
+    handleClose();
+    Cookies.remove('token');
+    Cookies.remove('accountId');
+    Cookies.remove('expiryDate');
+    navigate('/login');
   };
 
   return (
@@ -44,7 +54,6 @@ export default function AccountPopover() {
               height: '100%',
               borderRadius: '50%',
               position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
             },
           }),
         }}
@@ -87,7 +96,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Đăng xuất
         </MenuItem>
       </MenuPopover>

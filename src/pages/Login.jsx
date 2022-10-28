@@ -1,14 +1,17 @@
 // @mui
-import { Card, Container, Typography } from '@mui/material';
+import { Alert, Card, Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 // hooks
+import { useEffect } from 'react';
 import useResponsive from '~/hooks/useResponsive';
+import { useLocation, useNavigate } from 'react-router';
 // components
 import Logo from '~/components/Logo';
 // sections
 import LoginForm from '~/components/Login/LoginForm';
 // img
 import illustrationLoginImg from '~/assets/images/illustration_login.png';
+import Cookies from 'js-cookie';
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -52,6 +55,14 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   const mdUp = useResponsive('up', 'md');
+  const { state } = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (Cookies.get('token')) {
+      navigate(-1);
+    }
+  }, [navigate]);
 
   return (
     <RootStyle>
@@ -67,6 +78,11 @@ export default function Login() {
 
       <Container maxWidth="sm">
         <ContentStyle>
+          {state && (
+            <Alert severity="error" variant="outlined" sx={{ mb: 2, color: '#e57373' }}>
+              {state.message}
+            </Alert>
+          )}
           <Typography variant="h4" gutterBottom>
             Đăng Nhập
           </Typography>
