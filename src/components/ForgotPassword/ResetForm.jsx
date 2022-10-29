@@ -10,9 +10,15 @@ import { IconButton, InputAdornment, Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/Iconify';
+import request from '~/services/request';
+import { useNavigate, useParams } from 'react-router';
+// services
+import Cookies from 'js-cookie';
 
 export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const { token } = useParams();
 
   const LoginSchema = Yup.object().shape({
     password: Yup.string().required('Vui lòng nhập mật khẩu'),
@@ -30,9 +36,22 @@ export default function ResetForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
   } = methods;
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    const { password } = getValues();
+    const accountId = Cookies.get('accountId');
+
+    const res = await request.post('/auth/change-password', {
+      password,
+      passwordToken: token,
+      accountId,
+    });
+    if (res.status === 201) {
+      navigate('/login');
+    }
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

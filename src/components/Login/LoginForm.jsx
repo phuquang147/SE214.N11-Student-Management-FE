@@ -14,11 +14,11 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/Iconify';
 // request
-import request from '~/utils/request';
+import request from '~/services/request';
 // cookies
 import Cookies from 'js-cookie';
 // redux
-import { roleActions } from '~/redux/role';
+import { inforActions } from '~/redux/infor';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ export default function LoginForm() {
       Cookies.set('token', token, { expires: expiryDate });
       Cookies.set('accountId', accountId, { expires: expiryDate });
 
-      dispatch(roleActions.setRole(role));
+      // dispatch(inforActions.setRole(role));
       navigate('/', { replace: true });
     }
   };

@@ -30,11 +30,6 @@ const navConfig = [
     path: '/scores',
     icon: getIcon('carbon:table-split'),
   },
-  {
-    title: 'login',
-    path: '/login',
-    icon: getIcon('eva:lock-fill'),
-  },
 ];
 
 export default navConfig;

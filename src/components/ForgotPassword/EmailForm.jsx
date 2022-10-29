@@ -8,6 +8,9 @@ import { Stack } from '@mui/material';
 // components
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
+// services
+import request from '~/services/request';
+import Cookies from 'js-cookie';
 
 export default function EmailForm() {
   const LoginSchema = Yup.object().shape({
@@ -26,9 +29,17 @@ export default function EmailForm() {
   const {
     handleSubmit,
     formState: { isSubmitting },
+    getValues,
   } = methods;
 
-  const onSubmit = async () => {};
+  const onSubmit = async () => {
+    const { email } = getValues();
+    const res = await request.post('/auth/reset-password', {
+      email,
+    });
+
+    Cookies.set('accountId', res.data.accountId);
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

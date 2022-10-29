@@ -14,6 +14,7 @@ import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 
 const genders = ['Nam', 'Nữ'];
 const status = ['Đang học', 'Đã tốt nghiệp', 'Đã nghỉ học'];
+const classes = ['12A1', '11A1', '10A1'];
 
 export default function StudentForm() {
   const StudentSchema = Yup.object().shape({
@@ -52,6 +53,16 @@ export default function StudentForm() {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={4}>
           <RHFTextField name="name" label="Họ và tên" />
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={4}>
+          <RHFAutocomplete
+            name="class"
+            label="Lớp"
+            options={classes}
+            getOptionLabel={(option) => option}
+            isOptionEqualToValue={(option, value) => option === value}
+          />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
