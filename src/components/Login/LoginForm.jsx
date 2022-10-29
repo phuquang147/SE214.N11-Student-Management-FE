@@ -54,14 +54,14 @@ export default function LoginForm() {
     });
 
     if (res.status === 200) {
-      const { token, accountId, role } = res.data;
+      const { token, accountId } = res.data;
 
       const remainingMilliseconds = 60 * 60 * 1000;
       const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
       Cookies.set('token', token, { expires: expiryDate });
       Cookies.set('accountId', accountId, { expires: expiryDate });
 
-      // dispatch(inforActions.setRole(role));
+      dispatch(inforActions.setCommonInforStarted());
       navigate('/', { replace: true });
     }
   };

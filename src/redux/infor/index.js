@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
+  status: 'idle',
   role: '',
   subjects: [],
   classes: [],
@@ -10,11 +11,18 @@ const inforSlice = createSlice({
   name: 'infor',
   initialState,
   reducers: {
-    setCommonInfor(state, action) {
+    setCommonInforStarted(state) {
+      state.status = 'loading';
+    },
+    setCommonInforSuccess(state, action) {
       const { role, subjects, classes } = action.payload;
       state.role = role;
       state.subjects = subjects;
       state.classes = classes;
+      state.status = 'idle';
+    },
+    setCommonInforFailed(state) {
+      state.status = 'failed';
     },
   },
 });
