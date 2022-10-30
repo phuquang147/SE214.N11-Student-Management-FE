@@ -9,6 +9,7 @@ function* getCommonData(action) {
     }, '/data');
 
     const { classes, subjects, role } = infor.data;
+    console.log(classes);
     const subjectsName = subjects.map((subject) => subject.name);
     const classesName = classes.map((_class) => _class.name);
 

@@ -35,7 +35,6 @@ export default function AccountPopover() {
     handleClose();
     Cookies.remove('token');
     Cookies.remove('accountId');
-    Cookies.remove('expiryDate');
     navigate('/login');
   };
 
