@@ -4,12 +4,12 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Card, Container, Stack, Typography, Chip } from '@mui/material';
 // components
 import Iconify from '~/components/Iconify';
-import Filters from '~/components/Filters';
+import Filters from '~/components/Scores/Filters';
 import Table from '~/components/Table';
 // mock
 import students from '~/_mock/students';
 // filters
-import * as filters from '~/constants/filters';
+import { studentFilters } from '~/constants/filters';
 // import { useDispatch } from 'react-redux';
 import ActionsMenu from '~/components/ActionsMenu';
 
@@ -200,12 +200,6 @@ export default function Students() {
     <Container>
       <Typography variant="h4">Quản lý học sinh</Typography>
       <Stack direction="row" alignItems="center" justifyContent="end" mb={5} columnGap={2}>
-        <Filters
-          isOpenFilter={openFilter}
-          onOpenFilter={handleOpenFilter}
-          onCloseFilter={handleCloseFilter}
-          filters={filters.studentFilters}
-        />
         <Button
           variant="contained"
           component={RouterLink}
@@ -215,6 +209,8 @@ export default function Students() {
           Tạo mới học sinh
         </Button>
       </Stack>
+
+      <Filters filters={studentFilters} />
 
       <Card
         sx={{

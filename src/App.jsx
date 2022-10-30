@@ -21,8 +21,6 @@ export default function App() {
       const subjectsName = subjects.map((subject) => subject.name);
       const classesName = classes.map((_class) => _class.name);
 
-      console.log(subjectsName);
-
       if (res.status === 200) {
         dispatch(inforActions.setCommonInforSuccess({ classes: classesName, subjects: subjectsName, role }));
       }

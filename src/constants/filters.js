@@ -1,25 +1,53 @@
 export const studentFilters = [
   {
-    title: 'Giới tính',
-    items: ['Tất cả', 'Nam', 'Nữ'],
+    name: 'class',
+    label: 'Lớp',
+    options: ['Mọi lớp'],
   },
   {
-    title: 'Tình trạng',
-    items: ['Tất cả', 'Đang học', 'Đã tốt nghiệp', 'Đã nghỉ học'],
+    name: 'schoolYear',
+    label: 'Năm học',
+    options: ['Mọi năm học', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'],
   },
 ];
 
 export const classFilters = [
   {
-    title: 'Khối',
-    items: ['Mọi khối', 10, 11, 12],
+    name: 'grade',
+    label: 'Khối',
+    options: ['Mọi khối', '10', '11', '12'],
   },
   {
-    title: 'Lớp',
-    items: ['Mọi lớp', '10A1', '11A1', '12A2'],
+    name: 'schoolYear',
+    label: 'Năm học',
+    options: ['Mọi năm học', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'],
+  },
+];
+
+export const scoreFilters = [
+  {
+    name: 'schoolYear',
+    label: 'Năm học',
+    options: ['Mọi năm học', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022'],
   },
   {
-    title: 'Năm học',
-    items: ['Mọi năm học', 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022],
+    name: 'grade',
+    label: 'Khối',
+    options: ['Mọi khối', '10', '11', '12'],
+  },
+  {
+    name: 'class',
+    label: 'Lớp',
+    options: ['Mọi lớp'],
+  },
+  {
+    name: 'semester',
+    label: 'Học kì',
+    options: ['Mọi học kỳ', 'Học kì 1', 'Học kì 2'],
+  },
+  {
+    name: 'subject',
+    label: 'Môn học',
+    options: ['Mọi môn học'],
   },
 ];

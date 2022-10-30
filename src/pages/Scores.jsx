@@ -2,6 +2,7 @@ import { Alert, Button, Container, Dialog, DialogActions, DialogTitle, Snackbar,
 import * as React from 'react';
 import Filters from '~/components/Scores/Filters';
 import ScoresTable from '~/components/Scores/ScoresTable';
+import { scoreFilters } from '~/constants/filters';
 
 const _ = require('lodash');
 
@@ -23,6 +24,7 @@ export default function Scores() {
   const mutateRow = useFakeMutation();
   const [promiseArguments, setPromiseArguments] = React.useState(null);
   const [snackbar, setSnackbar] = React.useState(null);
+
   const handleCloseSnackbar = () => setSnackbar(null);
 
   const processRowUpdate = React.useCallback(
@@ -75,7 +77,7 @@ export default function Scores() {
           </DialogActions>
         </Dialog>
       )}
-      <Filters />
+      <Filters filters={scoreFilters} />
       <ScoresTable processRowUpdate={processRowUpdate} />
       {!!snackbar && (
         <Snackbar open onClose={handleCloseSnackbar} autoHideDuration={6000}>

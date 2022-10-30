@@ -5,9 +5,9 @@ import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material'
 // components
 import Iconify from '~/components/Iconify';
 import Table from '~/components/Table';
-import Filters from '~/components/Filters';
+import Filters from '~/components/Scores/Filters';
 // filters
-import * as filters from '~/constants/filters';
+import { classFilters } from '~/constants/filters';
 // mock
 import classes from '~/_mock/classes';
 import ActionsMenu from '~/components/ActionsMenu';
@@ -137,12 +137,6 @@ function Classes() {
     <Container>
       <Typography variant="h4">Quản lý lớp học</Typography>
       <Stack direction="row" alignItems="center" justifyContent="end" mb={5} columnGap={2}>
-        <Filters
-          isOpenFilter={openFilter}
-          onOpenFilter={handleOpenFilter}
-          onCloseFilter={handleCloseFilter}
-          filters={filters.classFilters}
-        />
         <Button
           variant="contained"
           component={RouterLink}
@@ -152,6 +146,8 @@ function Classes() {
           Tạo mới lớp
         </Button>
       </Stack>
+
+      <Filters filters={classFilters} />
 
       <Card
         sx={{
