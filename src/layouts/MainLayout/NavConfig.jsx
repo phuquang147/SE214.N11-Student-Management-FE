@@ -31,6 +31,11 @@ const navConfig = [
     icon: getIcon('carbon:table-split'),
   },
   {
+    title: 'Giáo viên',
+    path: '/teachers',
+    icon: getIcon('la:chalkboard-teacher'),
+  },
+  {
     title: 'login',
     path: '/login',
     icon: getIcon('eva:lock-fill'),

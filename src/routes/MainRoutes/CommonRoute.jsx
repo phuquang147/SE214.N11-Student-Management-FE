@@ -1,13 +1,21 @@
 import Dashboard from '~/pages/Dashboard';
 // Student
-import Students from '~/pages/Students';
 import EditStudent from '~/pages/EditStudent';
 import NewStudent from '~/pages/NewStudent';
+import Students from '~/pages/Students';
+// Class
+import Classes from '~/pages/Classes';
+import EditClass from '~/pages/EditClass';
+import NewClass from '~/pages/NewClass';
+// Score
+import Scores from '~/pages/Scores';
+// Profile
+import Profile from '~/pages/Profile';
 //
 import Page404 from '~/pages/Page404';
-import Profile from '~/pages/Profile';
-import Classes from '~/pages/Classes';
-import Scores from '~/pages/Scores';
+import Teachers from '~/pages/Teachers';
+import NewTeacher from '~/pages/NewTeacher';
+import EditTeacher from '~/pages/EditTeacher';
 
 const CommonRoutes = [
   {
@@ -18,6 +26,7 @@ const CommonRoutes = [
     path: '/profile',
     element: <Profile />,
   },
+  // Student
   {
     path: '/students',
     element: <Students />,
@@ -30,14 +39,38 @@ const CommonRoutes = [
     path: '/students/edit/:id',
     element: <EditStudent />,
   },
+  // Class
   {
     path: '/classes',
     element: <Classes />,
   },
   {
+    path: '/classes/new',
+    element: <NewClass />,
+  },
+  {
+    path: '/classes/edit/:id',
+    element: <EditClass />,
+  },
+  // Score
+  {
     path: '/scores',
     element: <Scores />,
   },
+  // Teacher
+  {
+    path: '/teachers',
+    element: <Teachers />,
+  },
+  {
+    path: '/teachers/new',
+    element: <NewTeacher />,
+  },
+  {
+    path: '/teachers/edit/:id',
+    element: <EditTeacher />,
+  },
+  //
   {
     path: '*',
     element: <Page404 />,
