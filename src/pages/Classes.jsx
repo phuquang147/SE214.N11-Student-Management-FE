@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material';
@@ -123,16 +122,6 @@ const columns = [
 ];
 
 function Classes() {
-  const [openFilter, setOpenFilter] = useState(false);
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
-
   return (
     <Container>
       <Typography variant="h4">Quản lý lớp học</Typography>

@@ -9,12 +9,12 @@ function* getCommonData(action) {
     }, '/data');
 
     const { classes, subjects, role } = infor.data;
-    console.log(classes);
-    const subjectsName = subjects.map((subject) => subject.name);
-    const classesName = classes.map((_class) => _class.name);
 
-    yield put(inforActions.setCommonInforSuccess({ classes: classesName, subjects: subjectsName, role }));
+    console.log(classes);
+
+    yield put(inforActions.setCommonInforSuccess({ classes, subjects, role }));
   } catch (err) {
+    console.log(err.message);
     yield put(inforActions.setCommonInforFailed());
   }
 }

@@ -12,17 +12,19 @@ export default function App() {
 
   useEffect(() => {
     const getCommonInfor = async () => {
-      if (!Cookies.get('token')) {
-        return;
-      }
+      try {
+        if (!Cookies.get('token')) {
+          return;
+        }
 
-      const res = await request.get('/data');
-      const { classes, subjects, role } = res.data;
-      const subjectsName = subjects.map((subject) => subject.name);
-      const classesName = classes.map((_class) => _class.name);
+        const res = await request.get('/data');
+        const { classes, subjects, role } = res.data;
 
-      if (res.status === 200) {
-        dispatch(inforActions.setCommonInforSuccess({ classes: classesName, subjects: subjectsName, role }));
+        if (res.status === 200) {
+          dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role }));
+        }
+      } catch (err) {
+        console.log(err.message);
       }
     };
 

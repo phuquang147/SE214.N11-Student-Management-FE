@@ -1,6 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
+import { LoadingButton } from '@mui/lab';
 import { Card, Grid, Typography } from '@mui/material';
-import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import * as Yup from 'yup';
@@ -8,27 +8,25 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import { selectClasses, selectSubjects } from '~/redux/infor';
 
-export default function Filters({ filters }) {
+export default function Filters({ filters, onChangeFilter }) {
   const StudentSchema = Yup.object().shape({});
-  const [loadedFilters, setLoadedFilters] = useState(filters);
   const subjects = useSelector(selectSubjects);
   const classes = useSelector(selectClasses);
 
-  useEffect(() => {
-    const formatedFilters = filters.map((filter) => {
-      if (filter.name === 'class' && filter.options.length === 1) {
-        filter.options.push(...classes);
-      }
+  const subjectsName = subjects.map((subject) => subject.name);
+  const classesName = classes.map((_class) => _class.name);
 
-      if (filter.name === 'subject' && filter.options.length === 1) {
-        filter.options.push(...subjects);
-      }
+  const formatedFilters = filters.map((filter) => {
+    if (filter.name === 'class' && filter.options.length === 1) {
+      filter.options.push(...classesName);
+    }
 
-      return filter;
-    });
+    if (filter.name === 'subject' && filter.options.length === 1) {
+      filter.options.push(...subjectsName);
+    }
 
-    setLoadedFilters(formatedFilters);
-  }, [filters, classes, subjects]);
+    return filter;
+  });
 
   const defaultValues = {};
 
@@ -39,11 +37,11 @@ export default function Filters({ filters }) {
 
   const {
     handleSubmit,
-    // formState: { isSubmitting },
+    formState: { isSubmitting },
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
+    onChangeFilter(values);
   };
   return (
     <Card sx={{ padding: '16px', my: 2 }}>
@@ -52,17 +50,23 @@ export default function Filters({ filters }) {
       </Typography>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
-          {loadedFilters.map((filter, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <RHFAutocomplete
-                name={filter.name}
-                label={filter.label}
-                options={filter.options}
-                getOptionLabel={(option) => option}
-                isOptionEqualToValue={(option, value) => option === value}
-              />
-            </Grid>
-          ))}
+          {formatedFilters &&
+            formatedFilters.map((filter, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <RHFAutocomplete
+                  name={filter.name}
+                  label={filter.label}
+                  options={filter.options}
+                  getOptionLabel={(option) => option}
+                  isOptionEqualToValue={(option, value) => option === value}
+                />
+              </Grid>
+            ))}
+          <Grid item xs={12} sm={6} md={4}>
+            <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
+              Tìm kiếm
+            </LoadingButton>
+          </Grid>
         </Grid>
       </FormProvider>
     </Card>

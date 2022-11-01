@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Button, Card, Container, Stack, Typography, Chip } from '@mui/material';
@@ -6,12 +5,14 @@ import { Button, Card, Container, Stack, Typography, Chip } from '@mui/material'
 import Iconify from '~/components/Iconify';
 import Filters from '~/components/Scores/Filters';
 import Table from '~/components/Table';
-// mock
-import students from '~/_mock/students';
 // filters
 import { studentFilters } from '~/constants/filters';
 // import { useDispatch } from 'react-redux';
 import ActionsMenu from '~/components/ActionsMenu';
+import { useSelector } from 'react-redux';
+import { selectClasses } from '~/redux/infor';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const columns = [
   {
@@ -187,15 +188,57 @@ const columns = [
 ];
 
 export default function Students() {
-  const [openFilter, setOpenFilter] = useState(false);
+  const classes = useSelector(selectClasses);
+  const [students, setStudents] = useState([]);
 
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
+  useEffect(() => {
+    if (classes.length > 0) {
+      const updatedStudents = [];
+
+      classes.forEach((_class) => {
+        _class.students.forEach((student) => {
+          const formatedStudent = {
+            id: student._id.slice(0, 8).toUpperCase(),
+            name: student.name,
+            phone: student.phone,
+            email: student.email,
+            birthday: student.birthday,
+            address: student.address,
+            gender: student.gender,
+            status: student.status,
+          };
+          updatedStudents.push(formatedStudent);
+        });
+      });
+
+      setStudents(updatedStudents);
+    }
+  }, [classes]);
+
+  const handleChangeFilter = (values) => {
+    const { class: className, schoolYear } = values;
+    const updatedStudents = [];
+    classes.forEach((_class) => {
+      if (_class.name === className && _class.schoolYear === +schoolYear) {
+        _class.students.forEach((student) => {
+          const formatedStudent = {
+            id: student._id.slice(0, 8).toUpperCase(),
+            name: student.name,
+            phone: student.phone,
+            email: student.email,
+            birthday: student.birthday,
+            address: student.address,
+            gender: student.gender,
+            status: student.status,
+          };
+          updatedStudents.push(formatedStudent);
+        });
+      }
+    });
+
+    setStudents(updatedStudents);
   };
 
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
   return (
     <Container>
       <Typography variant="h4">Quản lý học sinh</Typography>
@@ -210,7 +253,7 @@ export default function Students() {
         </Button>
       </Stack>
 
-      <Filters filters={studentFilters} />
+      <Filters filters={studentFilters} onChangeFilter={handleChangeFilter} />
 
       <Card
         sx={{

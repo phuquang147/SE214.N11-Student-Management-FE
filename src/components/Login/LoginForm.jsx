@@ -61,7 +61,7 @@ export default function LoginForm() {
       Cookies.set('token', token, { expires: expiryDate });
       Cookies.set('accountId', accountId, { expires: expiryDate });
 
-      dispatch(inforActions.setCommonInforStarted());
+      // dispatch(inforActions.setCommonInforStarted());
       navigate('/', { replace: true });
     }
   };
