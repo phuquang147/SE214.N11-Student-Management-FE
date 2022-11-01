@@ -150,9 +150,9 @@ export default function ScoresTable({ processRowUpdate }) {
     <Card
       sx={{
         width: '100%',
-        // '& .header': {
-        //   display: 'none !important',
-        // },
+        '& .header': {
+          display: 'none !important',
+        },
         '& .ho-ten': {
           backgroundColor: 'rgba(0, 0, 0, 0.03)',
         },

@@ -8,7 +8,7 @@ export default function EditClass() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4" gutterBottom>
-          Chỉnh sửa thông tin học sinh
+          Chỉnh sửa thông tin lớp
         </Typography>
       </Stack>
 
