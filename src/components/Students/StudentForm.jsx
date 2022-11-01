@@ -11,9 +11,8 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
-
-const genders = ['Nam', 'Nữ'];
-const status = ['Đang học', 'Đã tốt nghiệp', 'Đã nghỉ học'];
+// constants
+import { genders, studentStatus } from '~/constants';
 
 export default function StudentForm() {
   const StudentSchema = Yup.object().shape({
@@ -30,7 +29,7 @@ export default function StudentForm() {
     gender: genders[0],
     birthdate: dayjs('2014-08-18T21:11:54'),
     address: '',
-    status: status[0],
+    status: studentStatus[0],
   };
 
   const methods = useForm({
@@ -84,7 +83,7 @@ export default function StudentForm() {
           <RHFAutocomplete
             name="status"
             label="Tình trạng"
-            options={status}
+            options={studentStatus}
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
           />

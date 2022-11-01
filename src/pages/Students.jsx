@@ -1,17 +1,13 @@
-import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Button, Card, Container, Stack, Typography, Chip } from '@mui/material';
+import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material';
 // components
+import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
-import Filters from '~/components/Filters';
+import Filters from '~/components/Students/Filters';
 import Table from '~/components/Table';
 // mock
 import students from '~/_mock/students';
-// filters
-import * as filters from '~/constants/filters';
-// import { useDispatch } from 'react-redux';
-import ActionsMenu from '~/components/ActionsMenu';
 
 const columns = [
   {
@@ -38,7 +34,7 @@ const columns = [
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
-    minWidth: 200,
+    minWidth: 120,
     renderCell: (params) => {
       const { row } = params;
       return (
@@ -187,35 +183,21 @@ const columns = [
 ];
 
 export default function Students() {
-  const [openFilter, setOpenFilter] = useState(false);
-
-  const handleOpenFilter = () => {
-    setOpenFilter(true);
-  };
-
-  const handleCloseFilter = () => {
-    setOpenFilter(false);
-  };
   return (
     <Container>
-      <Typography variant="h4">Quản lý học sinh</Typography>
-      <Stack direction="row" alignItems="center" justifyContent="end" mb={5} columnGap={2}>
-        <Filters
-          isOpenFilter={openFilter}
-          onOpenFilter={handleOpenFilter}
-          onCloseFilter={handleCloseFilter}
-          filters={filters.studentFilters}
-        />
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+        <Typography variant="h4">Học sinh</Typography>
         <Button
           variant="contained"
           component={RouterLink}
           to="/students/new"
           startIcon={<Iconify icon="eva:plus-fill" />}
         >
-          Tạo mới học sinh
+          Thêm học sinh
         </Button>
       </Stack>
 
+      <Filters />
       <Card
         sx={{
           width: '100%',

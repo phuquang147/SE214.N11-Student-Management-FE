@@ -8,7 +8,7 @@ export default function NewStudent() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4" gutterBottom>
-          Tạo mới học sinh
+          Thêm học sinh
         </Typography>
       </Stack>
 
