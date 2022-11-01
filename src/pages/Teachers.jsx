@@ -5,19 +5,14 @@ import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material'
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
 import Table from '~/components/Table';
-// filters
-import { studentFilters } from '~/constants/filters';
-// import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { selectClasses } from '~/redux/infor';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import Filters from '~/components/Scores/Filters';
+import Filters from '~/components/Teachers/Filters';
+// mock
+import teachers from '~/_mock/teachers';
 
 const columns = [
   {
     field: 'name',
-    headerName: 'Tên học sinh',
+    headerName: 'Tên giáo viên',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
@@ -35,7 +30,7 @@ const columns = [
   },
   {
     field: 'id',
-    headerName: 'Mã học sinh',
+    headerName: 'Mã giáo viên',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
@@ -48,6 +43,14 @@ const columns = [
         </Stack>
       );
     },
+  },
+  {
+    field: 'subject',
+    headerName: 'Môn',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
+    minWidth: 150,
   },
   {
     field: 'gender',
@@ -85,6 +88,7 @@ const columns = [
       );
     },
   },
+
   {
     field: 'birthdate',
     headerName: 'Ngày sinh',
@@ -126,50 +130,34 @@ const columns = [
     minWidth: 130,
     renderCell: (params) => {
       const { row } = params;
-      switch (row.status) {
-        case 'Đang học':
-          return (
-            <Chip
-              label="Đang học"
-              color="primary"
-              sx={{
-                bgcolor: 'primary.light',
-                color: 'primary.dark',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                width: '130px',
-              }}
-            />
-          );
-        case 'Đã tốt nghiệp':
-          return (
-            <Chip
-              label="Đã tốt nghiệp"
-              color="success"
-              sx={{
-                bgcolor: 'success.light',
-                color: 'success.dark',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                width: '130px',
-              }}
-            />
-          );
-        default:
-          return (
-            <Chip
-              label="Đã nghỉ học"
-              color="error"
-              sx={{
-                bgcolor: 'error.light',
-                color: 'error.dark',
-                fontSize: '13px',
-                fontWeight: 'bold',
-                width: '130px',
-              }}
-            />
-          );
-      }
+      if (row.status === 'Đang dạy')
+        return (
+          <Chip
+            label="Đang dạy"
+            color="success"
+            sx={{
+              bgcolor: 'success.light',
+              color: 'success.dark',
+              fontSize: '13px',
+              fontWeight: 'bold',
+              width: '130px',
+            }}
+          />
+        );
+      else
+        return (
+          <Chip
+            label="Đã nghỉ"
+            color="error"
+            sx={{
+              bgcolor: 'error.light',
+              color: 'error.dark',
+              fontSize: '13px',
+              fontWeight: 'bold',
+              width: '130px',
+            }}
+          />
+        );
     },
   },
   {
@@ -187,73 +175,22 @@ const columns = [
   },
 ];
 
-export default function Students() {
-  const classes = useSelector(selectClasses);
-  const [students, setStudents] = useState([]);
-
-  useEffect(() => {
-    if (classes.length > 0) {
-      const updatedStudents = [];
-
-      classes.forEach((_class) => {
-        _class.students.forEach((student) => {
-          const formatedStudent = {
-            id: student._id.slice(0, 8).toUpperCase(),
-            name: student.name,
-            phone: student.phone,
-            email: student.email,
-            birthday: student.birthday,
-            address: student.address,
-            gender: student.gender,
-            status: student.status,
-          };
-          updatedStudents.push(formatedStudent);
-        });
-      });
-
-      setStudents(updatedStudents);
-    }
-  }, [classes]);
-
-  const handleChangeFilter = (values) => {
-    const { class: className, schoolYear } = values;
-    const updatedStudents = [];
-    classes.forEach((_class) => {
-      if (_class.name === className && _class.schoolYear === +schoolYear) {
-        _class.students.forEach((student) => {
-          const formatedStudent = {
-            id: student._id.slice(0, 8).toUpperCase(),
-            name: student.name,
-            phone: student.phone,
-            email: student.email,
-            birthday: student.birthday,
-            address: student.address,
-            gender: student.gender,
-            status: student.status,
-          };
-          updatedStudents.push(formatedStudent);
-        });
-      }
-    });
-
-    setStudents(updatedStudents);
-  };
-
+export default function Teachers() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Học sinh</Typography>
+        <Typography variant="h4">Giáo viên</Typography>
         <Button
           variant="contained"
           component={RouterLink}
-          to="/students/new"
+          to="/teachers/new"
           startIcon={<Iconify icon="eva:plus-fill" />}
         >
-          Thêm học sinh
+          Thêm giáo viên
         </Button>
       </Stack>
 
-      <Filters filters={studentFilters} onChangeFilter={handleChangeFilter} />
+      <Filters />
 
       <Card
         sx={{
@@ -264,7 +201,7 @@ export default function Students() {
           },
         }}
       >
-        <Table data={students} columns={columns} />
+        <Table data={teachers} columns={columns} />
       </Card>
     </Container>
   );

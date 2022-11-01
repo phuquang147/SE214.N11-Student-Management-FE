@@ -12,11 +12,8 @@ import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 // constants
-import { genders, studentStatus } from '~/constants';
-
-const classes = ['12A1', '11A1', '10A1'];
-
-export default function StudentForm() {
+import { genders, teacherStatus } from '~/constants';
+export default function TeacherForm() {
   const StudentSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
     phone: Yup.string().required('Vui lòng nhập số điện thoại'),
@@ -31,7 +28,7 @@ export default function StudentForm() {
     gender: genders[0],
     birthdate: dayjs('2014-08-18T21:11:54'),
     address: '',
-    status: studentStatus[0],
+    status: teacherStatus[0],
   };
 
   const methods = useForm({
@@ -53,16 +50,6 @@ export default function StudentForm() {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={4}>
           <RHFTextField name="name" label="Họ và tên" />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFAutocomplete
-            name="class"
-            label="Lớp"
-            options={classes}
-            getOptionLabel={(option) => option}
-            isOptionEqualToValue={(option, value) => option === value}
-          />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -95,7 +82,7 @@ export default function StudentForm() {
           <RHFAutocomplete
             name="status"
             label="Tình trạng"
-            options={studentStatus}
+            options={teacherStatus}
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
           />

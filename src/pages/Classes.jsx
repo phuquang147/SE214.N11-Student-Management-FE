@@ -2,14 +2,14 @@ import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material';
 // components
+import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
 import Table from '~/components/Table';
-import Filters from '~/components/Scores/Filters';
 // filters
 import { classFilters } from '~/constants/filters';
 // mock
 import classes from '~/_mock/classes';
-import ActionsMenu from '~/components/ActionsMenu';
+import Filters from '~/components/Classes/Filters';
 
 const columns = [
   {
@@ -18,7 +18,7 @@ const columns = [
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
-    minWidth: 200,
+    minWidth: 100,
     renderCell: (params) => {
       const { row } = params;
       return (
@@ -52,7 +52,7 @@ const columns = [
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
-    minWidth: 130,
+    minWidth: 100,
     renderCell: (params) => {
       const { row } = params;
       let bgColor = 'primary.light';
@@ -124,15 +124,15 @@ const columns = [
 function Classes() {
   return (
     <Container>
-      <Typography variant="h4">Quản lý lớp học</Typography>
-      <Stack direction="row" alignItems="center" justifyContent="end" mb={5} columnGap={2}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+        <Typography variant="h4">Lớp học</Typography>
         <Button
           variant="contained"
           component={RouterLink}
           to="/classes/new"
           startIcon={<Iconify icon="eva:plus-fill" />}
         >
-          Tạo mới lớp
+          Thêm lớp
         </Button>
       </Stack>
 
