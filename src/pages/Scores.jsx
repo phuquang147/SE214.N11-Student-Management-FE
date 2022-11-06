@@ -1,6 +1,6 @@
 import { Alert, Button, Container, Dialog, DialogActions, DialogTitle, Snackbar, Typography } from '@mui/material';
 import * as React from 'react';
-import Filters from '~/components/Scores/Filters';
+import Filters from '~/components/Filters';
 import ScoresTable from '~/components/Scores/ScoresTable';
 import { scoreFilters } from '~/constants/filters';
 

@@ -12,7 +12,7 @@ import { useSelector } from 'react-redux';
 import { selectClasses } from '~/redux/infor';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import Filters from '~/components/Scores/Filters';
+import Filters from '~/components/Filters';
 
 const columns = [
   {
