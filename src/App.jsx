@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import Routes from './routes';
 import ScrollToTop from './components/ScrollToTop';
-import request from './services/request';
-import { inforActions } from './redux/infor';
-import Cookies from 'js-cookie';
 // import { BaseOptionChartStyle } from './components/chart/BaseOptionChart';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { inforActions } from '~/redux/infor';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -17,8 +16,14 @@ export default function App() {
           return;
         }
 
-        const res = await request.get('/data');
-        const { classes, subjects, role } = res.data;
+        const res = await fetch('https://studentapp-be.herokuapp.com/data', {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${Cookies.get('token')}`,
+          },
+        });
+        const data = await res.json();
+        const { classes, subjects, role } = data;
 
         if (res.status === 200) {
           dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role }));

@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
 // components
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
@@ -13,6 +13,8 @@ import { selectClasses } from '~/redux/infor';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import Filters from '~/components/Filters';
+import request from '~/services/request';
+import Cookies from 'js-cookie';
 
 const columns = [
   {
@@ -34,7 +36,7 @@ const columns = [
     },
   },
   {
-    field: 'id',
+    field: '_id',
     headerName: 'Mã học sinh',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -44,7 +46,7 @@ const columns = [
       const { row } = params;
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Typography noWrap>{row.id.slice(0, 8).toUpperCase()}</Typography>
+          <Typography noWrap>{row._id.slice(0, 8).toUpperCase()}</Typography>
         </Stack>
       );
     },
@@ -86,12 +88,17 @@ const columns = [
     },
   },
   {
-    field: 'birthdate',
+    field: 'birthday',
     headerName: 'Ngày sinh',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
     minWidth: 150,
+    renderCell: (params) => {
+      const { row } = params;
+      const birthday = new Date(row.birthday).toLocaleDateString();
+      return <Typography>{birthday}</Typography>;
+    },
   },
   {
     field: 'phone',
@@ -190,53 +197,36 @@ const columns = [
 export default function Students() {
   const classes = useSelector(selectClasses);
   const [students, setStudents] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (classes.length > 0) {
       const updatedStudents = [];
 
       classes.forEach((_class) => {
-        _class.students.forEach((student) => {
-          const formatedStudent = {
-            id: student._id.slice(0, 8).toUpperCase(),
-            name: student.name,
-            phone: student.phone,
-            email: student.email,
-            birthday: student.birthday,
-            address: student.address,
-            gender: student.gender,
-            status: student.status,
-          };
-          updatedStudents.push(formatedStudent);
-        });
+        updatedStudents.push(..._class.students);
       });
 
       setStudents(updatedStudents);
     }
   }, [classes]);
 
-  const handleChangeFilter = (values) => {
+  const handleChangeFilter = async (values) => {
     const { class: className, schoolYear } = values;
     const updatedStudents = [];
+
+    const res = await request.get(`/classesByNameAndSchoolYear?className=${className}&schoolYear=${schoolYear}`, {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    });
+    const { classes } = res.data;
     classes.forEach((_class) => {
-      if (_class.name === className && _class.schoolYear === +schoolYear) {
-        _class.students.forEach((student) => {
-          const formatedStudent = {
-            id: student._id.slice(0, 8).toUpperCase(),
-            name: student.name,
-            phone: student.phone,
-            email: student.email,
-            birthday: student.birthday,
-            address: student.address,
-            gender: student.gender,
-            status: student.status,
-          };
-          updatedStudents.push(formatedStudent);
-        });
-      }
+      updatedStudents.push(..._class.students);
     });
 
     setStudents(updatedStudents);
+    setLoading(false);
   };
 
   return (
@@ -255,17 +245,23 @@ export default function Students() {
 
       <Filters filters={studentFilters} onChangeFilter={handleChangeFilter} />
 
-      <Card
-        sx={{
-          width: '100%',
-          '& .super-app-theme--header': {
-            backgroundColor: '#5e94ca',
-            color: 'white',
-          },
-        }}
-      >
-        <Table data={students} columns={columns} />
-      </Card>
+      {loading ? (
+        <Box sx={{ textAlign: 'center', pt: 3 }}>
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table data={students} columns={columns} />
+        </Card>
+      )}
     </Container>
   );
 }

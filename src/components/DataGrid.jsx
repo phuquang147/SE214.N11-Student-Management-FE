@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { DATA_GRID_DEFAULT_LOCALE_TEXT } from '~/utils/datagrid-default-locale-text';
@@ -7,6 +8,7 @@ export default function DataGridView({ columns, rows, ...other }) {
 
   return (
     <DataGrid
+      getRowId={() => faker.database.mongodbObjectId()}
       //Data
       rows={rows}
       columns={columns}

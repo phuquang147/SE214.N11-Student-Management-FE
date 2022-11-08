@@ -41,6 +41,7 @@ export default function Filters({ filters, onChangeFilter }) {
   } = methods;
 
   const onSubmit = async (values) => {
+    console.log(values);
     onChangeFilter(values);
   };
   return (
