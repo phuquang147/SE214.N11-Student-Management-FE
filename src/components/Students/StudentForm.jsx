@@ -13,10 +13,14 @@ import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 // constants
 import { genders, studentStatus } from '~/constants';
-
-const classes = ['12A1', '11A1', '10A1'];
+// redux
+import { useSelector } from 'react-redux';
+import { selectClasses } from '~/redux/infor';
 
 export default function StudentForm() {
+  const classes = useSelector(selectClasses);
+  const classesName = classes.map((_class) => _class.name);
+
   const StudentSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
     phone: Yup.string().required('Vui lòng nhập số điện thoại'),
@@ -29,7 +33,7 @@ export default function StudentForm() {
     email: '',
     phone: '',
     gender: genders[0],
-    birthdate: dayjs('2014-08-18T21:11:54'),
+    birthday: dayjs('2014-08-18T21:11:54'),
     address: '',
     status: studentStatus[0],
   };
@@ -46,6 +50,9 @@ export default function StudentForm() {
 
   const onSubmit = async (values) => {
     console.log(values);
+    const { class: className } = values;
+    const _class = classes.find((item) => item.name === className);
+    const classId = _class._id;
   };
 
   return (
@@ -59,7 +66,7 @@ export default function StudentForm() {
           <RHFAutocomplete
             name="class"
             label="Lớp"
-            options={classes}
+            options={classesName}
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
           />
@@ -84,7 +91,7 @@ export default function StudentForm() {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFDatePicker name="birthdate" label="Ngày sinh" />
+          <RHFDatePicker name="birthday" label="Ngày sinh" />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
