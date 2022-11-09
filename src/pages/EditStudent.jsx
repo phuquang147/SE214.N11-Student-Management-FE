@@ -1,12 +1,24 @@
 // material
 import { Card, Container, Stack, Typography } from '@mui/material';
-import { useParams } from 'react-router';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 // components
 import StudentForm from '~/components/Students/StudentForm';
+import { selectClasses } from '~/redux/infor';
 
 export default function EditStudent() {
-  const params = useParams();
-  console.log(params);
+  const location = useLocation();
+  const classes = useSelector(selectClasses);
+  const student = location.state;
+
+  const studentClass = classes.find((_class) => _class._id === student.className);
+  const studentClassName = studentClass.name;
+
+  const formattedStudent = {
+    ...student,
+    class: studentClassName,
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -16,7 +28,7 @@ export default function EditStudent() {
       </Stack>
 
       <Card sx={{ padding: 4 }}>
-        <StudentForm />
+        <StudentForm mode="edit" student={formattedStudent} />
       </Card>
     </Container>
   );

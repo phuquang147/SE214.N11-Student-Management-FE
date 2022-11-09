@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 // component
 import Iconify from '~/components/Iconify';
 
-export default function ActionsMenu() {
+export default function ActionsMenu({ student }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -26,7 +26,13 @@ export default function ActionsMenu() {
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <MenuItem component={RouterLink} to={`${location.pathname}/edit/abs`} sx={{ color: 'text.secondary' }}>
+        <MenuItem
+          component={React.forwardRef((props, ref) => {
+            return <RouterLink {...props} ref={ref} state={student} />;
+          })}
+          to={`${location.pathname}/edit/${student._id}`}
+          sx={{ color: 'text.secondary' }}
+        >
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} color="#339af0" />
           </ListItemIcon>

@@ -189,7 +189,10 @@ const columns = [
     hideable: false,
     filterable: false,
     renderCell: (params) => {
-      return <ActionsMenu />;
+      const { name, phone, address, className, email, gender, status, birthday, _id } = params.row;
+      const student = { name, phone, address, className, email, gender, status, birthday, _id };
+
+      return <ActionsMenu student={student} />;
     },
   },
 ];

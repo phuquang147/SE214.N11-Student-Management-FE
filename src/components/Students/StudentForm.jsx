@@ -16,10 +16,15 @@ import { genders, studentStatus } from '~/constants';
 // redux
 import { useSelector } from 'react-redux';
 import { selectClasses } from '~/redux/infor';
+import { createStudent, updateStudent } from '~/services/studentRequests';
+// router
+import { useParams } from 'react-router';
 
-export default function StudentForm() {
+export default function StudentForm({ mode, student }) {
   const classes = useSelector(selectClasses);
   const classesName = classes.map((_class) => _class.name);
+
+  const params = useParams();
 
   const StudentSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
@@ -29,13 +34,14 @@ export default function StudentForm() {
   });
 
   const defaultValues = {
-    name: '',
-    email: '',
-    phone: '',
-    gender: genders[0],
-    birthday: dayjs('2014-08-18T21:11:54'),
-    address: '',
-    status: studentStatus[0],
+    name: student.name,
+    email: student.email,
+    phone: student.phone,
+    gender: student.gender,
+    birthday: dayjs(student.birthday),
+    address: student.address,
+    status: student.status,
+    class: student.class,
   };
 
   const methods = useForm({
@@ -49,17 +55,33 @@ export default function StudentForm() {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
-    const { class: className } = values;
+    const { class: className, name, gender, birthday, address, email, phone, status } = values;
     const _class = classes.find((item) => item.name === className);
     const classId = _class._id;
+
+    const student = {
+      className: classId,
+      name,
+      gender,
+      address,
+      email,
+      phone,
+      status,
+      birthday: new Date(birthday).toISOString(),
+    };
+
+    if (mode === 'create') {
+      await createStudent(student);
+    } else {
+      await updateStudent(student, params.id);
+    }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="name" label="Họ và tên" />
+          <RHFTextField name="name" label="Họ và tên" text={mode === 'edit' ? student.name : ''} />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -69,15 +91,16 @@ export default function StudentForm() {
             options={classesName}
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
+            text={mode === 'edit' ? student.class : classesName[0]}
           />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="phone" label="Số điện thoại" />
+          <RHFTextField name="phone" label="Số điện thoại" text={mode === 'edit' ? student.phone : ''} />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="email" label="Email" />
+          <RHFTextField name="email" label="Email" text={mode === 'edit' ? student.email : ''} />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -87,15 +110,16 @@ export default function StudentForm() {
             options={genders}
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
+            text={mode === 'edit' ? student.gender : genders[0]}
           />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFDatePicker name="birthday" label="Ngày sinh" />
+          <RHFDatePicker name="birthday" label="Ngày sinh" text={mode === 'edit' && dayjs(student.birthday)} />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFTextField name="address" label="Địa chỉ" />
+          <RHFTextField name="address" label="Địa chỉ" text={mode === 'edit' ? student.address : ''} />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -105,13 +129,14 @@ export default function StudentForm() {
             options={studentStatus}
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
+            text={mode === 'edit' ? student.status : studentStatus[0]}
           />
         </Grid>
       </Grid>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
         <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
-          Tạo mới
+          {mode === 'create' ? 'Tạo mới' : 'Cập nhật'}
         </LoadingButton>
       </Stack>
     </FormProvider>

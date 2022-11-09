@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
 import { Autocomplete, TextField } from '@mui/material';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 RHFAutocomplete.propTypes = {
   name: PropTypes.string,
@@ -10,6 +12,11 @@ RHFAutocomplete.propTypes = {
 
 export default function RHFAutocomplete({ name, ...other }) {
   const { control } = useFormContext();
+  const [value, setValue] = useState(other.options[0] || other.text);
+
+  useEffect(() => {
+    setValue(other.text);
+  }, [other.text]);
 
   return (
     <Controller
@@ -19,13 +26,15 @@ export default function RHFAutocomplete({ name, ...other }) {
         return (
           <Autocomplete
             {...field}
-            value={field.value || other.options[0]}
+            value={value || other.options[0]}
+            defaultValue={value || other.text}
             fullWidth
             disableClearable
             onChange={(e, value) => {
+              setValue(value);
               field.onChange(value);
             }}
-            renderInput={(params) => <TextField {...params} label={other.label} value={field.value} />}
+            renderInput={(params) => <TextField {...params} label={other.label} />}
             {...other}
           />
         );

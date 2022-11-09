@@ -23,7 +23,7 @@ export default function RHFDatePicker({ name, ...other }) {
           <DesktopDatePicker
             {...field}
             inputFormat="DD/MM/YYYY"
-            value={field.value}
+            value={field.value || other.text}
             renderInput={(params) => <TextField {...params} fullWidth />}
             {...other}
           />

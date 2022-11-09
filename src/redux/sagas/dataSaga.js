@@ -10,8 +10,6 @@ function* getCommonData(action) {
 
     const { classes, subjects, role } = infor.data;
 
-    console.log(classes);
-
     yield put(inforActions.setCommonInforSuccess({ classes, subjects, role }));
   } catch (err) {
     console.log(err.message);

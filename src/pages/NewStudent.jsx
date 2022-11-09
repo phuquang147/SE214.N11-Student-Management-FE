@@ -13,7 +13,7 @@ export default function NewStudent() {
       </Stack>
 
       <Card sx={{ padding: 4 }}>
-        <StudentForm />
+        <StudentForm mode="create" />
       </Card>
     </Container>
   );
