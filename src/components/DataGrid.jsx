@@ -3,7 +3,7 @@ import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useState } from 'react';
 import { DATA_GRID_DEFAULT_LOCALE_TEXT } from '~/utils/datagrid-default-locale-text';
 
-export default function DataGridView({ columns, rows, ...other }) {
+export default function DataGridView({ columns, rows, sx, ...other }) {
   const [pageSize, setPageSize] = useState(10);
 
   return (
@@ -29,6 +29,7 @@ export default function DataGridView({ columns, rows, ...other }) {
         '&.MuiDataGrid-root .MuiDataGrid-cell:focus': {
           outline: 'none',
         },
+        ...sx,
       }}
       //Locale text
       localeText={DATA_GRID_DEFAULT_LOCALE_TEXT}
