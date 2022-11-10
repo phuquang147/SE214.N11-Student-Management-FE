@@ -34,14 +34,14 @@ export default function StudentForm({ mode, student }) {
   });
 
   const defaultValues = {
-    name: student.name,
-    email: student.email,
-    phone: student.phone,
-    gender: student.gender,
-    birthday: dayjs(student.birthday),
-    address: student.address,
-    status: student.status,
-    class: student.class,
+    name: (student && student.name) || '',
+    email: (student && student.email) || '',
+    phone: (student && student.phone) || '',
+    gender: (student && student.gender) || genders[0],
+    birthday: student ? dayjs(student.birthday) : dayjs('2007-01-01T21:11:54'),
+    address: (student && student.address) || '',
+    status: (student && student.status) || studentStatus[0],
+    class: (student && student.class) || classesName[0],
   };
 
   const methods = useForm({
