@@ -213,11 +213,14 @@ export default function Students() {
 
   const handleChangeFilter = async (values) => {
     const { class: className, schoolYear } = values;
-    console.log(values);
     const updatedStudents = [];
 
+    const formattedClassName = className !== undefined && className !== 'Mọi lớp' ? `name=${className}` : '';
+    const formattedSchoolYear =
+      schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
+
     setLoading(true);
-    const res = await request.get(`/classesByNameAndSchoolYear?className=${className}&schoolYear=${schoolYear}`, {
+    const res = await request.get(`/classesByNameAndSchoolYear?${formattedClassName}&${formattedSchoolYear}`, {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },

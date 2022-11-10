@@ -7,17 +7,22 @@ export const getAllStudents = async () => {
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
   });
-  console.log(res.data);
   return res.data;
 };
 
 export const createStudent = async (student) => {
-  const res = await request.post('/students', student, {
-    headers: {
-      Authorization: `Bearer ${Cookies.get('token')}`,
-    },
-  });
-  return res.data;
+  try {
+    const res = await request.post('/students', student, {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    });
+    console.log(res);
+    return res;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
 };
 
 export const updateStudent = async (student, studentId) => {
@@ -26,9 +31,7 @@ export const updateStudent = async (student, studentId) => {
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
   });
-  const data = res.data;
-  console.log(data);
-  return data;
+  return res;
 };
 
 export const deleteStudent = async (studentId) => {
@@ -37,7 +40,5 @@ export const deleteStudent = async (studentId) => {
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
   });
-  const data = res.data;
-  console.log(data);
-  return data;
+  return res;
 };

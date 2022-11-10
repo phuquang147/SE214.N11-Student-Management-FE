@@ -19,6 +19,7 @@ import { selectClasses } from '~/redux/infor';
 import { createStudent, updateStudent } from '~/services/studentRequests';
 // router
 import { useParams } from 'react-router';
+import { toast } from 'react-toastify';
 
 export default function StudentForm({ mode, student }) {
   const classes = useSelector(selectClasses);
@@ -71,9 +72,19 @@ export default function StudentForm({ mode, student }) {
     };
 
     if (mode === 'create') {
-      await createStudent(student);
+      const res = await createStudent(student);
+      if (res.status === 201) {
+        return toast.success(res.data.message);
+      }
+
+      toast.error(res.response.data.message);
     } else {
-      await updateStudent(student, params.id);
+      const res = await updateStudent(student, params.id);
+      if (res.status === 201) {
+        return toast.success(res.data.message);
+      }
+
+      toast.error('Có lỗi xảy ra, vui lòng thử lại');
     }
   };
 

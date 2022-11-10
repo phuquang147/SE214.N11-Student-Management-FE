@@ -1,4 +1,5 @@
 // import * as SagaActionTypes from '~/redux/constants/constantSaga';
+import { toast } from 'react-toastify';
 import { deleteStudent } from '~/services/studentRequests';
 import DataGridView from './DataGrid';
 
@@ -7,9 +8,14 @@ export default function Table({ data, columns, sx, onDelete, ...other }) {
 
   const handleDelete = async (studentId) => {
     const res = await deleteStudent(studentId);
-    console.log(res);
-    const updatedStudents = data.filter((element) => element._id !== studentId);
-    onDelete(updatedStudents);
+
+    if (res.status === 200) {
+      toast.success(res.data.message);
+      const updatedStudents = data.filter((element) => element._id !== studentId);
+      onDelete(updatedStudents);
+    } else {
+      toast.error('Có lỗi xảy ra, vui lòng thử lại');
+    }
   };
 
   const modifiedRows = data.map((element) => {

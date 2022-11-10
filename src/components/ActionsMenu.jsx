@@ -5,7 +5,7 @@ import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/mat
 // component
 import Iconify from '~/components/Iconify';
 
-export default function ActionsMenu({ student, onDelete }) {
+export default function ActionsMenu({ student = {}, onDelete }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
