@@ -10,7 +10,7 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 
-const grades = [10, 11, 12];
+const grades = ['10', '11', '12'];
 const teachers = ['Giáo viên 1', 'Giáo viên 2'];
 
 export default function ClassForm() {

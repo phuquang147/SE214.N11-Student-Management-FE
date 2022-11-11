@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import Filters from '~/components/Filters';
 import request from '~/services/request';
 import Cookies from 'js-cookie';
+import { getAllStudents } from '~/services/studentRequests';
 
 const columns = [
   {
@@ -192,7 +193,7 @@ const columns = [
       const { name, phone, address, className, email, gender, status, birthday, _id } = params.row;
       const student = { name, phone, address, className, email, gender, status, birthday, _id };
 
-      return <ActionsMenu student={student} />;
+      return <ActionsMenu student={student} onDelete={params.row.handleDelete} />;
     },
   },
 ];
@@ -203,22 +204,23 @@ export default function Students() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (classes.length > 0) {
-      const updatedStudents = [];
-
-      classes.forEach((_class) => {
-        updatedStudents.push(..._class.students);
-      });
-
-      setStudents(updatedStudents);
-    }
+    const getStudents = async () => {
+      const res = await getAllStudents();
+      setStudents(res.students);
+    };
+    getStudents();
   }, [classes]);
 
   const handleChangeFilter = async (values) => {
     const { class: className, schoolYear } = values;
     const updatedStudents = [];
 
-    const res = await request.get(`/classesByNameAndSchoolYear?className=${className}&schoolYear=${schoolYear}`, {
+    const formattedClassName = className !== undefined && className !== 'Mọi lớp' ? `name=${className}` : '';
+    const formattedSchoolYear =
+      schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
+
+    setLoading(true);
+    const res = await request.get(`/classesByNameAndSchoolYear?${formattedClassName}&${formattedSchoolYear}`, {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
@@ -230,6 +232,10 @@ export default function Students() {
 
     setStudents(updatedStudents);
     setLoading(false);
+  };
+
+  const handleDelete = (updatedStudents) => {
+    setStudents(updatedStudents);
   };
 
   return (
@@ -262,7 +268,7 @@ export default function Students() {
             },
           }}
         >
-          <Table data={students} columns={columns} />
+          <Table data={students} columns={columns} onDelete={handleDelete} />
         </Card>
       )}
     </Container>

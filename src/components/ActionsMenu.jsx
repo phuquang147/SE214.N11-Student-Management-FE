@@ -5,10 +5,14 @@ import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/mat
 // component
 import Iconify from '~/components/Iconify';
 
-export default function ActionsMenu({ student }) {
+export default function ActionsMenu({ student = {}, onDelete }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+
+  const handleDelete = async () => {
+    await onDelete();
+  };
 
   return (
     <>
@@ -39,7 +43,7 @@ export default function ActionsMenu({ student }) {
           <ListItemText primary="Chỉnh sửa" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
 
-        <MenuItem sx={{ color: 'text.secondary' }}>
+        <MenuItem sx={{ color: 'text.secondary' }} onClick={handleDelete}>
           <ListItemIcon>
             <Iconify icon="eva:trash-2-outline" width={24} height={24} color="#ff6b6b" />
           </ListItemIcon>

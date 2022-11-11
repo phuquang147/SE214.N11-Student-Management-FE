@@ -19,6 +19,7 @@ import { selectClasses } from '~/redux/infor';
 import { createStudent, updateStudent } from '~/services/studentRequests';
 // router
 import { useParams } from 'react-router';
+import { toast } from 'react-toastify';
 
 export default function StudentForm({ mode, student }) {
   const classes = useSelector(selectClasses);
@@ -34,14 +35,14 @@ export default function StudentForm({ mode, student }) {
   });
 
   const defaultValues = {
-    name: student.name,
-    email: student.email,
-    phone: student.phone,
-    gender: student.gender,
-    birthday: dayjs(student.birthday),
-    address: student.address,
-    status: student.status,
-    class: student.class,
+    name: (student && student.name) || '',
+    email: (student && student.email) || '',
+    phone: (student && student.phone) || '',
+    gender: (student && student.gender) || genders[0],
+    birthday: student ? dayjs(student.birthday) : dayjs('2007-01-01T21:11:54'),
+    address: (student && student.address) || '',
+    status: (student && student.status) || studentStatus[0],
+    class: (student && student.class) || classesName[0],
   };
 
   const methods = useForm({
@@ -71,9 +72,19 @@ export default function StudentForm({ mode, student }) {
     };
 
     if (mode === 'create') {
-      await createStudent(student);
+      const res = await createStudent(student);
+      if (res.status === 201) {
+        return toast.success(res.data.message);
+      }
+
+      toast.error(res.response.data.message);
     } else {
-      await updateStudent(student, params.id);
+      const res = await updateStudent(student, params.id);
+      if (res.status === 201) {
+        return toast.success(res.data.message);
+      }
+
+      toast.error('Có lỗi xảy ra, vui lòng thử lại');
     }
   };
 

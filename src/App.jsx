@@ -5,6 +5,8 @@ import Cookies from 'js-cookie';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { inforActions } from '~/redux/infor';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -41,6 +43,7 @@ export default function App() {
       <ScrollToTop />
       <Routes />
       {/* <BaseOptionChartStyle /> */}
+      <ToastContainer position="top-right" autoClose={3000} theme="dark" />
     </>
   );
 }
