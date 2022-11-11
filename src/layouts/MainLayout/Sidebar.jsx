@@ -1,20 +1,19 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { selectRole } from '~/redux/infor';
 // material
 import { Avatar, Box, Drawer, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-// mock
-import account from '~/_mock/account';
 // hooks
 import useResponsive from '~/hooks/useResponsive';
 // components
 import Logo from '~/components/Logo';
-import NavSection from '~/layouts/MainLayout/NavSection';
 import Scrollbar from '~/components/Scrollbar';
+import NavSection from '~/layouts/MainLayout/NavSection';
 //
 import navConfig from './NavConfig';
-
 const DRAWER_WIDTH = 280;
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -39,6 +38,7 @@ Sidebar.propTypes = {
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
+  const role = useSelector(selectRole);
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -63,13 +63,16 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar
+              src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
+              alt="photoURL"
+            />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                Quang dep trai
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {role}
               </Typography>
             </Box>
           </AccountStyle>

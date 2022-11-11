@@ -4,8 +4,6 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
 // components
 import MenuPopover from '~/HOC/MenuPopover';
-// mocks_
-import account from '~/_mock/account';
 // cookies
 import Cookies from 'js-cookie';
 
@@ -57,7 +55,10 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar
+          src="https://e7.pngegg.com/pngimages/799/987/png-clipart-computer-icons-avatar-icon-design-avatar-heroes-computer-wallpaper-thumbnail.png"
+          alt="photoURL"
+        />
       </IconButton>
 
       <MenuPopover
@@ -76,10 +77,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            Quang dep trai
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            phuquang@gmail.com
           </Typography>
         </Box>
 
