@@ -1,4 +1,3 @@
-// import * as SagaActionTypes from '~/redux/constants/constantSaga';
 import { toast } from 'react-toastify';
 import { deleteStudent } from '~/services/studentRequests';
 import DataGridView from './DataGrid';

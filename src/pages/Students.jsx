@@ -1,21 +1,20 @@
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
 // components
-import ActionsMenu from '~/components/ActionsMenu';
-import Iconify from '~/components/Iconify';
-import Table from '~/components/Table';
-// filters
-import { studentFilters } from '~/constants/filters';
-// import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { selectClasses } from '~/redux/infor';
-import { useState } from 'react';
-import { useEffect } from 'react';
 import Filters from '~/components/Filters';
+import Iconify from '~/components/Iconify';
+// constants
+import { studentFilters } from '~/constants/filters';
+// services
+import ActionsMenu from '~/components/ActionsMenu';
+import { selectClasses } from '~/redux/infor';
 import request from '~/services/request';
-import Cookies from 'js-cookie';
 import { getAllStudents } from '~/services/studentRequests';
+import Table from '~/components/Table';
 
 const columns = [
   {
@@ -229,7 +228,6 @@ export default function Students() {
     classes.forEach((_class) => {
       updatedStudents.push(..._class.students);
     });
-
     setStudents(updatedStudents);
     setLoading(false);
   };
