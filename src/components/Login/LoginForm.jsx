@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { IconButton, InputAdornment, Stack } from '@mui/material';
+import { IconButton, InputAdornment, Stack, Typography } from '@mui/material';
 // components
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
@@ -78,8 +78,15 @@ export default function LoginForm() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="end" sx={{ my: 2 }}>
-        <Link to="/forgot-password">Quên mật khẩu?</Link>
+      <Stack direction="row" alignItems="center" justifyContent="end" sx={{ my: 2, textDecoration: 'none' }}>
+        <Typography
+          component={Link}
+          to="/forgot-password"
+          color="primary"
+          sx={{ textDecoration: 'none !important', fontWeight: 600, fontSize: '14px' }}
+        >
+          Quên mật khẩu?
+        </Typography>
       </Stack>
 
       <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
