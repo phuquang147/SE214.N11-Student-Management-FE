@@ -60,8 +60,7 @@ export default function Filters({ filters, onChangeFilter }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    const newValues = _.mapValues(values, (value) => value.value);
-    onChangeFilter(newValues);
+    onChangeFilter(values);
   };
 
   const handleChangeSchoolYear = (newSchoolYear) => {

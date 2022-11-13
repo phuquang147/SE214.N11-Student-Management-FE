@@ -11,10 +11,10 @@ import Iconify from '~/components/Iconify';
 import { studentFilters } from '~/constants/filters';
 // services
 import ActionsMenu from '~/components/ActionsMenu';
+import Table from '~/components/Table';
 import { selectClasses } from '~/redux/infor';
 import request from '~/services/request';
 import { getAllStudents } from '~/services/studentRequests';
-import Table from '~/components/Table';
 
 const columns = [
   {
@@ -211,15 +211,15 @@ export default function Students() {
   }, [classes]);
 
   const handleChangeFilter = async (values) => {
-    const { class: className, schoolYear } = values;
+    const { class: _class, schoolYear } = values;
     const updatedStudents = [];
 
-    const formattedClassName = className !== undefined && className !== 'Mọi lớp' ? `name=${className}` : '';
+    const formattedClassName = _class.value !== undefined && _class.value !== 'Tất cả' ? `name=${_class.name}` : '';
     const formattedSchoolYear =
-      schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
+      schoolYear !== undefined && schoolYear.value !== 'Tất cả' ? `schoolYear=${schoolYear.value}` : '';
 
     setLoading(true);
-    const res = await request.get(`/classesByNameAndSchoolYear?${formattedClassName}&${formattedSchoolYear}`, {
+    const res = await request.get(`/classes?${formattedClassName}&${formattedSchoolYear}`, {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },

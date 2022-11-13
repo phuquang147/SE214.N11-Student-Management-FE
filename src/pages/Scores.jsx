@@ -76,10 +76,15 @@ export default function Scores() {
 
   const handleChangeFilter = async (values) => {
     setLoading(true);
-    const { class: classId, schoolYear, semester, subject } = values;
+    const { class: _class, schoolYear, semester, subject } = values;
 
     try {
-      const { data, status } = await scoresRequest.getScores({ classId, subject, semester, schoolYear });
+      const { data, status } = await scoresRequest.getScores({
+        classId: _class.value,
+        subject: subject.value,
+        semester: semester.value,
+        schoolYear: schoolYear.value,
+      });
       if (status === 200) {
         const { classScore } = data;
         setClassScore(classScore);
