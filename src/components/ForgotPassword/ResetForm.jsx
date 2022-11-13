@@ -1,4 +1,6 @@
+import Cookies from 'js-cookie';
 import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,10 +12,8 @@ import { IconButton, InputAdornment, Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import Iconify from '~/components/Iconify';
-import request from '~/services/request';
-import { useNavigate, useParams } from 'react-router';
 // services
-import Cookies from 'js-cookie';
+import * as authServices from '~/services/authRequest';
 
 export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,11 +43,12 @@ export default function ResetForm() {
     const { password } = getValues();
     const accountId = Cookies.get('accountId');
 
-    const res = await request.post('/auth/change-password', {
+    const res = await authServices.changePassword({
       password,
       passwordToken: token,
       accountId,
     });
+
     if (res.status === 201) {
       navigate('/login');
     }
