@@ -24,8 +24,13 @@ const inforSlice = createSlice({
       state.status = 'idle';
       state.semesters = _.map(semesters, (semester) => ({ label: semester.name, value: semester._id }));
       state.subjects = _.map(subjects, (subject) => ({ label: subject.name, value: subject._id }));
-      state.classes = _.map(classes, (_class) => ({ label: _class.name, value: _class._id }));
-      state.groupedClasses = _.mapValues(_.groupBy(classes, 'schoolYear'));
+      state.classes = _.map(classes, (_class) => ({
+        label: `${_class.name} - ${_class.schoolYear}`,
+        value: _class._id,
+      }));
+      state.groupedClasses = _.mapValues(_.groupBy(classes, 'schoolYear'.toString()), (classes) => {
+        return _.map(classes, (_class) => ({ label: _class.name, value: _class._id }));
+      });
       state.schoolYears = _.map(_.keys(state.groupedClasses), (schoolYear) => ({
         label: schoolYear,
         value: schoolYear,

@@ -1,6 +1,6 @@
 import { Card } from '@mui/material';
 import Table from '~/components/Table';
-import scores from '~/_mock/scores';
+import { convertArrayToObjectKeys } from '~/utils/convert-scores';
 
 export const commonConfig = {
   headerClassName: 'header',
@@ -145,7 +145,7 @@ export const columnGroupingModel = [
   },
 ];
 
-export default function ScoresTable({ processRowUpdate }) {
+export default function ScoresTable({ studentScores, processRowUpdate }) {
   return (
     <Card
       sx={{
@@ -174,7 +174,7 @@ export default function ScoresTable({ processRowUpdate }) {
       }}
     >
       <Table
-        data={scores}
+        data={convertArrayToObjectKeys(studentScores)}
         columns={columns(false)}
         processRowUpdate={processRowUpdate}
         experimentalFeatures={{ newEditingApi: true, columnGrouping: true }}

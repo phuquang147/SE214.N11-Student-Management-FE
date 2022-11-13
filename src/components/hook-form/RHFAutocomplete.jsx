@@ -1,40 +1,28 @@
-import PropTypes from 'prop-types';
 // form
 import { Controller, useFormContext } from 'react-hook-form';
 // @mui
 import { Autocomplete, TextField } from '@mui/material';
-import { useState } from 'react';
-import { useEffect } from 'react';
 
-RHFAutocomplete.propTypes = {
-  name: PropTypes.string,
-};
-
-export default function RHFAutocomplete({ name, ...other }) {
-  const { control } = useFormContext();
-  const [value, setValue] = useState(other.options[0] || other.text);
-
-  useEffect(() => {
-    setValue(other.text);
-  }, [other.text]);
+export default function RHFAutocomplete({ name, label, handleChange, ...other }) {
+  const { control, setValue } = useFormContext();
 
   return (
     <Controller
       name={name}
       control={control}
+      defaultValue={other.options.length > 0 ? other.options[0] : null}
       render={({ field }) => {
         return (
           <Autocomplete
             {...field}
-            value={value || other.options[0]}
-            defaultValue={value || other.text}
+            value={field.value}
             fullWidth
             disableClearable
             onChange={(e, value) => {
-              setValue(value);
-              field.onChange(value);
+              setValue(name, value);
+              if (handleChange) handleChange(value);
             }}
-            renderInput={(params) => <TextField {...params} label={other.label} />}
+            renderInput={(params) => <TextField {...params} label={label} />}
             {...other}
           />
         );
