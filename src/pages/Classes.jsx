@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
 // components
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
@@ -8,8 +8,13 @@ import Table from '~/components/Table';
 // filters
 import { classFilters } from '~/constants/filters';
 // mock
-import classes from '~/_mock/classes';
-import Filters from '~/components/Classes/Filters';
+import Filters from '~/components/Filters';
+import { useSelector } from 'react-redux';
+import { selectClasses, selectGrades } from '~/redux/infor';
+import Cookies from 'js-cookie';
+import request from '~/services/request';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const columns = [
   {
@@ -24,7 +29,7 @@ const columns = [
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
           <Typography variant="subtitle2" noWrap>
-            {row.className}
+            {row.name}
           </Typography>
         </Stack>
       );
@@ -41,7 +46,7 @@ const columns = [
       const { row } = params;
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Typography noWrap>{row.id.slice(0, 8).toUpperCase()}</Typography>
+          <Typography noWrap>{row._id.slice(0, 8).toUpperCase()}</Typography>
         </Stack>
       );
     },
@@ -70,7 +75,7 @@ const columns = [
 
       return (
         <Chip
-          label={row.grade}
+          label={row.grade.name}
           color="success"
           sx={{
             bgcolor: bgColor,
@@ -98,6 +103,14 @@ const columns = [
     headerAlign: 'center',
     align: 'center',
     minWidth: 200,
+    renderCell: (params) => {
+      const { row } = params;
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography noWrap>{row.students.length}</Typography>
+        </Stack>
+      );
+    },
   },
   {
     field: 'teacher',
@@ -106,6 +119,14 @@ const columns = [
     headerAlign: 'center',
     align: 'center',
     minWidth: 200,
+    renderCell: (params) => {
+      const { row } = params;
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography noWrap>{row.teacher.name}</Typography>
+        </Stack>
+      );
+    },
   },
   {
     field: 'Tùy chỉnh',
@@ -122,6 +143,36 @@ const columns = [
 ];
 
 function Classes() {
+  const classes = useSelector(selectClasses);
+  const [selectedClasses, setSelectedClasses] = useState(classes);
+  const [loading, setLoading] = useState(false);
+  const grades = useSelector(selectGrades);
+
+  useEffect(() => {
+    setSelectedClasses(classes);
+  }, [classes]);
+
+  const handleChangeFilter = async (values) => {
+    const { grade, schoolYear } = values;
+    const selectedGrade = grades.find((grade) => grade.name === +values.grade);
+
+    const formattedGrade = grade !== undefined && grade !== 'Mọi khối' ? `grade=${selectedGrade._id}` : '';
+    const formattedSchoolYear =
+      schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
+
+    setLoading(true);
+    const res = await request.get(`/classes?${formattedGrade}&${formattedSchoolYear}`, {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    });
+    if (res.status === 200) {
+      const { classes } = res.data;
+      setLoading(false);
+      setSelectedClasses(classes);
+    }
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
@@ -136,19 +187,25 @@ function Classes() {
         </Button>
       </Stack>
 
-      <Filters filters={classFilters} />
+      <Filters filters={classFilters} onChangeFilter={handleChangeFilter} />
 
-      <Card
-        sx={{
-          width: '100%',
-          '& .super-app-theme--header': {
-            backgroundColor: '#5e94ca',
-            color: 'white',
-          },
-        }}
-      >
-        <Table data={classes} columns={columns} />
-      </Card>
+      {loading ? (
+        <Box sx={{ textAlign: 'center', pt: 3 }}>
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table data={selectedClasses} columns={columns} />
+        </Card>
+      )}
     </Container>
   );
 }

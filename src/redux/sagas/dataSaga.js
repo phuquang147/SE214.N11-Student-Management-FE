@@ -8,9 +8,9 @@ function* getCommonData(action) {
       return request.get(url);
     }, '/data');
 
-    const { classes, subjects, role } = infor.data;
+    const { classes, subjects, role, grades } = infor.data;
 
-    yield put(inforActions.setCommonInforSuccess({ classes, subjects, role }));
+    yield put(inforActions.setCommonInforSuccess({ classes, subjects, role, grades }));
   } catch (err) {
     console.log(err.message);
     yield put(inforActions.setCommonInforFailed());

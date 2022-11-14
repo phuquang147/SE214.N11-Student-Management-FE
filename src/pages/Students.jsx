@@ -220,7 +220,7 @@ export default function Students() {
       schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
 
     setLoading(true);
-    const res = await request.get(`/classesByNameAndSchoolYear?${formattedClassName}&${formattedSchoolYear}`, {
+    const res = await request.get(`/classes?${formattedClassName}&${formattedSchoolYear}`, {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },

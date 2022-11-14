@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { inforActions } from '~/redux/infor';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import request from './services/request';
 
 export default function App() {
   const dispatch = useDispatch();
@@ -18,17 +19,15 @@ export default function App() {
           return;
         }
 
-        const res = await fetch('https://studentapp-be.herokuapp.com/data', {
+        const res = await request.get('https://studentapp-be.herokuapp.com/data', {
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${Cookies.get('token')}`,
           },
         });
-        const data = await res.json();
-        const { classes, subjects, role } = data;
+        const { classes, subjects, role, grades } = res.data;
 
         if (res.status === 200) {
-          dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role }));
+          dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role, grades }));
         }
       } catch (err) {
         console.log(err.message);
