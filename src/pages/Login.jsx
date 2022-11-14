@@ -10,7 +10,7 @@ import Logo from '~/components/Logo';
 // sections
 import LoginForm from '~/components/Login/LoginForm';
 // img
-import illustrationLoginImg from '~/assets/images/illustration_login.png';
+import illustrationLoginImg from '~/assets/images/school.jpg';
 import Cookies from 'js-cookie';
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {

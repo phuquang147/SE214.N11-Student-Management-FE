@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,8 +10,7 @@ import { Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 // services
-import request from '~/services/request';
-import Cookies from 'js-cookie';
+import * as authServices from '~/services/authRequest';
 
 export default function EmailForm() {
   const LoginSchema = Yup.object().shape({
@@ -34,9 +34,7 @@ export default function EmailForm() {
 
   const onSubmit = async () => {
     const { email } = getValues();
-    const res = await request.post('/auth/reset-password', {
-      email,
-    });
+    const res = await authServices.resetPassword({ email });
 
     Cookies.set('accountId', res.data.accountId);
   };

@@ -1,20 +1,19 @@
+import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 // material
 import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
 // components
-import ActionsMenu from '~/components/ActionsMenu';
-import Iconify from '~/components/Iconify';
-import Table from '~/components/Table';
-// filters
-import { studentFilters } from '~/constants/filters';
-// import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { selectClasses } from '~/redux/infor';
-import { useState } from 'react';
-import { useEffect } from 'react';
 import Filters from '~/components/Filters';
+import Iconify from '~/components/Iconify';
+// constants
+import { studentFilters } from '~/constants/filters';
+// services
+import ActionsMenu from '~/components/ActionsMenu';
+import Table from '~/components/Table';
+import { selectClasses } from '~/redux/infor';
 import request from '~/services/request';
-import Cookies from 'js-cookie';
 import { getAllStudents } from '~/services/studentRequests';
 
 const columns = [
@@ -212,12 +211,12 @@ export default function Students() {
   }, [classes]);
 
   const handleChangeFilter = async (values) => {
-    const { class: className, schoolYear } = values;
+    const { class: _class, schoolYear } = values;
     const updatedStudents = [];
 
-    const formattedClassName = className !== undefined && className !== 'Mọi lớp' ? `name=${className}` : '';
+    const formattedClassName = _class.value !== undefined && _class.value !== 'Tất cả' ? `name=${_class.name}` : '';
     const formattedSchoolYear =
-      schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
+      schoolYear !== undefined && schoolYear.value !== 'Tất cả' ? `schoolYear=${schoolYear.value}` : '';
 
     setLoading(true);
     const res = await request.get(`/classes?${formattedClassName}&${formattedSchoolYear}`, {
@@ -229,7 +228,6 @@ export default function Students() {
     classes.forEach((_class) => {
       updatedStudents.push(..._class.students);
     });
-
     setStudents(updatedStudents);
     setLoading(false);
   };

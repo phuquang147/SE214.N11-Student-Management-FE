@@ -1,13 +1,14 @@
 import createSagaMiddleware from '@redux-saga/core';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-
-import inforReducer from './infor';
+//
+import infor from './infor';
+//
 import rootSaga from './sagas/rootSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = combineReducers({
-  infor: inforReducer,
+  infor,
 });
 
 export const store = configureStore({
