@@ -1,6 +1,5 @@
 // @mui
 import { Container, Typography } from '@mui/material';
-import request from '~/services/request';
 
 export default function Dashboard() {
   return (
