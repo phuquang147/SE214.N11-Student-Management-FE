@@ -58,7 +58,8 @@ export default function StudentForm({ mode, student }) {
   const onSubmit = async (values) => {
     const { class: className, name, gender, birthday, address, email, phone, status } = values;
     const _class = classes.find((item) => item.name === className);
-    const classId = _class._id;
+    const classId = _class.value;
+    console.log(classId);
 
     const student = {
       className: classId,

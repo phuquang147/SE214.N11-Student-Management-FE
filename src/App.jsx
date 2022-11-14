@@ -21,9 +21,10 @@ export default function App() {
       if (token) {
         try {
           const { data, status } = await commonDataRequest.getCommonData();
-          const { classes, subjects, role, semesters } = data;
+          const { classes, subjects, role, semesters, grades } = data;
+          console.log(data);
           if (status === 200) {
-            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role, semesters }));
+            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role, semesters, grades }));
           }
         } catch (err) {
           toast.error('Đã xảy ra lỗi! Vui lòng tải lại trang');

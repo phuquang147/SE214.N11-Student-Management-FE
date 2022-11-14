@@ -11,7 +11,8 @@ export default function EditStudent() {
   const classes = useSelector(selectClasses);
   const student = location.state;
 
-  const studentClass = classes.find((_class) => _class._id === student.className._id);
+  console.log(classes, student);
+  const studentClass = classes.find((_class) => _class.value === student.className._id);
   const studentClassName = studentClass.name;
 
   const formattedStudent = {
