@@ -17,6 +17,11 @@ export const classFilters = [
     label: 'Năm học',
     options: [{ label: 'Tất cả', value: 'Tất cả' }],
   },
+  {
+    name: 'grade',
+    label: 'Khối',
+    options: [{ label: 'Tất cả', value: 'Tất cả' }],
+  },
 ];
 
 export const scoreFilters = [

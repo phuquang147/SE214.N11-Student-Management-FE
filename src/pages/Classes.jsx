@@ -9,16 +9,15 @@ import Table from '~/components/Table';
 import { classFilters } from '~/constants/filters';
 // mock
 import Filters from '~/components/Filters';
-import { useSelector } from 'react-redux';
-import { selectClasses, selectGrades } from '~/redux/infor';
 import Cookies from 'js-cookie';
 import request from '~/services/request';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { getClasses } from '~/services/classRequest';
 
 const columns = [
   {
-    field: 'className',
+    field: 'name',
     headerName: 'Tên lớp',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -113,7 +112,7 @@ const columns = [
     },
   },
   {
-    field: 'teacher',
+    field: 'teacher[name]',
     headerName: 'Giáo viên chủ nhiệm',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -143,22 +142,30 @@ const columns = [
 ];
 
 function Classes() {
-  const classes = useSelector(selectClasses);
-  const [selectedClasses, setSelectedClasses] = useState(classes);
+  const [selectedClasses, setSelectedClasses] = useState([]);
   const [loading, setLoading] = useState(false);
-  const grades = useSelector(selectGrades);
 
   useEffect(() => {
-    setSelectedClasses(classes);
-  }, [classes]);
+    const getAllClasses = async () => {
+      setLoading(true);
+      const res = await getClasses();
+      const { data, status } = res;
+
+      if (status === 200) {
+        setSelectedClasses(data.classes);
+        setLoading(false);
+      }
+    };
+
+    getAllClasses();
+  }, []);
 
   const handleChangeFilter = async (values) => {
     const { grade, schoolYear } = values;
-    const selectedGrade = grades.find((grade) => grade.name === +values.grade);
 
-    const formattedGrade = grade !== undefined && grade !== 'Mọi khối' ? `grade=${selectedGrade._id}` : '';
+    const formattedGrade = grade.label !== undefined && grade.label !== 'Tất cả' ? `grade=${grade.value}` : '';
     const formattedSchoolYear =
-      schoolYear !== undefined && schoolYear !== 'Mọi năm học' ? `schoolYear=${schoolYear}` : '';
+      schoolYear.value !== undefined && schoolYear.value !== 'Tất cả' ? `schoolYear=${schoolYear.value}` : '';
 
     setLoading(true);
     const res = await request.get(`/classes?${formattedGrade}&${formattedSchoolYear}`, {

@@ -8,7 +8,7 @@ export default function NewClass() {
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4" gutterBottom>
-          Tạo mới lớp
+          Thêm lớp học
         </Typography>
       </Stack>
 

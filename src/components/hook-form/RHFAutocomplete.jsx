@@ -20,6 +20,9 @@ export default function RHFAutocomplete({ name, label, handleChange, ...other })
             disableClearable
             onChange={(e, value) => {
               setValue(name, value);
+              if (typeof value === 'object') {
+                console.log(value);
+              }
               if (handleChange) handleChange(value);
             }}
             renderInput={(params) => <TextField {...params} label={label} />}

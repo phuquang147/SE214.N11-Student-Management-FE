@@ -9,25 +9,34 @@ import { Grid, Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFTextField from '~/components/hook-form/RHFTextField';
+import { useSelector } from 'react-redux';
+import { selectGrades } from '~/redux/infor';
 
-const grades = ['10', '11', '12'];
-const teachers = ['Giáo viên 1', 'Giáo viên 2'];
+// const grades = [
+//   {
+//     name: 'grade',
+//     label: '10',
+//     value: 'aaa',
+//   },
+// ];
+
+// const teachers = ['Giáo viên 1'];
 
 export default function ClassForm() {
-  const StudentSchema = Yup.object().shape({
-    name: Yup.string().required('Vui lòng nhập họ và tên'),
-    grade: Yup.string().required('Vui lòng nhập số điện thoại'),
-    teacher: Yup.string().required('Vui lòng nhập email'),
+  const grades = useSelector(selectGrades);
+
+  const ClassSchema = Yup.object().shape({
+    name: Yup.string().required('Vui lòng nhập tên lớp'),
   });
 
   const defaultValues = {
     name: '',
-    grade: '',
-    teacher: '',
+    grade: grades[0],
+    // teacher: teachers[0],
   };
 
   const methods = useForm({
-    resolver: yupResolver(StudentSchema),
+    resolver: yupResolver(ClassSchema),
     defaultValues,
   });
 
@@ -38,6 +47,8 @@ export default function ClassForm() {
 
   const onSubmit = async (values) => {
     console.log(values);
+    const { name, grade } = values;
+    const gradeId = grade.value;
   };
 
   return (
@@ -52,12 +63,12 @@ export default function ClassForm() {
             name="grade"
             label="Khối"
             options={grades}
-            getOptionLabel={(option) => option}
-            isOptionEqualToValue={(option, value) => option === value}
+            getOptionLabel={(option) => option.label || '10'}
+            isOptionEqualToValue={(option, value) => option.value === value.value}
           />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
+        {/* <Grid item xs={12} sm={6} md={4}>
           <RHFAutocomplete
             name="teacher"
             label="Giáo viên"
@@ -65,7 +76,7 @@ export default function ClassForm() {
             getOptionLabel={(option) => option}
             isOptionEqualToValue={(option, value) => option === value}
           />
-        </Grid>
+        </Grid> */}
       </Grid>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>

@@ -22,7 +22,6 @@ export default function App() {
         try {
           const { data, status } = await commonDataRequest.getCommonData();
           const { classes, subjects, role, semesters, grades } = data;
-          console.log(data);
           if (status === 200) {
             dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role, semesters, grades }));
           }

@@ -37,7 +37,7 @@ const inforSlice = createSlice({
         label: schoolYear,
         value: schoolYear,
       }));
-      state.grades = grades;
+      state.grades = _.map(grades, (grade) => ({ label: grade.name.toString(), value: grade._id }));
     },
     setCommonInforFailed(state) {
       state.status = 'failed';

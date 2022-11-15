@@ -1,23 +1,16 @@
 // material
 import { Card, Container, Stack, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
 // components
 import StudentForm from '~/components/Students/StudentForm';
-import { selectClasses } from '~/redux/infor';
 
 export default function EditStudent() {
   const location = useLocation();
-  const classes = useSelector(selectClasses);
   const student = location.state;
-
-  console.log(classes, student);
-  const studentClass = classes.find((_class) => _class.value === student.className._id);
-  const studentClassName = studentClass.name;
 
   const formattedStudent = {
     ...student,
-    class: studentClassName,
+    class: student.className.name,
   };
 
   return (

@@ -10,7 +10,14 @@ import { useForm } from 'react-hook-form';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 // redux
-import { selectClasses, selectGroupedClasses, selectSchoolYears, selectSemesters, selectSubjects } from '~/redux/infor';
+import {
+  selectClasses,
+  selectGrades,
+  selectGroupedClasses,
+  selectSchoolYears,
+  selectSemesters,
+  selectSubjects,
+} from '~/redux/infor';
 
 const _ = require('lodash');
 
@@ -22,6 +29,7 @@ export default function Filters({ filters, onChangeFilter }) {
   const classes = useSelector(selectClasses);
   const semesters = useSelector(selectSemesters);
   const groupedClasses = useSelector(selectGroupedClasses);
+  const grades = useSelector(selectGrades);
 
   const formatedFilters = _.mapValues(_.keyBy(filters, 'name'), (filter) => {
     if (filter.name === 'class' && filter.options.length <= 1) {
@@ -38,6 +46,10 @@ export default function Filters({ filters, onChangeFilter }) {
 
     if (filter.name === 'semester' && filter.options.length <= 1) {
       filter.options.push(...semesters);
+    }
+
+    if (filter.name === 'grade' && filter.options.length <= 1) {
+      filter.options.push(...grades);
     }
 
     return filter;
@@ -65,8 +77,11 @@ export default function Filters({ filters, onChangeFilter }) {
 
   const handleChangeSchoolYear = (newSchoolYear) => {
     if (newSchoolYear.value === 'Tất cả') {
-      setClassOptions(formatedFilters.class.options);
-      if (classes.length > 0) setValue('class', formatedFilters.class.options[0]);
+      if (formatedFilters.class) {
+        setClassOptions(formatedFilters.class.options);
+        if (classes.length > 0) setValue('class', formatedFilters.class.options[0]);
+        return;
+      }
     } else {
       setClassOptions(groupedClasses[newSchoolYear.value]);
       if (groupedClasses[newSchoolYear.value].length > 0) setValue('class', groupedClasses[newSchoolYear.value][0]);
@@ -84,6 +99,10 @@ export default function Filters({ filters, onChangeFilter }) {
 
     if (formatedFilters.subject && formatedFilters.subject.options.length > 0 && !getValues().subject) {
       setValue('subject', formatedFilters.subject.options[0]);
+    }
+
+    if (formatedFilters.grade && formatedFilters.grade.options.length > 0 && !getValues().grade) {
+      setValue('grade', formatedFilters.grade.options[0]);
     }
 
     if (formatedFilters.class && formatedFilters.class.options.length > 0 && !getValues().class) {
@@ -105,18 +124,21 @@ export default function Filters({ filters, onChangeFilter }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           {formatedFilters &&
-            Object.keys(formatedFilters).map((key, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <RHFAutocomplete
-                  name={key}
-                  label={formatedFilters[key].label}
-                  options={key === 'class' ? classOptions : formatedFilters[key].options}
-                  handleChange={key === 'schoolYear' ? handleChangeSchoolYear : null}
-                  getOptionLabel={(option) => option.label}
-                  isOptionEqualToValue={(option, value) => option.value === value.value}
-                />
-              </Grid>
-            ))}
+            Object.keys(formatedFilters).map((key, index) => {
+              console.log(formatedFilters[key].options);
+              return (
+                <Grid item xs={12} sm={6} md={4} key={index}>
+                  <RHFAutocomplete
+                    name={key}
+                    label={formatedFilters[key].label}
+                    options={key === 'class' ? classOptions : formatedFilters[key].options}
+                    handleChange={key === 'schoolYear' ? handleChangeSchoolYear : null}
+                    getOptionLabel={(option) => option.label}
+                    isOptionEqualToValue={(option, value) => option.value === value.value}
+                  />
+                </Grid>
+              );
+            })}
           <Grid item xs={12} sm={6} md={4}>
             <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ py: 2, px: 4 }}>
               Tìm kiếm
