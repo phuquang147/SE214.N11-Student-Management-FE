@@ -14,7 +14,8 @@ import ActionsMenu from '~/components/ActionsMenu';
 import Table from '~/components/Table';
 import { selectClasses } from '~/redux/infor';
 import request from '~/services/request';
-import { getAllStudents } from '~/services/studentRequests';
+import { deleteStudent, getAllStudents } from '~/services/studentRequests';
+import { toast } from 'react-toastify';
 
 const columns = [
   {
@@ -190,9 +191,20 @@ const columns = [
     filterable: false,
     renderCell: (params) => {
       const { name, phone, address, className, email, gender, status, birthday, _id } = params.row;
-      const student = { name, phone, address, className, email, gender, status, birthday, _id };
+      const student = {
+        name,
+        phone,
+        address,
+        className,
+        email,
+        gender,
+        status,
+        birthday,
+        _id,
+        schoolYear: params.row.className.schoolYear,
+      };
 
-      return <ActionsMenu student={student} onDelete={params.row.handleDelete} />;
+      return <ActionsMenu object={student} onDelete={params.row.handleDelete} />;
     },
   },
 ];
@@ -232,8 +244,16 @@ export default function Students() {
     setLoading(false);
   };
 
-  const handleDelete = (updatedStudents) => {
-    setStudents(updatedStudents);
+  const handleDelete = async (studentId) => {
+    const res = await deleteStudent(studentId);
+
+    if (res.status === 200) {
+      toast.success(res.data.message);
+      const updatedStudents = students.filter((element) => element._id !== studentId);
+      setStudents(updatedStudents);
+    } else {
+      toast.error('Có lỗi xảy ra, vui lòng thử lại');
+    }
   };
 
   return (

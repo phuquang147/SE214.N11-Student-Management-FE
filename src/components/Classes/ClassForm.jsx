@@ -11,18 +11,14 @@ import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import { useSelector } from 'react-redux';
 import { selectGrades } from '~/redux/infor';
+import { useEffect } from 'react';
+import { getAvailableTeacher } from '~/services/teacherRequest';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { createClass, updateClass } from '~/services/classRequest';
 
-// const grades = [
-//   {
-//     name: 'grade',
-//     label: '10',
-//     value: 'aaa',
-//   },
-// ];
-
-// const teachers = ['Giáo viên 1'];
-
-export default function ClassForm() {
+export default function ClassForm({ mode, _class }) {
+  const [availableTeacher, setAvailableTeacher] = useState([]);
   const grades = useSelector(selectGrades);
 
   const ClassSchema = Yup.object().shape({
@@ -30,9 +26,9 @@ export default function ClassForm() {
   });
 
   const defaultValues = {
-    name: '',
-    grade: grades[0],
-    // teacher: teachers[0],
+    name: (_class && _class.name) || '',
+    grade: (_class && _class.grade) || grades[0],
+    teacher: (_class && _class.teacher) || availableTeacher[0],
   };
 
   const methods = useForm({
@@ -47,9 +43,67 @@ export default function ClassForm() {
 
   const onSubmit = async (values) => {
     console.log(values);
-    const { name, grade } = values;
-    const gradeId = grade.value;
+    if (!values.grade) {
+      return toast.error('Vui lòng chọn khối');
+    }
+
+    if (!values.teacher) {
+      return toast.error('Vui lòng chọn giáo viên');
+    }
+
+    try {
+      const { name, grade, teacher } = values;
+      const gradeId = grade.value;
+      const teacherId = teacher.value;
+
+      const enteredGradeInName = name.slice(0, 2);
+      const selectedGradeName = grade.label;
+      if (enteredGradeInName !== selectedGradeName) {
+        return toast.error('Tên lớp và khối đã chọn không trùng khớp');
+      }
+
+      const enteredClass = {
+        name,
+        grade: gradeId,
+        teacher: teacherId,
+        schoolYear: new Date().getFullYear(),
+      };
+
+      if (mode === 'edit') {
+        enteredClass.id = _class._id;
+        const res = await updateClass(enteredClass);
+        if (res.status === 201) {
+          toast.success(res.data.message);
+        }
+      } else {
+        const res = await createClass(enteredClass);
+        if (res.status === 201) {
+          toast.success(res.data.message);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+      toast.error('Đã có lỗi xảy ra khi thêm lớp');
+    }
   };
+
+  useEffect(() => {
+    const getTeachers = async () => {
+      try {
+        const res = await getAvailableTeacher();
+        const formattedTeachers = res.data.teachers.map((teacher) => ({ label: teacher.name, value: teacher._id }));
+        if (_class) {
+          formattedTeachers.push({ label: _class.teacher.label, value: _class.teacher.value });
+        }
+        setAvailableTeacher(formattedTeachers);
+      } catch (err) {
+        console.log(err);
+        toast.error('Đã xảy ra lỗi khi tải trang');
+      }
+    };
+
+    getTeachers();
+  }, [_class]);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -63,25 +117,35 @@ export default function ClassForm() {
             name="grade"
             label="Khối"
             options={grades}
-            getOptionLabel={(option) => option.label || '10'}
-            isOptionEqualToValue={(option, value) => option.value === value.value}
+            getOptionLabel={(option) => option.label || (_class && _class.grade.name.toString()) || '10'}
+            isOptionEqualToValue={(option, value) => {
+              // if (!isNaN(value)) {
+              //   return option.label === value.toString();
+              // }
+              return option.label === (value.label || value.name.toString());
+            }}
           />
         </Grid>
 
-        {/* <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6} md={4}>
           <RHFAutocomplete
             name="teacher"
             label="Giáo viên"
-            options={teachers}
-            getOptionLabel={(option) => option}
-            isOptionEqualToValue={(option, value) => option === value}
+            options={availableTeacher}
+            getOptionLabel={(option) => option.label || (_class && _class.teacher.name) || ''}
+            isOptionEqualToValue={(option, value) => {
+              if (typeof value === 'string') {
+                return option.label === value;
+              }
+              return option.label === value.label || option.label === value.name;
+            }}
           />
-        </Grid> */}
+        </Grid>
       </Grid>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
         <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
-          Tạo mới
+          {mode === 'create' ? 'Tạo mới' : 'Cập nhật'}
         </LoadingButton>
       </Stack>
     </FormProvider>
