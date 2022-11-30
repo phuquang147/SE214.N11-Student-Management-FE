@@ -27,3 +27,12 @@ export const updateClass = async (_class) => {
   });
   return res;
 };
+
+export const deleteClass = async (classId) => {
+  const res = await request.delete(`/classes/${classId}`, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};

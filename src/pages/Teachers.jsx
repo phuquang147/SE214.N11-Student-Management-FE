@@ -1,13 +1,18 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Button, Card, Chip, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
 // components
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
 import Table from '~/components/Table';
-import Filters from '~/components/Teachers/Filters';
+import Filters from '~/components/Filters';
 // mock
-import teachers from '~/_mock/teachers';
+// import teachers from '~/_mock/teachers';
+import { teacherFilters } from '~/constants/filters';
+import { toast } from 'react-toastify';
+import { getTeachers, getTeachersBySubjectAndClass } from '~/services/teacherRequest';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 const columns = [
   {
@@ -39,7 +44,7 @@ const columns = [
       const { row } = params;
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Typography noWrap>{row.id.slice(0, 8).toUpperCase()}</Typography>
+          <Typography noWrap>{row._id.slice(0, 8).toUpperCase()}</Typography>
         </Stack>
       );
     },
@@ -51,6 +56,14 @@ const columns = [
     headerAlign: 'center',
     align: 'center',
     minWidth: 150,
+    renderCell: (params) => {
+      const { row } = params;
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography noWrap>{row.subject.name}</Typography>
+        </Stack>
+      );
+    },
   },
   {
     field: 'gender',
@@ -96,6 +109,11 @@ const columns = [
     headerAlign: 'center',
     align: 'center',
     minWidth: 150,
+    renderCell: (params) => {
+      const { row } = params;
+      const birthday = new Date(row.birthday).toLocaleDateString();
+      return <Typography>{birthday}</Typography>;
+    },
   },
   {
     field: 'phone',
@@ -176,6 +194,46 @@ const columns = [
 ];
 
 export default function Teachers() {
+  const [loading, setLoading] = useState(false);
+  const [teachers, setTeachers] = useState([]);
+
+  useEffect(() => {
+    const getAllTeachers = async () => {
+      try {
+        setLoading(true);
+        const res = await getTeachers();
+        console.log(res.data);
+        if (res.status === 200) {
+          setTeachers(res.data.teachers);
+          setLoading(false);
+        }
+      } catch (err) {
+        toast.error(err.response.data.message);
+        setLoading(false);
+      }
+    };
+
+    getAllTeachers();
+  }, []);
+
+  const handleChangeFilter = async (values) => {
+    console.log(values);
+    const { subject, class: _class } = values;
+    try {
+      const formattedSubject = subject.value !== 'Tất cả' ? `subject=${subject.value}` : '';
+      const formattedClass = _class.value !== 'Tất cả' ? `class=${_class.value}` : '';
+
+      setLoading(true);
+      const res = await getTeachersBySubjectAndClass(formattedSubject, formattedClass);
+      if (res.status === 200) {
+        setTeachers(res.data.teachers);
+        setLoading(false);
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || 'Đã xảy ra lỗi khi tìm giáo viên');
+    }
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
@@ -190,19 +248,25 @@ export default function Teachers() {
         </Button>
       </Stack>
 
-      <Filters />
+      <Filters filters={teacherFilters} onChangeFilter={handleChangeFilter} />
 
-      <Card
-        sx={{
-          width: '100%',
-          '& .super-app-theme--header': {
-            backgroundColor: '#5e94ca',
-            color: 'white',
-          },
-        }}
-      >
-        <Table data={teachers} columns={columns} />
-      </Card>
+      {loading ? (
+        <Box sx={{ textAlign: 'center', pt: 3 }}>
+          <CircularProgress color="primary" />
+        </Box>
+      ) : (
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table data={teachers} columns={columns} />
+        </Card>
+      )}
     </Container>
   );
 }

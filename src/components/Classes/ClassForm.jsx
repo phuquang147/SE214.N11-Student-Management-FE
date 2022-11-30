@@ -9,8 +9,8 @@ import { Grid, Stack } from '@mui/material';
 import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFTextField from '~/components/hook-form/RHFTextField';
-import { useSelector } from 'react-redux';
-import { selectGrades } from '~/redux/infor';
+import { useDispatch, useSelector } from 'react-redux';
+import { inforActions, selectGrades } from '~/redux/infor';
 import { useEffect } from 'react';
 import { getAvailableTeacher } from '~/services/teacherRequest';
 import { useState } from 'react';
@@ -20,6 +20,7 @@ import { createClass, updateClass } from '~/services/classRequest';
 export default function ClassForm({ mode, _class }) {
   const [availableTeacher, setAvailableTeacher] = useState([]);
   const grades = useSelector(selectGrades);
+  const dispatch = useDispatch();
 
   const ClassSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên lớp'),
@@ -77,8 +78,10 @@ export default function ClassForm({ mode, _class }) {
         }
       } else {
         const res = await createClass(enteredClass);
+        const { message, newClass } = res.data;
         if (res.status === 201) {
-          toast.success(res.data.message);
+          toast.success(message);
+          dispatch(inforActions.addClass(newClass));
         }
       }
     } catch (err) {

@@ -24,6 +24,24 @@ export const classFilters = [
   },
 ];
 
+export const teacherFilters = [
+  {
+    name: 'subject',
+    label: 'Môn học',
+    options: [{ label: 'Tất cả', value: 'Tất cả' }],
+  },
+  {
+    name: 'class',
+    label: 'Lớp',
+    options: [{ label: 'Tất cả', value: 'Tất cả' }],
+  },
+  {
+    name: 'schoolYear',
+    label: 'Năm học',
+    options: [{ label: 'Tất cả', value: 'Tất cả' }],
+  },
+];
+
 export const scoreFilters = [
   {
     name: 'schoolYear',

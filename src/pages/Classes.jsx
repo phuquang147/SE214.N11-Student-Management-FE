@@ -13,7 +13,8 @@ import Cookies from 'js-cookie';
 import request from '~/services/request';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { getClasses } from '~/services/classRequest';
+import { deleteClass, getClasses } from '~/services/classRequest';
+import { toast } from 'react-toastify';
 
 const columns = [
   {
@@ -137,7 +138,6 @@ const columns = [
     filterable: false,
     renderCell: (params) => {
       const { _id, grade, name, teacher, handleDelete } = params.row;
-      console.log(grade);
       const _class = {
         _id,
         name,
@@ -154,18 +154,18 @@ function Classes() {
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  const getAllClasses = async () => {
+    setLoading(true);
+    const res = await getClasses();
+    const { data, status } = res;
+
+    if (status === 200) {
+      setSelectedClasses(data.classes);
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const getAllClasses = async () => {
-      setLoading(true);
-      const res = await getClasses();
-      const { data, status } = res;
-
-      if (status === 200) {
-        setSelectedClasses(data.classes);
-        setLoading(false);
-      }
-    };
-
     getAllClasses();
   }, []);
 
@@ -186,6 +186,18 @@ function Classes() {
       const { classes } = res.data;
       setLoading(false);
       setSelectedClasses(classes);
+    }
+  };
+
+  const handleDelete = async (classId) => {
+    try {
+      const res = await deleteClass(classId);
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        getAllClasses();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message || 'Đã xảy ra lỗi khi xóa lớp');
     }
   };
 
@@ -219,7 +231,7 @@ function Classes() {
             },
           }}
         >
-          <Table data={selectedClasses} columns={columns} />
+          <Table data={selectedClasses} columns={columns} onDelete={handleDelete} />
         </Card>
       )}
     </Container>

@@ -43,6 +43,15 @@ const inforSlice = createSlice({
     setCommonInforFailed(state) {
       state.status = 'failed';
     },
+    addClass(state, action) {
+      const { name, schoolYear, _id } = action.payload;
+      state.classes.push({
+        label: `${name} - ${schoolYear}`,
+        value: _id,
+        name: name,
+        schoolYear: schoolYear,
+      });
+    },
   },
 });
 

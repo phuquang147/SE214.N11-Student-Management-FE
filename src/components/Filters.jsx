@@ -136,7 +136,13 @@ export default function Filters({ filters, onChangeFilter }) {
                 />
               </Grid>
             ))}
-          <Grid item xs={12} sm={6} md={4}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            md={filters.length % 3 === 0 ? 12 : 4}
+            sx={{ textAlign: { md: filters.length % 3 === 0 ? 'end' : 'start' } }}
+          >
             <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ py: 2, px: 4 }}>
               Tìm kiếm
             </LoadingButton>
