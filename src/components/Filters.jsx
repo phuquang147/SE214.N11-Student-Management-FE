@@ -124,21 +124,18 @@ export default function Filters({ filters, onChangeFilter }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           {formatedFilters &&
-            Object.keys(formatedFilters).map((key, index) => {
-              console.log(formatedFilters[key].options);
-              return (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <RHFAutocomplete
-                    name={key}
-                    label={formatedFilters[key].label}
-                    options={key === 'class' ? classOptions : formatedFilters[key].options}
-                    handleChange={key === 'schoolYear' ? handleChangeSchoolYear : null}
-                    getOptionLabel={(option) => option.label}
-                    isOptionEqualToValue={(option, value) => option.value === value.value}
-                  />
-                </Grid>
-              );
-            })}
+            Object.keys(formatedFilters).map((key, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <RHFAutocomplete
+                  name={key}
+                  label={formatedFilters[key].label}
+                  options={key === 'class' ? classOptions : formatedFilters[key].options}
+                  handleChange={key === 'schoolYear' ? handleChangeSchoolYear : null}
+                  getOptionLabel={(option) => option.label}
+                  isOptionEqualToValue={(option, value) => option.value === value.value}
+                />
+              </Grid>
+            ))}
           <Grid item xs={12} sm={6} md={4}>
             <LoadingButton type="submit" variant="contained" loading={isSubmitting} sx={{ py: 2, px: 4 }}>
               Tìm kiếm

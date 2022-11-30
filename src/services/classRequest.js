@@ -9,3 +9,21 @@ export const getClasses = async () => {
   });
   return res;
 };
+
+export const createClass = async (_class) => {
+  const res = await request.post('/classes', _class, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};
+
+export const updateClass = async (_class) => {
+  const res = await request.put(`/classes/${_class.id}`, _class, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};

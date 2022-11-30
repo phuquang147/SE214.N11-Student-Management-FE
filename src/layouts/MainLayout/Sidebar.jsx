@@ -69,7 +69,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
             />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                Quang dep trai
+                Đỗ Phú Quang
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {role}

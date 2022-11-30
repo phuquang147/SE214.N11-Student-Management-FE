@@ -5,7 +5,7 @@ import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/mat
 // component
 import Iconify from '~/components/Iconify';
 
-export default function ActionsMenu({ student = {}, onDelete }) {
+export default function ActionsMenu({ object = {}, onDelete }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
@@ -32,9 +32,9 @@ export default function ActionsMenu({ student = {}, onDelete }) {
       >
         <MenuItem
           component={React.forwardRef((props, ref) => {
-            return <RouterLink {...props} ref={ref} state={student} />;
+            return <RouterLink {...props} ref={ref} state={object} />;
           })}
-          to={`${location.pathname}/edit/${student._id}`}
+          to={`${location.pathname}/edit/${object._id}`}
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>

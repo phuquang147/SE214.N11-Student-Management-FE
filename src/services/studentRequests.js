@@ -11,18 +11,12 @@ export const getAllStudents = async () => {
 };
 
 export const createStudent = async (student) => {
-  try {
-    const res = await request.post('/students', student, {
-      headers: {
-        Authorization: `Bearer ${Cookies.get('token')}`,
-      },
-    });
-    console.log(res);
-    return res;
-  } catch (err) {
-    console.log(err);
-    return err;
-  }
+  const res = await request.post('/students', student, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
 };
 
 export const updateStudent = async (student, studentId) => {

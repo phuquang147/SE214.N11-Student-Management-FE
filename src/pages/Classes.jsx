@@ -136,7 +136,16 @@ const columns = [
     hideable: false,
     filterable: false,
     renderCell: (params) => {
-      return <ActionsMenu />;
+      const { _id, grade, name, teacher, handleDelete } = params.row;
+      console.log(grade);
+      const _class = {
+        _id,
+        name,
+        grade: { label: grade.name.toString(), value: grade._id },
+        teacher: { label: teacher.name, value: teacher._id },
+      };
+
+      return <ActionsMenu object={_class} onDelete={handleDelete} />;
     },
   },
 ];
