@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -43,14 +44,19 @@ export default function ResetForm() {
     const { password } = getValues();
     const accountId = Cookies.get('accountId');
 
-    const res = await authServices.changePassword({
-      password,
-      passwordToken: token,
-      accountId,
-    });
+    try {
+      const res = await authServices.changePassword({
+        password,
+        passwordToken: token,
+        accountId,
+      });
 
-    if (res.status === 201) {
-      navigate('/login');
+      if (res.status === 201) {
+        toast.success('Thay đổi mật khẩu thành công');
+        navigate('/login');
+      } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
+    } catch (err) {
+      toast.error(err.response.data.message);
     }
   };
 

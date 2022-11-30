@@ -154,22 +154,23 @@ export default function ScoresTable({ studentScores, processRowUpdate }) {
           display: 'none !important',
         },
         '& .ho-ten': {
-          backgroundColor: 'rgba(0, 0, 0, 0.03)',
+          backgroundColor: 'rgba(32, 101, 209, 0.04)',
+          justifyContent: 'center !important',
         },
         '& .diem-mieng': {
-          backgroundColor: 'rgba(0, 0, 0, 0.05)',
+          backgroundColor: 'rgba(32, 101, 209, 0.08)',
         },
         '& .muoi-lam-phut': {
-          backgroundColor: 'rgba(0, 0, 0, 0.1)',
+          backgroundColor: 'rgba(32, 101, 209, 0.12)',
         },
         '& .mot-tiet': {
-          backgroundColor: 'rgba(0, 0, 0, 0.15)',
+          backgroundColor: 'rgba(32, 101, 209, 0.16)',
         },
         '& .cuoi-ky': {
-          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          backgroundColor: 'rgba(32, 101, 209, 0.20)',
         },
         '& .trung-binh': {
-          backgroundColor: 'rgba(0, 0, 0, 0.25)',
+          backgroundColor: 'rgba(32, 101, 209, 0.24)',
         },
       }}
     >

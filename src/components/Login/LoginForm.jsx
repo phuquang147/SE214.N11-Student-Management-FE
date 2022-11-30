@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -43,17 +44,21 @@ export default function LoginForm() {
 
   const onSubmit = async () => {
     const { username, password } = getValues();
-    const { data, status } = await authRequest.login({ username, password });
+    try {
+      const { data, status } = await authRequest.login({ username, password });
+      if (status === 200) {
+        const { token, accountId } = data;
 
-    if (status === 200) {
-      const { token, accountId } = data;
+        const remainingMilliseconds = 60 * 60 * 1000;
+        const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
+        Cookies.set('token', token, { expires: expiryDate });
+        Cookies.set('accountId', accountId, { expires: expiryDate });
 
-      const remainingMilliseconds = 60 * 60 * 1000;
-      const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
-      Cookies.set('token', token, { expires: expiryDate });
-      Cookies.set('accountId', accountId, { expires: expiryDate });
-
-      navigate('/', { replace: true });
+        toast.success('Đăng nhập thành công');
+        navigate('/', { replace: true });
+      } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
+    } catch (err) {
+      toast.error(err.response.data.message);
     }
   };
 
