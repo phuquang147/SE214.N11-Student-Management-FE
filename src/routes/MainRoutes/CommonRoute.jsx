@@ -11,11 +11,14 @@ import NewClass from '~/pages/NewClass';
 import Scores from '~/pages/Scores';
 // Profile
 import Profile from '~/pages/Profile';
+// Teacher
+import EditTeacher from '~/pages/EditTeacher';
+import NewTeacher from '~/pages/NewTeacher';
+import Teachers from '~/pages/Teachers';
+// Schedule
+import Schedule from '~/pages/Schedule';
 //
 import Page404 from '~/pages/Page404';
-import Teachers from '~/pages/Teachers';
-import NewTeacher from '~/pages/NewTeacher';
-import EditTeacher from '~/pages/EditTeacher';
 
 const CommonRoutes = [
   {
@@ -69,6 +72,11 @@ const CommonRoutes = [
   {
     path: '/teachers/edit/:id',
     element: <EditTeacher />,
+  },
+  // Schedule
+  {
+    path: '/schedule',
+    element: <Schedule />,
   },
   //
   {

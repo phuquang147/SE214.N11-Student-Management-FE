@@ -23,3 +23,27 @@ code {
 ::-webkit-scrollbar-thumb {
   background: #999;
 }
+
+table {
+  border: 3px solid #a5d8ff;
+  border-collapse: collapse;
+  border-radius: 14px;
+}
+
+th {
+  border: 1px solid #a5d8ff;
+  padding: 10px 32px;
+}
+
+td {
+  border: 1px dashed #a5d8ff;
+  padding: 10px 32px;
+}
+
+th {
+  background: #e7f5ff;
+}
+
+td {
+  font-weight: 600;
+}

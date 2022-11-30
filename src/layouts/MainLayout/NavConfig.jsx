@@ -36,9 +36,9 @@ const navConfig = [
     icon: getIcon('la:chalkboard-teacher'),
   },
   {
-    title: 'login',
-    path: '/login',
-    icon: getIcon('eva:lock-fill'),
+    title: 'Thời khóa biểu',
+    path: '/schedule',
+    icon: getIcon('uim:schedule'),
   },
 ];
 
