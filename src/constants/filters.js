@@ -64,3 +64,21 @@ export const scoreFilters = [
     options: [],
   },
 ];
+
+export const scheduleFilters = [
+  {
+    name: 'schoolYear',
+    label: 'Năm học',
+    options: [],
+  },
+  {
+    name: 'class',
+    label: 'Lớp',
+    options: [],
+  },
+  {
+    name: 'semester',
+    label: 'Học kì',
+    options: [],
+  },
+];
