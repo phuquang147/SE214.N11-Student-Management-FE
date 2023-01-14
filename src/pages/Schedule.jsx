@@ -2,8 +2,10 @@ import { useState } from 'react';
 // material
 import { Box, Card, CircularProgress, Container, IconButton, Stack, Typography } from '@mui/material';
 // components
+import Filters from '~/components/Filters';
 import Iconify from '~/components/Iconify';
 import ScheduleModal from '~/components/Schedule/ScheduleModal';
+import { scheduleFilters } from '~/constants/filters';
 
 const schedule = [
   [
@@ -55,11 +57,16 @@ export default function Schedule() {
   const handleCloseScheduleModal = () => {
     setShowScheduleModal(false);
   };
+
+  const handleChangeFilter = () => {};
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
         <Typography variant="h4">Thời khóa biểu</Typography>
       </Stack>
+
+      <Filters filters={scheduleFilters} onChangeFilter={handleChangeFilter} />
 
       {loading ? (
         <Box sx={{ textAlign: 'center', pt: 3 }}>
