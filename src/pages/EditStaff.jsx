@@ -1,23 +1,23 @@
-import { useLocation } from 'react-router';
 // material
 import { Card, Container, Stack, Typography } from '@mui/material';
+import { useLocation } from 'react-router';
 // components
-import TeacherForm from '~/components/Teachers/TeacherForm';
+import StaffForm from '~/components/Staffs/StaffForm';
 
-export default function EditTeacher() {
+export default function EditStaff() {
   const location = useLocation();
-  const teacher = location.state;
+  const staff = location.state;
 
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4" gutterBottom>
-          Chỉnh sửa thông tin giáo viên
+          Chỉnh sửa thông tin nhân viên
         </Typography>
       </Stack>
 
       <Card sx={{ padding: 4 }}>
-        <TeacherForm mode="edit" teacher={teacher} />
+        <StaffForm mode="edit" staff={staff} />
       </Card>
     </Container>
   );

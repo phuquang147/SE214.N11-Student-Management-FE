@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
@@ -6,6 +6,8 @@ import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@
 import MenuPopover from '~/HOC/MenuPopover';
 // cookies
 import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import { selectUser } from '~/redux/infor';
 
 const MENU_OPTIONS = [
   {
@@ -18,6 +20,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const anchorRef = useRef(null);
   const navigate = useNavigate();
+  const user = useSelector(selectUser);
 
   const [open, setOpen] = useState(null);
 
@@ -77,10 +80,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            Đỗ Phú Quang
+            {user.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            phuquang@gmail.com
+            {user.email}
           </Typography>
         </Box>
 
@@ -88,7 +91,14 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} to={option.linkTo} component={RouterLink} onClick={handleClose}>
+            <MenuItem
+              key={option.label}
+              to={option.linkTo}
+              component={React.forwardRef((props, ref) => {
+                return <RouterLink {...props} ref={ref} state={user} />;
+              })}
+              onClick={handleClose}
+            >
               {option.label}
             </MenuItem>
           ))}

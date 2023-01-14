@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { selectRole } from '~/redux/infor';
+import { selectUser } from '~/redux/infor';
 // material
 import { Avatar, Box, Drawer, Link, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -38,7 +38,7 @@ Sidebar.propTypes = {
 
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-  const role = useSelector(selectRole);
+  const user = useSelector(selectUser);
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -69,10 +69,10 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
             />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                Đỗ Phú Quang
+                {user?.name}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {role}
+                {user?.role?.name}
               </Typography>
             </Box>
           </AccountStyle>

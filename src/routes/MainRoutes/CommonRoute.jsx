@@ -19,6 +19,9 @@ import Teachers from '~/pages/Teachers';
 import Schedule from '~/pages/Schedule';
 //
 import Page404 from '~/pages/Page404';
+import Staffs from '~/pages/Staffs';
+import NewStaff from '~/pages/NewStaff';
+import EditStaff from '~/pages/EditStaff';
 
 const CommonRoutes = [
   {
@@ -72,6 +75,19 @@ const CommonRoutes = [
   {
     path: '/teachers/edit/:id',
     element: <EditTeacher />,
+  },
+  // Staffs
+  {
+    path: '/staffs',
+    element: <Staffs />,
+  },
+  {
+    path: '/staffs/new',
+    element: <NewStaff />,
+  },
+  {
+    path: '/staffs/edit/:id',
+    element: <EditStaff />,
   },
   // Schedule
   {

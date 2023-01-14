@@ -17,9 +17,9 @@ export default function Dashboard() {
       if (token) {
         try {
           const { data, status } = await commonDataRequest.getCommonData();
-          const { classes, subjects, role, semesters, grades } = data;
+          const { classes, subjects, semesters, grades, user } = data;
           if (status === 200) {
-            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, role, semesters, grades }));
+            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, semesters, grades, user }));
           }
         } catch (err) {
           toast.error('Đã xảy ra lỗi! Vui lòng tải lại trang');

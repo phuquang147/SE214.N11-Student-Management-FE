@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 // material
 import {
@@ -40,6 +40,16 @@ export default function Scores() {
   const [promiseArguments, setPromiseArguments] = useState(null);
   const [classScore, setClassScore] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const getAllScores = async () => {
+      const { data, status } = await scoresRequest.getAllScores();
+      console.log(data.classScore, status);
+      setClassScore(data.classScore);
+    };
+
+    getAllScores();
+  }, []);
 
   const processRowUpdate = useCallback(
     (newRow, oldRow) =>
@@ -87,6 +97,7 @@ export default function Scores() {
       });
       if (status === 200) {
         const { classScore } = data;
+        console.log(data);
         setClassScore(classScore);
       }
     } catch (err) {

@@ -5,19 +5,17 @@ import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
 import Table from '~/components/Table';
-import Filters from '~/components/Filters';
 // mock
 // import teachers from '~/_mock/teachers';
-import { teacherFilters } from '~/constants/filters';
 import { toast } from 'react-toastify';
-import { deleteTeacher, getTeachers, getTeachersBySubjectAndClass } from '~/services/teacherRequest';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { deleteStaff, getStaffs } from '~/services/staffRequest';
 
 const columns = [
   {
     field: 'name',
-    headerName: 'Tên giáo viên',
+    headerName: 'Tên nhân viên',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
@@ -35,7 +33,7 @@ const columns = [
   },
   {
     field: 'id',
-    headerName: 'Mã giáo viên',
+    headerName: 'Mã nhân viên',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     align: 'center',
@@ -45,22 +43,6 @@ const columns = [
       return (
         <Stack direction="row" alignItems="center" spacing={2}>
           <Typography noWrap>{row._id.slice(0, 8).toUpperCase()}</Typography>
-        </Stack>
-      );
-    },
-  },
-  {
-    field: 'subject',
-    headerName: 'Môn',
-    headerClassName: 'super-app-theme--header',
-    headerAlign: 'center',
-    align: 'center',
-    minWidth: 150,
-    renderCell: (params) => {
-      const { row } = params;
-      return (
-        <Stack direction="row" alignItems="center" spacing={2}>
-          <Typography noWrap>{row.subject.name}</Typography>
         </Stack>
       );
     },
@@ -148,10 +130,10 @@ const columns = [
     minWidth: 130,
     renderCell: (params) => {
       const { row } = params;
-      if (row.status === 'Đang dạy')
+      if (row.status === 'Đang làm')
         return (
           <Chip
-            label="Đang dạy"
+            label="Đang làm"
             color="success"
             sx={{
               bgcolor: 'success.light',
@@ -188,34 +170,32 @@ const columns = [
     hideable: false,
     filterable: false,
     renderCell: (params) => {
-      const { name, phone, address, email, gender, birthday, status, subject, role, _id, handleDelete } = params.row;
-      const teacher = {
+      const { name, phone, address, email, gender, birthday, status, _id, handleDelete } = params.row;
+      const staff = {
         name,
         phone,
         address,
         email,
         gender,
         status,
-        subject,
-        role,
         birthday,
         _id,
       };
-      return <ActionsMenu object={teacher} onDelete={handleDelete} />;
+      return <ActionsMenu object={staff} onDelete={handleDelete} />;
     },
   },
 ];
 
-export default function Teachers() {
+export default function Staffs() {
   const [loading, setLoading] = useState(false);
-  const [teachers, setTeachers] = useState([]);
+  const [staffs, setStaffs] = useState([]);
 
-  const getAllTeachers = async () => {
+  const getAllStaffs = async () => {
     try {
       setLoading(true);
-      const res = await getTeachers();
+      const res = await getStaffs();
       if (res.status === 200) {
-        setTeachers(res.data.teachers);
+        setStaffs(res.data.staffs);
         setLoading(false);
       }
     } catch (err) {
@@ -225,33 +205,15 @@ export default function Teachers() {
   };
 
   useEffect(() => {
-    getAllTeachers();
+    getAllStaffs();
   }, []);
 
-  const handleChangeFilter = async (values) => {
-    console.log(values);
-    const { subject, class: _class } = values;
+  const handleDelete = async (staffId) => {
     try {
-      const formattedSubject = subject.value !== 'Tất cả' ? `subject=${subject.value}` : '';
-      const formattedClass = _class.value !== 'Tất cả' ? `class=${_class.value}` : '';
-
-      setLoading(true);
-      const res = await getTeachersBySubjectAndClass(formattedSubject, formattedClass);
-      if (res.status === 200) {
-        setTeachers(res.data.teachers);
-        setLoading(false);
-      }
-    } catch (err) {
-      toast.error(err?.response?.data?.message || 'Đã xảy ra lỗi khi tìm giáo viên');
-    }
-  };
-
-  const handleDelete = async (teacherId) => {
-    try {
-      const res = await deleteTeacher(teacherId);
+      const res = await deleteStaff(staffId);
       if (res.status === 200) {
         toast.success(res.data.message);
-        await getAllTeachers();
+        await getAllStaffs();
       }
     } catch (error) {
       toast.error(error.response.data.message || 'Đã xảy ra lỗi, vui lòng thử lại');
@@ -261,18 +223,16 @@ export default function Teachers() {
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Giáo viên</Typography>
+        <Typography variant="h4">Nhân viên giáo vụ</Typography>
         <Button
           variant="contained"
           component={RouterLink}
-          to="/teachers/new"
+          to="/staffs/new"
           startIcon={<Iconify icon="eva:plus-fill" />}
         >
-          Thêm giáo viên
+          Thêm nhân viên
         </Button>
       </Stack>
-
-      <Filters filters={teacherFilters} onChangeFilter={handleChangeFilter} />
 
       {loading ? (
         <Box sx={{ textAlign: 'center', pt: 3 }}>
@@ -288,7 +248,7 @@ export default function Teachers() {
             },
           }}
         >
-          <Table data={teachers} columns={columns} onDelete={handleDelete} />
+          <Table data={staffs} columns={columns} onDelete={handleDelete} />
         </Card>
       )}
     </Container>

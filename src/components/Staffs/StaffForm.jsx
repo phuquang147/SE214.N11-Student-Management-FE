@@ -12,17 +12,16 @@ import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 // constants
-import { genders, teacherStatus } from '~/constants';
+import { genders, staffStatus } from '~/constants';
+// toastify
 import { toast } from 'react-toastify';
-import { createTeacher, updateTeacher } from '~/services/teacherRequest';
-import { useSelector } from 'react-redux';
-import { selectRoles, selectSubjects } from '~/redux/infor';
-export default function TeacherForm({ mode, teacher }) {
-  const subjects = useSelector(selectSubjects);
-  const roles = useSelector(selectRoles);
-  console.log(roles);
+import { createStaff, updateStaff } from '~/services/staffRequest';
+import { useNavigate } from 'react-router';
 
-  const StudentSchema = Yup.object().shape({
+export default function StaffForm({ mode, staff }) {
+  const navigate = useNavigate();
+
+  const StaffSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
     phone: Yup.string().required('Vui lòng nhập số điện thoại'),
     email: Yup.string().email('Email không hợp lệ!').required('Vui lòng nhập email'),
@@ -30,19 +29,17 @@ export default function TeacherForm({ mode, teacher }) {
   });
 
   const defaultValues = {
-    name: (teacher && teacher.name) || '',
-    subject: (teacher && { label: teacher.subject.name, value: teacher.subject._id }) || subjects[0],
-    role: (teacher && { label: teacher.role.name, value: teacher.role._id }) || roles[0],
-    email: (teacher && teacher.email) || '',
-    phone: (teacher && teacher.phone) || '',
-    gender: (teacher && teacher.gender) || genders[0],
-    birthdate: teacher ? dayjs(teacher.birthday) : dayjs('2014-08-18T21:11:54'),
-    address: (teacher && teacher.address) || '',
-    status: (teacher && teacher.status) || teacherStatus[0],
+    name: (staff && staff.name) || '',
+    email: (staff && staff.email) || '',
+    phone: (staff && staff.phone) || '',
+    gender: (staff && staff.gender) || genders[0],
+    birthday: staff ? dayjs(staff.birthday) : dayjs('1999-01-01T21:11:54'),
+    address: (staff && staff.address) || '',
+    status: (staff && staff.status) || staffStatus[0],
   };
 
   const methods = useForm({
-    resolver: yupResolver(StudentSchema),
+    resolver: yupResolver(StaffSchema),
     defaultValues,
   });
 
@@ -52,35 +49,38 @@ export default function TeacherForm({ mode, teacher }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
-    const { name, gender, birthdate, address, email, phone, status, subject, role } = values;
-    const enteredTeacher = {
+    const { name, gender, birthday, address, email, phone, status } = values;
+
+    const enteredStaff = {
       name,
       gender,
       address,
       email,
       phone,
       status,
-      birthday: new Date(birthdate).toISOString(),
-      subject: subject.value,
-      role: role.value,
+      birthday: new Date(birthday).toISOString(),
     };
-    try {
-      if (mode === 'edit') {
-        const res = await updateTeacher(enteredTeacher, teacher._id);
-        console.log(res);
+
+    if (mode === 'edit') {
+      try {
+        const res = await updateStaff(enteredStaff, staff._id);
         if (res.status === 201) {
           toast.success(res.data.message);
+          navigate(-1);
         }
-      } else {
-        const res = await createTeacher(enteredTeacher);
+      } catch (err) {
+        toast.error(err.response.data.message || 'Đã xảy ra lỗi khi cập nhật nhân viên');
+      }
+    } else {
+      try {
+        const res = await createStaff(enteredStaff);
         if (res.status === 200) {
           toast.success(res.data.message);
+          navigate(-1);
         }
+      } catch (err) {
+        toast.error(err.response.data.message || 'Đã xảy ra lỗi khi thêm nhân viên');
       }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message || 'Đã xảy ra lỗi, vui lòng thử lại');
     }
   };
 
@@ -89,26 +89,6 @@ export default function TeacherForm({ mode, teacher }) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6} md={4}>
           <RHFTextField name="name" label="Họ và tên" />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFAutocomplete
-            name="subject"
-            label="Môn học"
-            options={subjects}
-            getOptionLabel={(option) => option.label}
-            isOptionEqualToValue={(option, value) => option.value === value.value}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFAutocomplete
-            name="role"
-            label="Vai trò"
-            options={[roles[0], roles[2]]}
-            getOptionLabel={(option) => option.label}
-            isOptionEqualToValue={(option, value) => option.value === value.value}
-          />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -130,7 +110,7 @@ export default function TeacherForm({ mode, teacher }) {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <RHFDatePicker name="birthdate" label="Ngày sinh" />
+          <RHFDatePicker name="birthday" label="Ngày sinh" />
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
@@ -142,7 +122,7 @@ export default function TeacherForm({ mode, teacher }) {
             <RHFAutocomplete
               name="status"
               label="Tình trạng"
-              options={teacherStatus}
+              options={staffStatus}
               getOptionLabel={(option) => option}
               isOptionEqualToValue={(option, value) => option === value}
             />
@@ -152,7 +132,7 @@ export default function TeacherForm({ mode, teacher }) {
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
         <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
-          {mode === 'edit' ? 'Cập nhật' : 'Tạo mới'}
+          {mode === 'create' ? 'Tạo mới' : 'Cập nhật'}
         </LoadingButton>
       </Stack>
     </FormProvider>

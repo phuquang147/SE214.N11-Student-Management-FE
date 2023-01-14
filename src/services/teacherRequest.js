@@ -27,3 +27,30 @@ export const getTeachersBySubjectAndClass = async (querySubjectId, queryClassId)
   });
   return res;
 };
+
+export const updateTeacher = async (teacher, teacherId) => {
+  const res = await request.put(`/teachers/${teacherId}`, teacher, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};
+
+export const createTeacher = async (teacher) => {
+  const res = await request.post('/teachers', teacher, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};
+
+export const deleteTeacher = async (teacherId) => {
+  const res = await request.delete(`/teachers/${teacherId}`, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};

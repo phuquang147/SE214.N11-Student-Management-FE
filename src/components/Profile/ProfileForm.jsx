@@ -11,10 +11,14 @@ import FormProvider from '~/components/hook-form/FormProvider';
 import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 import RHFTextField from '~/components/hook-form/RHFTextField';
+import { updateProfile } from '~/services/profileRequest';
+import { toast } from 'react-toastify';
 
 const genders = ['Nam', 'Nữ'];
 
-export default function ProfileForm() {
+export default function ProfileForm({ user }) {
+  const { name, email, phone, gender, birthday, address } = user;
+
   const StudentSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
     phone: Yup.string().required('Vui lòng nhập số điện thoại'),
@@ -23,12 +27,12 @@ export default function ProfileForm() {
   });
 
   const defaultValues = {
-    name: '',
-    email: '',
-    phone: '',
-    gender: genders[0],
-    birthdate: dayjs('2014-08-18T21:11:54'),
-    address: '',
+    name,
+    email,
+    phone,
+    gender,
+    birthdate: dayjs(birthday),
+    address,
   };
 
   const methods = useForm({
@@ -42,7 +46,24 @@ export default function ProfileForm() {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
+    const { name, phone, email, address, gender, birthdate } = values;
+    const updatedProfile = {
+      name,
+      gender,
+      address,
+      email,
+      phone,
+      birthday: new Date(birthdate).toISOString(),
+    };
+
+    try {
+      const res = await updateProfile(updatedProfile);
+      if (res.status === 201) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 export const genders = ['Nam', 'Nữ'];
 export const subjects = ['Toán', 'Văn'];
 export const teacherStatus = ['Đang dạy', 'Đã nghỉ'];
+export const staffStatus = ['Đang làm', 'Đã nghỉ'];
 export const studentStatus = ['Đang học', 'Đã tốt nghiệp', 'Đã nghỉ học'];
 
 // filters

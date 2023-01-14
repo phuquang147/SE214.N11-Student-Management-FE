@@ -1,4 +1,4 @@
-import { Card } from '@mui/material';
+import { Card, Stack, Typography } from '@mui/material';
 import Table from '~/components/Table';
 import { convertArrayToObjectKeys } from '~/utils/convert-scores';
 
@@ -17,6 +17,16 @@ export const columns = (editable) => [
     headerClassName: 'header',
     width: 180,
     editable,
+    renderCell: (params) => {
+      const { row } = params;
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography variant="subtitle2" noWrap>
+            {row.name}
+          </Typography>
+        </Stack>
+      );
+    },
   },
   //mieng
   {
@@ -115,32 +125,38 @@ export const columns = (editable) => [
 export const columnGroupingModel = [
   {
     groupId: 'Họ và tên',
-    headerClassName: 'ho-ten',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
     children: [{ field: 'name' }],
   },
   {
     groupId: 'Điểm miệng',
-    headerClassName: 'diem-mieng',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
     children: [{ field: 'oral1' }, { field: 'oral2' }, { field: 'oral3' }, { field: 'oral4' }, { field: 'oral5' }],
   },
   {
     groupId: 'Điểm 15 phút',
-    headerClassName: 'muoi-lam-phut',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
     children: [{ field: 'm151' }, { field: 'm152' }, { field: 'm153' }, { field: 'm154' }, { field: 'm155' }],
   },
   {
     groupId: 'Điểm 1 tiết',
-    headerClassName: 'mot-tiet',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
     children: [{ field: 'm451' }, { field: 'm452' }, { field: 'm453' }, { field: 'm454' }, { field: 'm455' }],
   },
   {
     groupId: 'Cuối kỳ',
-    headerClassName: 'cuoi-ky',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
     children: [{ field: 'final' }],
   },
   {
     groupId: 'Trung bình',
-    headerClassName: 'trung-binh',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
     children: [{ field: 'average' }],
   },
 ];
@@ -171,6 +187,10 @@ export default function ScoresTable({ studentScores, processRowUpdate }) {
         },
         '& .trung-binh': {
           backgroundColor: 'rgba(32, 101, 209, 0.24)',
+        },
+        '& .super-app-theme--header': {
+          backgroundColor: '#5e94ca',
+          color: 'white',
         },
       }}
     >

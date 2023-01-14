@@ -8,3 +8,11 @@ export const getScores = async ({ classId, subject, semester, schoolYear }) => {
     },
   });
 };
+
+export const getAllScores = async () => {
+  return request.get('/scores/all', {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+};

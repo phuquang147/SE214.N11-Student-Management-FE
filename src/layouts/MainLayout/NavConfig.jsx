@@ -36,6 +36,11 @@ const navConfig = [
     icon: getIcon('la:chalkboard-teacher'),
   },
   {
+    title: 'Nhân viên',
+    path: '/staffs',
+    icon: getIcon('icon-park-outline:file-staff'),
+  },
+  {
     title: 'Thời khóa biểu',
     path: '/schedule',
     icon: getIcon('uim:schedule'),
