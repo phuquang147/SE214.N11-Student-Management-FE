@@ -5,6 +5,7 @@ import Table from '~/components/Table';
 import { getRegulations } from '~/services/regulationsRequest';
 import { toast } from 'react-toastify';
 import RegulationsModal from '~/components/Regulations/RegulationsModal';
+import HelmetContainer from '~/HOC/HelmetContainer';
 
 const columns = [
   {
@@ -122,7 +123,7 @@ function Regulations() {
   };
 
   return (
-    <>
+    <HelmetContainer title="Quy định | Student Management App">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
           <Typography variant="h4">Quy định</Typography>
@@ -152,7 +153,7 @@ function Regulations() {
           onUpdate={handleUpdateRegulation}
         />
       )}
-    </>
+    </HelmetContainer>
   );
 }
 

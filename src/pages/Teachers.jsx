@@ -13,6 +13,7 @@ import { toast } from 'react-toastify';
 import { deleteTeacher, getTeachers, getTeachersBySubjectAndClass } from '~/services/teacherRequest';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import HelmetContainer from '~/HOC/HelmetContainer';
 
 const columns = [
   {
@@ -259,38 +260,40 @@ export default function Teachers() {
   };
 
   return (
-    <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Giáo viên</Typography>
-        <Button
-          variant="contained"
-          component={RouterLink}
-          to="/teachers/new"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-          Thêm giáo viên
-        </Button>
-      </Stack>
+    <HelmetContainer title="Giáo viên | Student Management App">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+          <Typography variant="h4">Giáo viên</Typography>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/teachers/new"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Thêm giáo viên
+          </Button>
+        </Stack>
 
-      <Filters filters={teacherFilters} onChangeFilter={handleChangeFilter} />
+        <Filters filters={teacherFilters} onChangeFilter={handleChangeFilter} />
 
-      {loading ? (
-        <Box sx={{ textAlign: 'center', pt: 3 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
-        <Card
-          sx={{
-            width: '100%',
-            '& .super-app-theme--header': {
-              backgroundColor: '#5e94ca',
-              color: 'white',
-            },
-          }}
-        >
-          <Table data={teachers} columns={columns} onDelete={handleDelete} />
-        </Card>
-      )}
-    </Container>
+        {loading ? (
+          <Box sx={{ textAlign: 'center', pt: 3 }}>
+            <CircularProgress color="primary" />
+          </Box>
+        ) : (
+          <Card
+            sx={{
+              width: '100%',
+              '& .super-app-theme--header': {
+                backgroundColor: '#5e94ca',
+                color: 'white',
+              },
+            }}
+          >
+            <Table data={teachers} columns={columns} onDelete={handleDelete} />
+          </Card>
+        )}
+      </Container>
+    </HelmetContainer>
   );
 }

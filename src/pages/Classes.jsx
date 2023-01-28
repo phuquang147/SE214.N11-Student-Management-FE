@@ -17,6 +17,7 @@ import { deleteClass, getClasses } from '~/services/classRequest';
 import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { selectUser } from '~/redux/infor';
+import HelmetContainer from '~/HOC/HelmetContainer';
 
 const columns = [
   {
@@ -217,45 +218,47 @@ function Classes() {
   };
 
   return (
-    <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Lớp học</Typography>
-        <Button
-          variant="contained"
-          component={RouterLink}
-          to="/classes/new"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-          Thêm lớp
-        </Button>
-      </Stack>
+    <HelmetContainer title="Lớp học | Student Management App">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+          <Typography variant="h4">Lớp học</Typography>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/classes/new"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Thêm lớp
+          </Button>
+        </Stack>
 
-      <Filters filters={classFilters} onChangeFilter={handleChangeFilter} />
+        <Filters filters={classFilters} onChangeFilter={handleChangeFilter} />
 
-      {loading ? (
-        <Box sx={{ textAlign: 'center', pt: 3 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
-        <Card
-          sx={{
-            width: '100%',
-            '& .super-app-theme--header': {
-              backgroundColor: '#5e94ca',
-              color: 'white',
-            },
-          }}
-        >
-          <Table
-            data={selectedClasses}
-            columns={columns}
-            homeroomClass={homeroomClass}
-            onDelete={handleDelete}
-            onRowClick={handleRowClick}
-          />
-        </Card>
-      )}
-    </Container>
+        {loading ? (
+          <Box sx={{ textAlign: 'center', pt: 3 }}>
+            <CircularProgress color="primary" />
+          </Box>
+        ) : (
+          <Card
+            sx={{
+              width: '100%',
+              '& .super-app-theme--header': {
+                backgroundColor: '#5e94ca',
+                color: 'white',
+              },
+            }}
+          >
+            <Table
+              data={selectedClasses}
+              columns={columns}
+              homeroomClass={homeroomClass}
+              onDelete={handleDelete}
+              onRowClick={handleRowClick}
+            />
+          </Card>
+        )}
+      </Container>
+    </HelmetContainer>
   );
 }
 

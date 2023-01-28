@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { deleteStaff, getStaffs } from '~/services/staffRequest';
+import HelmetContainer from '~/HOC/HelmetContainer';
 
 const columns = [
   {
@@ -221,36 +222,38 @@ export default function Staffs() {
   };
 
   return (
-    <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Nhân viên giáo vụ</Typography>
-        <Button
-          variant="contained"
-          component={RouterLink}
-          to="/staffs/new"
-          startIcon={<Iconify icon="eva:plus-fill" />}
-        >
-          Thêm nhân viên
-        </Button>
-      </Stack>
+    <HelmetContainer title="Nhân viên | Student Management App">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+          <Typography variant="h4">Nhân viên giáo vụ</Typography>
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/staffs/new"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+          >
+            Thêm nhân viên
+          </Button>
+        </Stack>
 
-      {loading ? (
-        <Box sx={{ textAlign: 'center', pt: 3 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
-        <Card
-          sx={{
-            width: '100%',
-            '& .super-app-theme--header': {
-              backgroundColor: '#5e94ca',
-              color: 'white',
-            },
-          }}
-        >
-          <Table data={staffs} columns={columns} onDelete={handleDelete} />
-        </Card>
-      )}
-    </Container>
+        {loading ? (
+          <Box sx={{ textAlign: 'center', pt: 3 }}>
+            <CircularProgress color="primary" />
+          </Box>
+        ) : (
+          <Card
+            sx={{
+              width: '100%',
+              '& .super-app-theme--header': {
+                backgroundColor: '#5e94ca',
+                color: 'white',
+              },
+            }}
+          >
+            <Table data={staffs} columns={columns} onDelete={handleDelete} />
+          </Card>
+        )}
+      </Container>
+    </HelmetContainer>
   );
 }
