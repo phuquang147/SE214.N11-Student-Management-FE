@@ -12,17 +12,18 @@ import RHFAutocomplete from '~/components/hook-form/RHFAutocomplete';
 import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 // constants
-import { genders, studentStatus } from '~/constants';
+import { conducts, genders, studentStatus } from '~/constants';
 // redux
 import { useSelector } from 'react-redux';
 import { selectClasses } from '~/redux/infor';
 import { createStudent, updateStudent } from '~/services/studentRequests';
 // router
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 
 export default function StudentForm({ mode, student }) {
   const classes = useSelector(selectClasses);
+  const navigate = useNavigate();
 
   const params = useParams();
 
@@ -41,6 +42,7 @@ export default function StudentForm({ mode, student }) {
     birthday: student ? dayjs(student.birthday) : dayjs('2007-01-01T21:11:54'),
     address: (student && student.address) || '',
     status: (student && student.status) || studentStatus[0],
+    conduct: (student && student.conduct) || conducts[2],
     class: student ? classes.find((_class) => _class.label === student.class + ' - ' + student.schoolYear) : classes[0],
   };
 
@@ -55,7 +57,7 @@ export default function StudentForm({ mode, student }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    const { class: className, name, gender, birthday, address, email, phone, status } = values;
+    const { class: className, name, gender, birthday, address, email, phone, status, conduct } = values;
     const classId = className.value;
 
     const student = {
@@ -66,13 +68,17 @@ export default function StudentForm({ mode, student }) {
       email,
       phone,
       status,
+      conduct,
       birthday: new Date(birthday).toISOString(),
     };
+
+    console.log(new Date().getFullYear() - new Date(student.birthday).getFullYear());
 
     if (mode === 'create') {
       try {
         const res = await createStudent(student);
         if (res.status === 201) {
+          navigate('/students');
           return toast.success(res.data.message);
         }
       } catch (err) {
@@ -82,6 +88,7 @@ export default function StudentForm({ mode, student }) {
       try {
         const res = await updateStudent(student, params.id);
         if (res.status === 201) {
+          navigate('/students');
           return toast.success(res.data.message);
         }
       } catch (err) {
@@ -142,6 +149,18 @@ export default function StudentForm({ mode, student }) {
             isOptionEqualToValue={(option, value) => option === value}
           />
         </Grid>
+
+        {mode === 'edit' && (
+          <Grid item xs={12} sm={6} md={4}>
+            <RHFAutocomplete
+              name="conduct"
+              label="Hạnh kiểm"
+              options={conducts}
+              getOptionLabel={(option) => option}
+              isOptionEqualToValue={(option, value) => option === value}
+            />
+          </Grid>
+        )}
       </Grid>
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>

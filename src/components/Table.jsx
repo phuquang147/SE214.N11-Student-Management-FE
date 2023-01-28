@@ -9,6 +9,7 @@ export default function Table({ data, columns, sx, onDelete, ...other }) {
     return {
       ...element,
       handleDelete: () => handleDelete(element._id),
+      handleUpdate: other.onUpdate,
     };
   });
 

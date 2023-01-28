@@ -14,6 +14,7 @@ import Scrollbar from '~/components/Scrollbar';
 import NavSection from '~/layouts/MainLayout/NavSection';
 //
 import navConfig from './NavConfig';
+import { HOMEROOM_TEACHER, STAFF, SUBJECT_TEACHER } from '~/constants/roles';
 const DRAWER_WIDTH = 280;
 
 const RootStyle = styled('div')(({ theme }) => ({
@@ -39,6 +40,18 @@ Sidebar.propTypes = {
 export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const user = useSelector(selectUser);
+
+  let updatedNavConfig;
+
+  if (user?.role?.name === SUBJECT_TEACHER || user?.role?.name === HOMEROOM_TEACHER) {
+    updatedNavConfig = navConfig.filter(
+      (item) => item.title !== 'dashboard' && item.title !== 'Nhân viên' && item.title !== 'Giáo viên',
+    );
+  }
+
+  if (user?.role?.name === STAFF) {
+    updatedNavConfig = navConfig.filter((item) => item.title !== 'Điểm số');
+  }
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -79,7 +92,7 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
         </Link>
       </Box>
 
-      <NavSection navConfig={navConfig} />
+      <NavSection navConfig={updatedNavConfig || navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

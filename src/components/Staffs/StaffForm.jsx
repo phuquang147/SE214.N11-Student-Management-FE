@@ -67,6 +67,7 @@ export default function StaffForm({ mode, staff }) {
         if (res.status === 201) {
           toast.success(res.data.message);
           navigate(-1);
+          console.log('edited');
         }
       } catch (err) {
         toast.error(err.response.data.message || 'Đã xảy ra lỗi khi cập nhật nhân viên');

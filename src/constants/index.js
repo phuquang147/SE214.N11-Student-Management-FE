@@ -10,3 +10,4 @@ export const teacherStatusFilter = ['Tất cả', 'Đang dạy', 'Đã nghỉ'];
 export const studentStatusFilter = ['Tất cả', 'Đang học', 'Đã tốt nghiệp', 'Đã nghỉ học'];
 export const gradeFilter = ['Tất cả', 10, 11, 12];
 export const schoolYearFilter = ['Tất cả', 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022];
+export const conducts = ['Giỏi', 'Khá', 'Trung bình', 'Yếu'];

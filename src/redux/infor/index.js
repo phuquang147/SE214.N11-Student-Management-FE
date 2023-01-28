@@ -22,11 +22,12 @@ const inforSlice = createSlice({
       state.status = 'loading';
     },
     setCommonInforSuccess(state, action) {
-      const { subjects, classes, roles, semesters, grades, user } = action.payload;
+      const { subjects, classes, roles, role, semesters, grades, user } = action.payload;
       state.user = user;
       state.status = 'idle';
       state.semesters = _.map(semesters, (semester) => ({ label: semester.name, value: semester._id }));
       state.roles = _.map(roles, (role) => ({ label: role.name, value: role._id }));
+      state.role = role;
       state.subjects = _.map(subjects, (subject) => ({ label: subject.name, value: subject._id }));
       state.classes = _.map(classes, (_class) => ({
         label: `${_class.name} - ${_class.schoolYear}`,
@@ -68,6 +69,7 @@ export const selectGroupedClasses = (state) => state.infor.groupedClasses;
 export const selectSchoolYears = (state) => state.infor.schoolYears;
 export const selectGrades = (state) => state.infor.grades;
 export const selectRoles = (state) => state.infor.roles;
+export const selectUserRole = (state) => state.infor.role;
 export const selectUser = (state) => state.infor.user;
 
 export default inforSlice.reducer;

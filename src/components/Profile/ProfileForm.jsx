@@ -13,11 +13,13 @@ import RHFDatePicker from '~/components/hook-form/RHFDatePicker';
 import RHFTextField from '~/components/hook-form/RHFTextField';
 import { updateProfile } from '~/services/profileRequest';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router';
 
 const genders = ['Nam', 'Nữ'];
 
 export default function ProfileForm({ user }) {
   const { name, email, phone, gender, birthday, address } = user;
+  const navigate = useNavigate();
 
   const StudentSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
@@ -60,6 +62,7 @@ export default function ProfileForm({ user }) {
       const res = await updateProfile(updatedProfile);
       if (res.status === 201) {
         toast.success(res.data.message);
+        navigate('/');
       }
     } catch (error) {
       toast.error(error?.response?.data?.message || 'Đã xảy ra lỗi, vui lòng thử lại');

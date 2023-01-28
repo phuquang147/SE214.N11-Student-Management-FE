@@ -45,6 +45,11 @@ const navConfig = [
     path: '/schedule',
     icon: getIcon('uim:schedule'),
   },
+  {
+    title: 'Quy định',
+    path: '/regulations',
+    icon: getIcon('carbon:rule-draft'),
+  },
 ];
 
 export default navConfig;

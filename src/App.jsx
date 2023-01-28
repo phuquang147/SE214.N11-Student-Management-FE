@@ -21,9 +21,9 @@ export default function App() {
       if (token) {
         try {
           const { data, status } = await commonDataRequest.getCommonData();
-          const { classes, subjects, roles, semesters, grades, user } = data;
+          const { classes, subjects, roles, role, semesters, grades, user } = data;
           if (status === 200) {
-            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, semesters, grades, roles, user }));
+            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, semesters, grades, roles, role, user }));
           }
         } catch (err) {
           toast.error('Đã xảy ra lỗi! Vui lòng tải lại trang');

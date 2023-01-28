@@ -1,4 +1,4 @@
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
 // components
@@ -15,6 +15,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { deleteClass, getClasses } from '~/services/classRequest';
 import { toast } from 'react-toastify';
+import { useSelector } from 'react-redux';
+import { selectUser } from '~/redux/infor';
 
 const columns = [
   {
@@ -136,6 +138,7 @@ const columns = [
     sortable: false,
     hideable: false,
     filterable: false,
+    flex: 1,
     renderCell: (params) => {
       const { _id, grade, name, teacher, handleDelete } = params.row;
       const _class = {
@@ -153,6 +156,13 @@ const columns = [
 function Classes() {
   const [selectedClasses, setSelectedClasses] = useState([]);
   const [loading, setLoading] = useState(false);
+  const user = useSelector(selectUser);
+  const navigate = useNavigate();
+
+  let homeroomClass;
+  if (user?.role?.name === 'Giáo viên chủ nhiệm') {
+    homeroomClass = user.classes[0].name;
+  }
 
   const getAllClasses = async () => {
     setLoading(true);
@@ -201,6 +211,11 @@ function Classes() {
     }
   };
 
+  const handleRowClick = (classId, students) => {
+    navigate(`/classes/${classId}`, { state: students });
+    // console.log(classId, students);
+  };
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
@@ -231,7 +246,13 @@ function Classes() {
             },
           }}
         >
-          <Table data={selectedClasses} columns={columns} onDelete={handleDelete} />
+          <Table
+            data={selectedClasses}
+            columns={columns}
+            homeroomClass={homeroomClass}
+            onDelete={handleDelete}
+            onRowClick={handleRowClick}
+          />
         </Card>
       )}
     </Container>

@@ -14,6 +14,8 @@ export default function Filters() {
 
   const defaultValues = {};
 
+  console.log('here');
+
   const methods = useForm({
     resolver: yupResolver(StudentSchema),
     defaultValues,

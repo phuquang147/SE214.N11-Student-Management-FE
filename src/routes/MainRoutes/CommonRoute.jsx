@@ -22,6 +22,8 @@ import Page404 from '~/pages/Page404';
 import Staffs from '~/pages/Staffs';
 import NewStaff from '~/pages/NewStaff';
 import EditStaff from '~/pages/EditStaff';
+import Regulations from '~/pages/Regulations';
+import StudentList from '~/pages/StudentList';
 
 const CommonRoutes = [
   {
@@ -58,6 +60,10 @@ const CommonRoutes = [
     path: '/classes/edit/:id',
     element: <EditClass />,
   },
+  {
+    path: '/classes/:id',
+    element: <StudentList />,
+  },
   // Score
   {
     path: '/scores',
@@ -88,6 +94,10 @@ const CommonRoutes = [
   {
     path: '/staffs/edit/:id',
     element: <EditStaff />,
+  },
+  {
+    path: '/regulations',
+    element: <Regulations />,
   },
   // Schedule
   {
