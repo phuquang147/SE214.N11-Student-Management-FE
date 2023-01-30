@@ -14,9 +14,9 @@ export function convertArrayToObjectKeys(studentScores) {
     };
 
     for (let i = 0; i < 5; i++) {
-      newScores[`oral${i + 1}`] = studentScore.scores.oral[i];
-      newScores[`m15${i + 1}`] = studentScore.scores.m15[i];
-      newScores[`m45${i + 1}`] = studentScore.scores.m45[i];
+      newScores[`oral${i + 1}`] = studentScore.scores.oral[i] ? studentScore.scores.oral[i] : null;
+      newScores[`m15${i + 1}`] = studentScore.scores.m15[i] ? studentScore.scores.m15[i] : null;
+      newScores[`m45${i + 1}`] = studentScore.scores.m45[i] ? studentScore.scores.m45[i] : null;
     }
 
     return newScores;
@@ -28,7 +28,8 @@ export function convertArrayToObjectKeys(studentScores) {
 export function convertObjectKeysToArray(scores) {
   const newScores = {
     name: scores.name,
-    id: scores.id,
+    _id: scores._id,
+    studentId: scores.student._id,
     final: scores.final,
     oral: [],
     m15: [],
@@ -36,9 +37,9 @@ export function convertObjectKeysToArray(scores) {
   };
 
   for (let i = 0; i < 5; i++) {
-    newScores.oral.push(scores[`oral${i + 1}`]);
-    newScores.m15.push(scores[`m15${i + 1}`]);
-    newScores.m45.push(scores[`m45${i + 1}`]);
+    newScores.oral.push(scores[`oral${i + 1}`] ? scores[`oral${i + 1}`] : null);
+    newScores.m15.push(scores[`m15${i + 1}`] ? scores[`m15${i + 1}`] : null);
+    newScores.m45.push(scores[`m45${i + 1}`] ? scores[`m45${i + 1}`] : null);
   }
 
   return newScores;

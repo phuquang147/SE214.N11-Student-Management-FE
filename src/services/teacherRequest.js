@@ -19,6 +19,33 @@ export const getAvailableTeacher = async () => {
   return res;
 };
 
+export const getAvailableTeachers = async ({
+  subjectId,
+  dayOfWeek,
+  startPeriod,
+  endPeriod,
+  schoolYear,
+  semesterId,
+}) => {
+  const res = await request.post(
+    '/available-teachers',
+    {
+      subjectId,
+      dayOfWeek,
+      startPeriod,
+      endPeriod,
+      schoolYear,
+      semesterId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+  return res;
+};
+
 export const getTeachersBySubjectAndClass = async (querySubjectId, queryClassId) => {
   const res = await request.get(`/teachers?${querySubjectId}&${queryClassId}`, {
     headers: {

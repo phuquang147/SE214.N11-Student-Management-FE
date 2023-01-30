@@ -40,7 +40,6 @@ export default function DataGridView({ columns, rows, sx, ...other }) {
       rowsPerPageOptions={[10, 20, 30]}
       //Selection
       isRowSelectable={() => false}
-      isCellEditable={() => false}
       disableSelectionOnClick
       //
       getRowHeight={() => 60}

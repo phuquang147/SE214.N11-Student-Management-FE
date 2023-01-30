@@ -3,7 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 // @mui
 import { Autocomplete, TextField } from '@mui/material';
 
-export default function RHFAutocomplete({ name, label, handleChange, ...other }) {
+export default function RHFAutocomplete({ name, label, handleChange, defaultValue, ...other }) {
   const { control, setValue } = useFormContext();
 
   return (
@@ -20,7 +20,6 @@ export default function RHFAutocomplete({ name, label, handleChange, ...other })
             disableClearable
             onChange={(e, value) => {
               setValue(name, value);
-              console.log(value);
               if (handleChange) handleChange(value);
             }}
             renderInput={(params) => <TextField {...params} label={label} />}

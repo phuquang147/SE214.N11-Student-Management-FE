@@ -1,5 +1,5 @@
 import { Card, Stack, Typography } from '@mui/material';
-import Table from '~/components/Table';
+import DataGridView from '~/components/DataGrid';
 import { convertArrayToObjectKeys } from '~/utils/convert-scores';
 
 export const commonConfig = {
@@ -16,7 +16,7 @@ export const columns = (editable) => [
     field: 'name',
     headerClassName: 'header',
     width: 180,
-    editable,
+    editable: false,
     renderCell: (params) => {
       const { row } = params;
       return (
@@ -194,9 +194,9 @@ export default function ScoresTable({ studentScores, processRowUpdate }) {
         },
       }}
     >
-      <Table
-        data={convertArrayToObjectKeys(studentScores)}
-        columns={columns(false)}
+      <DataGridView
+        rows={convertArrayToObjectKeys(studentScores)}
+        columns={columns(true)}
         processRowUpdate={processRowUpdate}
         experimentalFeatures={{ newEditingApi: true, columnGrouping: true }}
         columnGroupingModel={columnGroupingModel}
