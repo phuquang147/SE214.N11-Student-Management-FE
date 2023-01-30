@@ -16,3 +16,15 @@ export const getAllScores = async () => {
     },
   });
 };
+
+export const updateScore = async ({ classScoreId, studentId, scores }) => {
+  return request.patch(
+    '/scores',
+    { classScoreId, studentId, scores },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
+};

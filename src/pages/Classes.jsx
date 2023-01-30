@@ -171,6 +171,7 @@ function Classes() {
     const { data, status } = res;
 
     if (status === 200) {
+      console.log(data.classes);
       setSelectedClasses(data.classes);
       setLoaded(true);
     }

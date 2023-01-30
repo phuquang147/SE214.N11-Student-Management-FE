@@ -50,8 +50,7 @@ export default function DataGridView({ columns, rows, sx, ...other }) {
       onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
       rowsPerPageOptions={[10, 20, 30]}
       //Selection
-      isRowSelectable={() => true}
-      isCellEditable={() => false}
+      isRowSelectable={() => false}
       disableSelectionOnClick
       //
       getRowHeight={() => 60}
