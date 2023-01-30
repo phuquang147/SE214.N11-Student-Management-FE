@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Button, Card, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { Button, Card, Container, Skeleton, Stack, Typography } from '@mui/material';
 // components
 import Filters from '~/components/Filters';
 import Iconify from '~/components/Iconify';
@@ -22,13 +22,17 @@ import { SUBJECT_TEACHER } from '~/constants/roles';
 export default function Students() {
   const classes = useSelector(selectClasses);
   const [students, setStudents] = useState([]);
-  const [loading, setLoading] = useState(false);
   const user = useSelector(selectUser);
+  const [loaded, setLoaded] = useState(user.hasOwnProperty());
 
   useEffect(() => {
     const getStudents = async () => {
       const res = await getAllStudents();
-      setStudents(res.students);
+      console.log(res);
+      if (res.status === 200) {
+        setStudents(res.data.students);
+        setLoaded(true);
+      }
     };
     getStudents();
   }, [classes]);
@@ -41,7 +45,6 @@ export default function Students() {
     const formattedSchoolYear =
       schoolYear !== undefined && schoolYear.value !== 'Tất cả' ? `schoolYear=${schoolYear.value}` : '';
 
-    setLoading(true);
     const res = await request.get(`/classes?${formattedClassName}&${formattedSchoolYear}`, {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
@@ -52,7 +55,6 @@ export default function Students() {
       updatedStudents.push(..._class.students);
     });
     setStudents(updatedStudents);
-    setLoading(false);
   };
 
   const handleDelete = async (studentId) => {
@@ -70,6 +72,15 @@ export default function Students() {
   let filteredColumns = studentColumns;
   if (user?.role?.name === SUBJECT_TEACHER) {
     filteredColumns = studentColumns.filter((column) => column.field !== 'Hành động');
+  }
+
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
   }
 
   return (
@@ -91,23 +102,17 @@ export default function Students() {
 
         <Filters filters={studentFilters} onChangeFilter={handleChangeFilter} />
 
-        {loading ? (
-          <Box sx={{ textAlign: 'center', pt: 3 }}>
-            <CircularProgress color="primary" />
-          </Box>
-        ) : (
-          <Card
-            sx={{
-              width: '100%',
-              '& .super-app-theme--header': {
-                backgroundColor: '#5e94ca',
-                color: 'white',
-              },
-            }}
-          >
-            <Table data={students} columns={filteredColumns} onDelete={handleDelete} />
-          </Card>
-        )}
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table data={students} columns={filteredColumns} onDelete={handleDelete} />
+        </Card>
       </Container>
     </HelmetContainer>
   );

@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Chip, CircularProgress, Container, Skeleton, Stack, Typography } from '@mui/material';
 // components
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
@@ -14,6 +14,8 @@ import { deleteTeacher, getTeachers, getTeachersBySubjectAndClass } from '~/serv
 import { useState } from 'react';
 import { useEffect } from 'react';
 import HelmetContainer from '~/HOC/HelmetContainer';
+import { selectUser } from '~/redux/infor';
+import { useSelector } from 'react-redux';
 
 const columns = [
   {
@@ -210,6 +212,8 @@ const columns = [
 export default function Teachers() {
   const [loading, setLoading] = useState(false);
   const [teachers, setTeachers] = useState([]);
+  const user = useSelector(selectUser);
+  const [loaded, setLoaded] = useState(user.hasOwnProperty());
 
   const getAllTeachers = async () => {
     try {
@@ -218,6 +222,7 @@ export default function Teachers() {
       if (res.status === 200) {
         setTeachers(res.data.teachers);
         setLoading(false);
+        setLoaded(true);
       }
     } catch (err) {
       toast.error(err.response.data.message);
@@ -258,6 +263,15 @@ export default function Teachers() {
       toast.error(error.response.data.message || 'Đã xảy ra lỗi, vui lòng thử lại');
     }
   };
+
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
+  }
 
   return (
     <HelmetContainer title="Giáo viên | Student Management App">

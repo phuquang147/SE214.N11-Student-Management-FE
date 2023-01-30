@@ -1,16 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 // material
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Dialog,
-  DialogActions,
-  DialogTitle,
-  Typography,
-} from '@mui/material';
+import { Button, Container, Dialog, DialogActions, DialogTitle, Skeleton, Typography } from '@mui/material';
 // components
 import Filters from '~/components/Filters';
 import ScoresTable from '~/components/Scores/ScoresTable';
@@ -18,6 +9,8 @@ import ScoresTable from '~/components/Scores/ScoresTable';
 import { scoreFilters } from '~/constants/filters';
 // services
 import * as scoresRequest from '~/services/scoresRequest';
+import { selectUser } from '~/redux/infor';
+import { useSelector } from 'react-redux';
 
 const _ = require('lodash');
 
@@ -39,13 +32,14 @@ export default function Scores() {
   const mutateRow = useFakeMutation();
   const [promiseArguments, setPromiseArguments] = useState(null);
   const [classScore, setClassScore] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const user = useSelector(selectUser);
+  const [loaded, setLoaded] = useState(user.hasOwnProperty());
 
   useEffect(() => {
     const getAllScores = async () => {
-      const { data, status } = await scoresRequest.getAllScores();
-      console.log(data.classScore, status);
+      const { data } = await scoresRequest.getAllScores();
       setClassScore(data.classScore);
+      setLoaded(true);
     };
 
     getAllScores();
@@ -85,7 +79,6 @@ export default function Scores() {
   };
 
   const handleChangeFilter = async (values) => {
-    setLoading(true);
     const { class: _class, schoolYear, semester, subject } = values;
 
     try {
@@ -97,14 +90,21 @@ export default function Scores() {
       });
       if (status === 200) {
         const { classScore } = data;
-        console.log(data);
         setClassScore(classScore);
       }
     } catch (err) {
       toast.error('Đã xảy ra lỗi! Vui lòng thử lại');
     }
-    setLoading(false);
   };
+
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
+  }
 
   return (
     <Container>
@@ -124,16 +124,10 @@ export default function Scores() {
 
       <Filters filters={scoreFilters} onChangeFilter={handleChangeFilter} />
 
-      {loading ? (
-        <Box sx={{ textAlign: 'center', pt: 3 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
-        <ScoresTable
-          studentScores={classScore.length > 0 ? classScore[0].studentScores : []}
-          processRowUpdate={processRowUpdate}
-        />
-      )}
+      <ScoresTable
+        studentScores={classScore.length > 0 ? classScore[0].studentScores : []}
+        processRowUpdate={processRowUpdate}
+      />
     </Container>
   );
 }

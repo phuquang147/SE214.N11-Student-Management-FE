@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // material
-import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { Button, Card, Chip, Container, Skeleton, Stack, Typography } from '@mui/material';
 // components
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
@@ -12,6 +12,8 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { deleteStaff, getStaffs } from '~/services/staffRequest';
 import HelmetContainer from '~/HOC/HelmetContainer';
+import { selectUser } from '~/redux/infor';
+import { useSelector } from 'react-redux';
 
 const columns = [
   {
@@ -188,20 +190,19 @@ const columns = [
 ];
 
 export default function Staffs() {
-  const [loading, setLoading] = useState(false);
+  const user = useSelector(selectUser);
+  const [loaded, setLoaded] = useState(user.hasOwnProperty());
   const [staffs, setStaffs] = useState([]);
 
   const getAllStaffs = async () => {
     try {
-      setLoading(true);
       const res = await getStaffs();
       if (res.status === 200) {
         setStaffs(res.data.staffs);
-        setLoading(false);
+        setLoaded(true);
       }
     } catch (err) {
       toast.error(err.response.data.message);
-      setLoading(false);
     }
   };
 
@@ -221,6 +222,15 @@ export default function Staffs() {
     }
   };
 
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
+  }
+
   return (
     <HelmetContainer title="Nhân viên | Student Management App">
       <Container>
@@ -236,23 +246,17 @@ export default function Staffs() {
           </Button>
         </Stack>
 
-        {loading ? (
-          <Box sx={{ textAlign: 'center', pt: 3 }}>
-            <CircularProgress color="primary" />
-          </Box>
-        ) : (
-          <Card
-            sx={{
-              width: '100%',
-              '& .super-app-theme--header': {
-                backgroundColor: '#5e94ca',
-                color: 'white',
-              },
-            }}
-          >
-            <Table data={staffs} columns={columns} onDelete={handleDelete} />
-          </Card>
-        )}
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table data={staffs} columns={columns} onDelete={handleDelete} />
+        </Card>
       </Container>
     </HelmetContainer>
   );

@@ -1,4 +1,4 @@
-import { Button, Card, Container, IconButton, Stack, Typography } from '@mui/material';
+import { Button, Card, Container, IconButton, Skeleton, Stack, Typography } from '@mui/material';
 import Iconify from '~/components/Iconify';
 import { useEffect, useState } from 'react';
 import Table from '~/components/Table';
@@ -6,6 +6,8 @@ import { getRegulations } from '~/services/regulationsRequest';
 import { toast } from 'react-toastify';
 import RegulationsModal from '~/components/Regulations/RegulationsModal';
 import HelmetContainer from '~/HOC/HelmetContainer';
+import { selectUser } from '~/redux/infor';
+import { useSelector } from 'react-redux';
 
 const columns = [
   {
@@ -86,13 +88,15 @@ function Regulations() {
   const [regulations, setRegulations] = useState([]);
   const [selectedRegulation, setSelectedRegulation] = useState();
   const [isOpened, setIsOpened] = useState(false);
+  const user = useSelector(selectUser);
+  const [loaded, setLoaded] = useState(user.hasOwnProperty());
 
   const getAllRegulations = async () => {
     try {
       const res = await getRegulations();
       if (res.status === 200) {
         setRegulations(res.data.regulations);
-        console.log(res.data);
+        setLoaded(true);
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -121,6 +125,15 @@ function Regulations() {
     setSelectedRegulation(currentRegulation);
     setIsOpened(true);
   };
+
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
+  }
 
   return (
     <HelmetContainer title="Quy định | Student Management App">

@@ -1,6 +1,6 @@
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
-import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { Button, Card, Chip, Container, Skeleton, Stack, Typography } from '@mui/material';
 // components
 import ActionsMenu from '~/components/ActionsMenu';
 import Iconify from '~/components/Iconify';
@@ -157,8 +157,8 @@ const columns = [
 
 function Classes() {
   const [selectedClasses, setSelectedClasses] = useState([]);
-  const [loading, setLoading] = useState(false);
   const user = useSelector(selectUser);
+  const [loaded, setLoaded] = useState(user.hasOwnProperty());
   const navigate = useNavigate();
 
   let homeroomClass;
@@ -167,13 +167,12 @@ function Classes() {
   }
 
   const getAllClasses = async () => {
-    setLoading(true);
     const res = await getClasses();
     const { data, status } = res;
 
     if (status === 200) {
       setSelectedClasses(data.classes);
-      setLoading(false);
+      setLoaded(true);
     }
   };
 
@@ -188,7 +187,6 @@ function Classes() {
     const formattedSchoolYear =
       schoolYear.value !== undefined && schoolYear.value !== 'Tất cả' ? `schoolYear=${schoolYear.value}` : '';
 
-    setLoading(true);
     const res = await request.get(`/classes?${formattedGrade}&${formattedSchoolYear}`, {
       headers: {
         Authorization: `Bearer ${Cookies.get('token')}`,
@@ -196,7 +194,6 @@ function Classes() {
     });
     if (res.status === 200) {
       const { classes } = res.data;
-      setLoading(false);
       setSelectedClasses(classes);
     }
   };
@@ -223,6 +220,15 @@ function Classes() {
     filteredColumns = columns.filter((column) => column.field !== 'Tùy chỉnh');
   }
 
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
+  }
+
   return (
     <HelmetContainer title="Lớp học | Student Management App">
       <Container>
@@ -242,29 +248,23 @@ function Classes() {
 
         <Filters filters={classFilters} onChangeFilter={handleChangeFilter} />
 
-        {loading ? (
-          <Box sx={{ textAlign: 'center', pt: 3 }}>
-            <CircularProgress color="primary" />
-          </Box>
-        ) : (
-          <Card
-            sx={{
-              width: '100%',
-              '& .super-app-theme--header': {
-                backgroundColor: '#5e94ca',
-                color: 'white',
-              },
-            }}
-          >
-            <Table
-              data={selectedClasses}
-              columns={filteredColumns}
-              homeroomClass={homeroomClass}
-              onDelete={handleDelete}
-              onRowClick={handleRowClick}
-            />
-          </Card>
-        )}
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table
+            data={selectedClasses}
+            columns={filteredColumns}
+            homeroomClass={homeroomClass}
+            onDelete={handleDelete}
+            onRowClick={handleRowClick}
+          />
+        </Card>
       </Container>
     </HelmetContainer>
   );

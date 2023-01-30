@@ -7,7 +7,7 @@ export const getAllStudents = async () => {
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
   });
-  return res.data;
+  return res;
 };
 
 export const getStudentsByClassId = async (classId) => {
