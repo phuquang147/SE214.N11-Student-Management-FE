@@ -72,8 +72,6 @@ export default function StudentForm({ mode, student }) {
       birthday: new Date(birthday).toISOString(),
     };
 
-    console.log(new Date().getFullYear() - new Date(student.birthday).getFullYear());
-
     if (mode === 'create') {
       try {
         const res = await createStudent(student);
@@ -86,6 +84,7 @@ export default function StudentForm({ mode, student }) {
       }
     } else {
       try {
+        console.log(student);
         const res = await updateStudent(student, params.id);
         if (res.status === 201) {
           navigate('/students');

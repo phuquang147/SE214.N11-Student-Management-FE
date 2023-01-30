@@ -41,16 +41,20 @@ export default function Sidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const user = useSelector(selectUser);
 
-  let updatedNavConfig;
+  let updatedNavConfig = navConfig;
 
   if (user?.role?.name === SUBJECT_TEACHER || user?.role?.name === HOMEROOM_TEACHER) {
     updatedNavConfig = navConfig.filter(
-      (item) => item.title !== 'dashboard' && item.title !== 'Nhân viên' && item.title !== 'Giáo viên',
+      (item) =>
+        item.title !== 'dashboard' &&
+        item.title !== 'Nhân viên' &&
+        item.title !== 'Giáo viên' &&
+        item.title !== 'Quy định',
     );
   }
 
   if (user?.role?.name === STAFF) {
-    updatedNavConfig = navConfig.filter((item) => item.title !== 'Điểm số');
+    updatedNavConfig = navConfig.filter((item) => item.title !== 'Điểm số' && item.title !== 'Quy định');
   }
 
   const isDesktop = useResponsive('up', 'lg');

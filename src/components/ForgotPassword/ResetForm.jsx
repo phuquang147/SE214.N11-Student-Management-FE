@@ -18,15 +18,23 @@ import * as authServices from '~/services/authRequest';
 
 export default function ResetForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const { token } = useParams();
 
   const LoginSchema = Yup.object().shape({
     password: Yup.string().required('Vui lòng nhập mật khẩu'),
+    confirmPassword: Yup.string()
+      .required('Vui lòng xác nhận lại mật khẩu')
+      .test('equal', 'Mật khẩu không trùng khớp', function (confirmPassword) {
+        const { password } = this.parent;
+        return password === confirmPassword;
+      }),
   });
 
   const defaultValues = {
     password: '',
+    confirmPassword: '',
   };
 
   const methods = useForm({
@@ -72,6 +80,21 @@ export default function ResetForm() {
               <InputAdornment position="end">
                 <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                   <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        <RHFTextField
+          name="confirmPassword"
+          label="Xác nhận mật khẩu"
+          type={showConfirmPassword ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                  <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),

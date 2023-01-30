@@ -34,7 +34,11 @@ export default function ActionsMenu({ object = {}, onDelete }) {
           component={React.forwardRef((props, ref) => {
             return <RouterLink {...props} ref={ref} state={object} />;
           })}
-          to={`${location.pathname}/edit/${object._id}`}
+          to={
+            location.pathname.includes('/classes/')
+              ? `/students/edit/${object._id}`
+              : `${location.pathname}/edit/${object._id}`
+          }
           sx={{ color: 'text.secondary' }}
         >
           <ListItemIcon>

@@ -79,6 +79,7 @@ export default function DataGridView({ columns, rows, sx, ...other }) {
       {...other}
       onCellDoubleClick={(params) => {
         const { _id, students } = params.row;
+        console.log(params.row);
         other.onRowClick(_id, students);
       }}
       onCellClick={(params, event) => {

@@ -61,8 +61,12 @@ const CommonRoutes = [
     element: <EditClass />,
   },
   {
-    path: '/classes/:id',
+    path: '/classes/:classId',
     element: <StudentList />,
+  },
+  {
+    path: '/classes/:classId/edit/:studentId',
+    element: <EditStudent />,
   },
   // Score
   {

@@ -165,6 +165,60 @@ export const studentColumns = [
     },
   },
   {
+    field: 'type',
+    headerName: 'Học lực',
+    headerClassName: 'super-app-theme--header',
+    headerAlign: 'center',
+    align: 'center',
+    minWidth: 120,
+    renderCell: (params) => {
+      const { row } = params;
+
+      let color;
+      switch (row.type) {
+        case 'Giỏi':
+          color = 'success';
+          break;
+        case 'Khá':
+          color = 'primary';
+          break;
+        case 'Trung bình':
+          color = 'secondary';
+          break;
+        case 'Yếu':
+          color = 'warning';
+          break;
+        case 'Kém':
+          color = 'error';
+          break;
+        default:
+          break;
+      }
+
+      if (row.type) {
+        return (
+          <Chip
+            label={row.type}
+            color={color}
+            sx={{
+              bgcolor: `${color}.light`,
+              color: `${color}.dark`,
+              fontSize: '13px',
+              fontWeight: 'bold',
+              width: '130px',
+            }}
+          />
+        );
+      }
+
+      return (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography noWrap>Chưa xét</Typography>
+        </Stack>
+      );
+    },
+  },
+  {
     field: 'Hành động',
     headerName: '',
     headerClassName: 'super-app-theme--header',

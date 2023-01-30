@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { selectUser } from '~/redux/infor';
 import HelmetContainer from '~/HOC/HelmetContainer';
+import { SUBJECT_TEACHER } from '~/constants/roles';
 
 const columns = [
   {
@@ -217,19 +218,26 @@ function Classes() {
     // console.log(classId, students);
   };
 
+  let filteredColumns = columns;
+  if (user?.role?.name === SUBJECT_TEACHER) {
+    filteredColumns = columns.filter((column) => column.field !== 'Tùy chỉnh');
+  }
+
   return (
     <HelmetContainer title="Lớp học | Student Management App">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
           <Typography variant="h4">Lớp học</Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/classes/new"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            Thêm lớp
-          </Button>
+          {user?.role?.name !== SUBJECT_TEACHER && (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/classes/new"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              Thêm lớp
+            </Button>
+          )}
         </Stack>
 
         <Filters filters={classFilters} onChangeFilter={handleChangeFilter} />
@@ -250,7 +258,7 @@ function Classes() {
           >
             <Table
               data={selectedClasses}
-              columns={columns}
+              columns={filteredColumns}
               homeroomClass={homeroomClass}
               onDelete={handleDelete}
               onRowClick={handleRowClick}

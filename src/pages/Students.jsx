@@ -11,17 +11,19 @@ import Iconify from '~/components/Iconify';
 import { studentFilters } from '~/constants/filters';
 // services
 import Table from '~/components/Table';
-import { selectClasses } from '~/redux/infor';
+import { selectClasses, selectUser } from '~/redux/infor';
 import request from '~/services/request';
 import { deleteStudent, getAllStudents } from '~/services/studentRequests';
 import { toast } from 'react-toastify';
 import { studentColumns } from '~/constants/columns';
 import HelmetContainer from '~/HOC/HelmetContainer';
+import { SUBJECT_TEACHER } from '~/constants/roles';
 
 export default function Students() {
   const classes = useSelector(selectClasses);
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
+  const user = useSelector(selectUser);
 
   useEffect(() => {
     const getStudents = async () => {
@@ -65,19 +67,26 @@ export default function Students() {
     }
   };
 
+  let filteredColumns = studentColumns;
+  if (user?.role?.name === SUBJECT_TEACHER) {
+    filteredColumns = studentColumns.filter((column) => column.field !== 'Hành động');
+  }
+
   return (
     <HelmetContainer title="Học sinh | Student Management App">
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
           <Typography variant="h4">Học sinh</Typography>
-          <Button
-            variant="contained"
-            component={RouterLink}
-            to="/students/new"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            Thêm học sinh
-          </Button>
+          {user?.role?.name !== SUBJECT_TEACHER && (
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="/students/new"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              Thêm học sinh
+            </Button>
+          )}
         </Stack>
 
         <Filters filters={studentFilters} onChangeFilter={handleChangeFilter} />
@@ -96,7 +105,7 @@ export default function Students() {
               },
             }}
           >
-            <Table data={students} columns={studentColumns} onDelete={handleDelete} />
+            <Table data={students} columns={filteredColumns} onDelete={handleDelete} />
           </Card>
         )}
       </Container>

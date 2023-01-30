@@ -10,6 +10,15 @@ export const getAllStudents = async () => {
   return res.data;
 };
 
+export const getStudentsByClassId = async (classId) => {
+  const res = await request.get(`/students/class/${classId}`, {
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token')}`,
+    },
+  });
+  return res;
+};
+
 export const createStudent = async (student) => {
   const res = await request.post('/students', student, {
     headers: {
@@ -34,5 +43,18 @@ export const deleteStudent = async (studentId) => {
       Authorization: `Bearer ${Cookies.get('token')}`,
     },
   });
+  return res;
+};
+
+export const rankStudents = async (classId) => {
+  const res = await request.post(
+    '/students/ranking',
+    { classId },
+    {
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token')}`,
+      },
+    },
+  );
   return res;
 };
