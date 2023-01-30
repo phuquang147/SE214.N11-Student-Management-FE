@@ -1,21 +1,19 @@
+import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
-// material
-import { Box, Button, Card, Chip, CircularProgress, Container, Stack, Typography } from '@mui/material';
-// components
+import { toast } from 'react-toastify';
+import ActionsMenu from '~/components/ActionsMenu';
 import Filters from '~/components/Filters';
 import Iconify from '~/components/Iconify';
-// constants
-import { studentFilters } from '~/constants/filters';
-// services
-import ActionsMenu from '~/components/ActionsMenu';
 import Table from '~/components/Table';
+import { studentFilters } from '~/constants/filters';
 import { selectClasses } from '~/redux/infor';
 import request from '~/services/request';
 import { deleteStudent, getAllStudents } from '~/services/studentRequests';
-import { toast } from 'react-toastify';
 
 const columns = [
   {
@@ -256,8 +254,64 @@ export default function Students() {
     }
   };
 
+  const handleExportExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('Học sinh');
+
+    sheet.columns = [
+      { header: 'Mã học sinh', key: 'id', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: 'Họ và tên', key: 'name', width: 40 },
+      { header: 'Giới tính', key: 'gender', width: 20 },
+      { header: 'Ngày sinh', key: 'birthday', width: 20 },
+      { header: 'Số điện thoại', key: 'phone', width: 20 },
+      { header: 'Email', key: 'email', width: 30 },
+      { header: 'Địa chỉ', key: 'address', width: 40 },
+      { header: 'Hạnh kiểm', key: 'conduct', width: 20 },
+      { header: 'Tình trạng', key: 'status', width: 20 },
+    ];
+
+    sheet.getRow(1).fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FFa5d8ff' },
+    };
+
+    sheet.getRow(1).font = {
+      bold: true,
+    };
+
+    for (let student of students) {
+      const { _id, name, gender, birthday, phone, email, address, conduct, status } = student;
+      const date = new Date(birthday);
+
+      sheet.addRow({
+        id: _id.substring(0, 6),
+        name,
+        gender,
+        birthday: `${date.getDay()}/${date.getMonth()}/${date.getFullYear()}`,
+        phone,
+        email,
+        address,
+        conduct,
+        status,
+      });
+    }
+
+    sheet.eachRow({ includeEmpty: true }, function (row) {
+      row.border = {
+        bottom: { style: 'thin' },
+      };
+      row.fontSize = 12;
+      row.height = 40;
+      row.alignment = { vertical: 'middle' };
+    });
+
+    const buf = await workbook.xlsx.writeBuffer();
+    saveAs(new Blob([buf]), `Student.xlsx`);
+  };
+
   return (
-    <Container>
+    <Container sx={{ pb: 2 }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
         <Typography variant="h4">Học sinh</Typography>
         <Button
@@ -287,6 +341,11 @@ export default function Students() {
           }}
         >
           <Table data={students} columns={columns} onDelete={handleDelete} />
+          <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
+            <Button variant="contained" onClick={handleExportExcel}>
+              Xuất Excel
+            </Button>
+          </Box>
         </Card>
       )}
     </Container>
