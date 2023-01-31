@@ -26,7 +26,6 @@ export default function Students() {
   useEffect(() => {
     const getStudents = async () => {
       const res = await getAllStudents();
-      console.log(res);
       if (res.status === 200) {
         setStudents(res.data.students);
         setLoaded(true);

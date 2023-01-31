@@ -12,6 +12,7 @@ import LoginForm from '~/components/Login/LoginForm';
 // img
 import illustrationLoginImg from '~/assets/images/school.jpg';
 import Cookies from 'js-cookie';
+import HelmetContainer from '~/HOC/HelmetContainer';
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex',
@@ -65,33 +66,35 @@ export default function Login() {
   }, [navigate]);
 
   return (
-    <RootStyle>
-      <HeaderStyle>
-        <Logo />
-      </HeaderStyle>
+    <HelmetContainer title="Đăng nhập | Student Management">
+      <RootStyle>
+        <HeaderStyle>
+          <Logo />
+        </HeaderStyle>
 
-      {mdUp && (
-        <SectionStyle>
-          <img src={illustrationLoginImg} alt="login" />
-        </SectionStyle>
-      )}
+        {mdUp && (
+          <SectionStyle>
+            <img src={illustrationLoginImg} alt="login" />
+          </SectionStyle>
+        )}
 
-      <Container maxWidth="sm">
-        <ContentStyle>
-          {state && (
-            <Alert severity="error" variant="outlined" sx={{ mb: 2, color: '#e57373' }}>
-              {state.message}
-            </Alert>
-          )}
-          <Typography variant="h4" gutterBottom>
-            Đăng Nhập
-          </Typography>
+        <Container maxWidth="sm">
+          <ContentStyle>
+            {state && (
+              <Alert severity="error" variant="outlined" sx={{ mb: 2, color: '#e57373' }}>
+                {state.message}
+              </Alert>
+            )}
+            <Typography variant="h4" gutterBottom>
+              Đăng Nhập
+            </Typography>
 
-          <Typography sx={{ color: 'text.secondary', mb: 5 }}>Nhập thông tin đăng nhập để tiếp tục</Typography>
+            <Typography sx={{ color: 'text.secondary', mb: 5 }}>Nhập thông tin đăng nhập để tiếp tục</Typography>
 
-          <LoginForm />
-        </ContentStyle>
-      </Container>
-    </RootStyle>
+            <LoginForm />
+          </ContentStyle>
+        </Container>
+      </RootStyle>
+    </HelmetContainer>
   );
 }

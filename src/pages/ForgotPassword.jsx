@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 // components
 import EmailForm from '~/components/ForgotPassword/EmailForm';
 import ResetForm from '~/components/ForgotPassword/ResetForm';
+import HelmetContainer from '~/HOC/HelmetContainer';
 
 const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -26,20 +27,22 @@ export default function ForgotPassword() {
   const { token } = useParams();
 
   return (
-    <RootStyle>
-      <Container maxWidth="sm">
-        <ContentStyle>
-          <Typography variant="h4" gutterBottom>
-            {token ? 'Tạo mật khẩu mới' : 'Quên mật khẩu'}
-          </Typography>
+    <HelmetContainer title="Quên mật khẩu | Student Management">
+      <RootStyle>
+        <Container maxWidth="sm">
+          <ContentStyle>
+            <Typography variant="h4" gutterBottom>
+              {token ? 'Tạo mật khẩu mới' : 'Quên mật khẩu'}
+            </Typography>
 
-          <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-            {token ? 'Nhập mật khẩu mới' : 'Nhập email để tiếp tục'}
-          </Typography>
+            <Typography sx={{ color: 'text.secondary', mb: 5 }}>
+              {token ? 'Nhập mật khẩu mới' : 'Nhập email để tiếp tục'}
+            </Typography>
 
-          {token ? <ResetForm /> : <EmailForm />}
-        </ContentStyle>
-      </Container>
-    </RootStyle>
+            {token ? <ResetForm /> : <EmailForm />}
+          </ContentStyle>
+        </Container>
+      </RootStyle>
+    </HelmetContainer>
   );
 }

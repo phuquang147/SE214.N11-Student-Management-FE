@@ -18,11 +18,12 @@ import { toast } from 'react-toastify';
 import { useSelector } from 'react-redux';
 import { selectUser } from '~/redux/infor';
 import HelmetContainer from '~/HOC/HelmetContainer';
-import { SUBJECT_TEACHER } from '~/constants/roles';
+import { HOMEROOM_TEACHER, SUBJECT_TEACHER } from '~/constants/roles';
 
 const columns = [
   {
     field: 'name',
+    flex: 1,
     headerName: 'Tên lớp',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -41,6 +42,7 @@ const columns = [
   },
   {
     field: 'id',
+    flex: 1,
     headerName: 'Mã lớp',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -57,6 +59,7 @@ const columns = [
   },
   {
     field: 'grade',
+    flex: 1,
     headerName: 'Khối',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -94,6 +97,7 @@ const columns = [
   },
   {
     field: 'schoolYear',
+    flex: 1,
     headerName: 'Năm học',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -102,6 +106,7 @@ const columns = [
   },
   {
     field: 'quantity',
+    flex: 1,
     headerName: 'Sỉ số',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -118,6 +123,7 @@ const columns = [
   },
   {
     field: 'teacher[name]',
+    flex: 1,
     headerName: 'Giáo viên chủ nhiệm',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
@@ -134,13 +140,13 @@ const columns = [
   },
   {
     field: 'Tùy chỉnh',
+    flex: 1,
     headerName: '',
     headerClassName: 'super-app-theme--header',
     headerAlign: 'center',
     sortable: false,
     hideable: false,
     filterable: false,
-    flex: 1,
     renderCell: (params) => {
       const { _id, grade, name, teacher, handleDelete } = params.row;
       const _class = {
@@ -171,7 +177,6 @@ function Classes() {
     const { data, status } = res;
 
     if (status === 200) {
-      console.log(data.classes);
       setSelectedClasses(data.classes);
       setLoaded(true);
     }
@@ -211,13 +216,13 @@ function Classes() {
     }
   };
 
-  const handleRowClick = (classId, students) => {
-    navigate(`/classes/${classId}`, { state: students });
-    // console.log(classId, students);
+  const handleRowClick = (params) => {
+    const { _id, students } = params.row;
+    navigate(`/classes/${_id}`, { state: students });
   };
 
   let filteredColumns = columns;
-  if (user?.role?.name === SUBJECT_TEACHER) {
+  if (user?.role?.name === SUBJECT_TEACHER || user?.role?.name === HOMEROOM_TEACHER) {
     filteredColumns = columns.filter((column) => column.field !== 'Tùy chỉnh');
   }
 
@@ -235,7 +240,7 @@ function Classes() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
           <Typography variant="h4">Lớp học</Typography>
-          {user?.role?.name !== SUBJECT_TEACHER && (
+          {user?.role?.name !== SUBJECT_TEACHER && user?.role?.name !== HOMEROOM_TEACHER && (
             <Button
               variant="contained"
               component={RouterLink}
@@ -263,7 +268,7 @@ function Classes() {
             columns={filteredColumns}
             homeroomClass={homeroomClass}
             onDelete={handleDelete}
-            onRowClick={handleRowClick}
+            onCellDoubleClick={handleRowClick}
           />
         </Card>
       </Container>

@@ -123,7 +123,7 @@ function Regulations() {
   const handleUpdateRegulation = (id) => {
     const currentRegulation = regulations.find((regulation) => regulation._id === id);
     setSelectedRegulation(currentRegulation);
-    setIsOpened(true);
+    handleShowModal();
   };
 
   if (!loaded) {
@@ -140,9 +140,6 @@ function Regulations() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
           <Typography variant="h4">Quy định</Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleShowModal}>
-            Thêm quy định
-          </Button>
         </Stack>
 
         <Card
@@ -163,7 +160,6 @@ function Regulations() {
           regulation={selectedRegulation}
           onClose={handleCloseModal}
           onReload={getAllRegulations}
-          onUpdate={handleUpdateRegulation}
         />
       )}
     </HelmetContainer>

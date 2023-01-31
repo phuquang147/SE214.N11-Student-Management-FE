@@ -16,9 +16,14 @@ import Iconify from '~/components/Iconify';
 import Cookies from 'js-cookie';
 // services
 import * as authRequest from '~/services/authRequest';
+import { HOMEROOM_TEACHER, PRINCIPAL, STAFF, SUBJECT_TEACHER } from '~/constants/roles';
+import * as commonDataRequest from '~/services/commonDataRequest';
+import { inforActions } from '~/redux/infor';
+import { useDispatch } from 'react-redux';
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -42,12 +47,24 @@ export default function LoginForm() {
     getValues,
   } = methods;
 
+  const getCommonData = async () => {
+    try {
+      const { data, status } = await commonDataRequest.getCommonData();
+      const { classes, subjects, semesters, grades, user } = data;
+      if (status === 200) {
+        dispatch(inforActions.setCommonInforSuccess({ classes, subjects, semesters, grades, user }));
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
   const onSubmit = async () => {
     const { username, password } = getValues();
     try {
       const { data, status } = await authRequest.login({ username, password });
       if (status === 200) {
-        const { token, accountId } = data;
+        const { token, accountId, role } = data;
 
         const remainingMilliseconds = 60 * 60 * 1000;
         const expiryDate = new Date(new Date().getTime() + remainingMilliseconds);
@@ -55,7 +72,17 @@ export default function LoginForm() {
         Cookies.set('accountId', accountId, { expires: expiryDate });
 
         toast.success('Đăng nhập thành công');
-        navigate('/', { replace: true });
+
+        await getCommonData();
+
+        if (role === SUBJECT_TEACHER || role === HOMEROOM_TEACHER) {
+          navigate('/students', { replace: true });
+          return;
+        }
+
+        if (role === PRINCIPAL || role === STAFF) {
+          navigate('/', { replace: true });
+        }
       } else toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
     } catch (err) {
       toast.error(err.response.data.message);

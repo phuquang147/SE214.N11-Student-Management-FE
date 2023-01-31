@@ -32,11 +32,14 @@ export default function Filters({ filters, onChangeFilter }) {
   const grades = useSelector(selectGrades);
 
   const formatedFilters = _.mapValues(_.keyBy(filters, 'name'), (filter) => {
+    let filterNumber = 1;
+    if (filter.options.length > 0 && filter.options[0].value === 'Tất cả') filterNumber = filterNumber + 1;
+
     if (filter.name === 'class' && filter.options.length <= 1) {
       filter.options.push(...classes);
     }
 
-    if (filter.name === 'schoolYear' && filter.options.length <= 1) {
+    if (filter.name === 'schoolYear' && filter.options.length < filterNumber) {
       filter.options.push(...schoolYears);
     }
 
@@ -90,6 +93,7 @@ export default function Filters({ filters, onChangeFilter }) {
 
   useEffect(() => {
     if (formatedFilters.schoolYear && formatedFilters.schoolYear.options.length > 0 && !getValues().schoolYear) {
+      console.log(formatedFilters.schoolYear.options[0]);
       setValue('schoolYear', formatedFilters.schoolYear.options[0]);
     }
 
@@ -111,7 +115,9 @@ export default function Filters({ filters, onChangeFilter }) {
         setValue('class', formatedFilters.class.options[0]);
       } else {
         setClassOptions(groupedClasses[formatedFilters.schoolYear.options[0].value]);
-        setValue('class', groupedClasses[formatedFilters.schoolYear.options[0].value][0]);
+        if (groupedClasses[formatedFilters.schoolYear.options[0].value]) {
+          setValue('class', groupedClasses[formatedFilters.schoolYear.options[0].value][0]);
+        }
       }
     }
   }, [formatedFilters, groupedClasses, setValue, getValues]);

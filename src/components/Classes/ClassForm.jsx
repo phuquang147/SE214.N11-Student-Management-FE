@@ -16,11 +16,13 @@ import { getAvailableTeacher } from '~/services/teacherRequest';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { createClass, updateClass } from '~/services/classRequest';
+import { useNavigate } from 'react-router';
 
 export default function ClassForm({ mode, _class }) {
   const [availableTeacher, setAvailableTeacher] = useState([]);
   const grades = useSelector(selectGrades);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const ClassSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập tên lớp'),
@@ -43,7 +45,6 @@ export default function ClassForm({ mode, _class }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
     if (!values.grade) {
       return toast.error('Vui lòng chọn khối');
     }
@@ -75,6 +76,7 @@ export default function ClassForm({ mode, _class }) {
         const res = await updateClass(enteredClass);
         if (res.status === 201) {
           toast.success(res.data.message);
+          navigate(-1);
         }
       } else {
         const res = await createClass(enteredClass);
@@ -82,10 +84,10 @@ export default function ClassForm({ mode, _class }) {
         if (res.status === 201) {
           toast.success(message);
           dispatch(inforActions.addClass(newClass));
+          navigate(-1);
         }
       }
     } catch (err) {
-      console.log(err);
       toast.error('Đã có lỗi xảy ra khi thêm lớp');
     }
   };
@@ -100,13 +102,14 @@ export default function ClassForm({ mode, _class }) {
         }
         setAvailableTeacher(formattedTeachers);
       } catch (err) {
-        console.log(err);
         toast.error('Đã xảy ra lỗi khi tải trang');
       }
     };
 
     getTeachers();
   }, [_class]);
+
+  console.log(mode);
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -148,7 +151,7 @@ export default function ClassForm({ mode, _class }) {
 
       <Stack direction="row" justifyContent="end" sx={{ mt: 3 }}>
         <LoadingButton size="large" type="submit" variant="contained" loading={isSubmitting}>
-          {mode === 'create' ? 'Tạo mới' : 'Cập nhật'}
+          {mode === 'edit' ? 'Cập nhật' : 'Tạo mới'}
         </LoadingButton>
       </Stack>
     </FormProvider>

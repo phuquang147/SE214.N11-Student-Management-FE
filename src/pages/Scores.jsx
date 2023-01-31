@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import Filters from '~/components/Filters';
 import ScoresTable from '~/components/Scores/ScoresTable';
 import { scoreFilters } from '~/constants/filters';
+import HelmetContainer from '~/HOC/HelmetContainer';
 import { selectUser } from '~/redux/infor';
 import * as scoresRequest from '~/services/scoresRequest';
 import { convertObjectKeysToArray } from '~/utils/convert-scores';
@@ -94,15 +95,6 @@ export default function Scores() {
     }
   };
 
-  if (!loaded) {
-    return (
-      <>
-        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
-        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
-      </>
-    );
-  }
-
   const handleExportExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const sheet = workbook.addWorksheet('Bảng điểm');
@@ -178,45 +170,47 @@ export default function Scores() {
     saveAs(new Blob([buf]), `test.xlsx`);
   };
 
+  if (!loaded) {
+    return (
+      <>
+        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+      </>
+    );
+  }
+
   return (
-    <Container sx={{ pb: 2 }}>
-      <Typography variant="h4">Quản lý điểm</Typography>
+    <HelmetContainer title="Điểm số | Student Management">
+      <Container sx={{ pb: 2 }}>
+        <Typography variant="h4">Quản lý điểm</Typography>
 
-      {!!promiseArguments && (
-        <Dialog maxWidth="xs" open={true}>
-          <DialogTitle>Xác nhận thay đổi điểm</DialogTitle>
-          <DialogActions>
-            <Button onClick={handleNo} color="error">
-              Không
-            </Button>
-            <Button variant="contained" onClick={handleYes}>
-              Xác nhận
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+        {!!promiseArguments && (
+          <Dialog maxWidth="xs" open={true}>
+            <DialogTitle>Xác nhận thay đổi điểm</DialogTitle>
+            <DialogActions>
+              <Button onClick={handleNo} color="error">
+                Không
+              </Button>
+              <Button variant="contained" onClick={handleYes}>
+                Xác nhận
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
 
-      <Filters filters={scoreFilters} onChangeFilter={handleChangeFilter} />
+        <Filters filters={scoreFilters} onChangeFilter={handleChangeFilter} />
 
-      <ScoresTable
-        studentScores={classScore.length > 0 ? classScore[0].studentScores : []}
-        processRowUpdate={processRowUpdate}
-      />
-      {/* {loading ? (
-        <Box sx={{ textAlign: 'center', pt: 3 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
         <ScoresTable
           studentScores={classScore.length > 0 ? classScore[0].studentScores : []}
           processRowUpdate={processRowUpdate}
         />
-      )} */}
-      <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
-        <Button variant="contained" onClick={handleExportExcel}>
-          Xuất Excel
-        </Button>
-      </Box>
-    </Container>
+
+        <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
+          <Button variant="contained" onClick={handleExportExcel}>
+            Xuất Excel
+          </Button>
+        </Box>
+      </Container>
+    </HelmetContainer>
   );
 }

@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { Box, Button, Card, CircularProgress, Container, IconButton, Stack, Typography } from '@mui/material';
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
@@ -7,6 +8,7 @@ import Filters from '~/components/Filters';
 import Iconify from '~/components/Iconify';
 import LessonModal from '~/components/Schedule/LessonModal';
 import { scheduleFilters } from '~/constants/filters';
+import HelmetContainer from '~/HOC/HelmetContainer';
 import * as scheduleRequest from '~/services/scheduleRequest';
 import convertLessons from '~/utils/convert-lessons';
 
@@ -43,10 +45,12 @@ export default function Schedule() {
         setSchedule(null);
       }
     } catch (error) {
-      toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
+      toast.error(error.response.data.message);
       setSchedule(null);
     }
     setLoading(false);
+
+    console.log(schedule);
   };
 
   const deleteLesson = async (cell, cellIndex) => {
@@ -120,170 +124,182 @@ export default function Schedule() {
     });
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `test.xlsx`);
+    saveAs(
+      new Blob([buf]),
+      `TKB - Lớp ${schedule.class.name} - ${schedule.semester.name} - Năm học ${schedule.schoolYear}.xlsx`,
+    );
   };
 
+  console.log(schedule?.lessons);
+
   return (
-    <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Thời khóa biểu</Typography>
-      </Stack>
+    <HelmetContainer title="Thời khóa biểu | Student Management">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+          <Typography variant="h4">Thời khóa biểu</Typography>
+        </Stack>
 
-      <Filters filters={scheduleFilters} onChangeFilter={handleChangeFilter} />
+        <Filters filters={scheduleFilters} onChangeFilter={handleChangeFilter} />
 
-      {loading ? (
-        <Box sx={{ textAlign: 'center', pt: 3 }}>
-          <CircularProgress color="primary" />
-        </Box>
-      ) : (
-        <Card
-          sx={{
-            width: '100%',
-            '& .super-app-theme--header': {
-              backgroundColor: '#5e94ca',
-              color: 'white',
-            },
-            padding: 4,
-            overflowX: 'auto',
-          }}
-        >
-          <table id="schedule">
-            <tr>
-              <th>Tiết / Thứ</th>
-              <th>
-                Thứ 2
-                <IconButton
-                  color="primary"
-                  size="small"
-                  sx={{ ml: 1 }}
-                  disabled={!schedule}
-                  onClick={() => handleShowLessonModal(0, false)}
-                >
-                  <Iconify icon="material-symbols:add" width={24} height={24} />
-                </IconButton>
-              </th>
-              <th>
-                Thứ 3
-                <IconButton
-                  color="primary"
-                  size="small"
-                  sx={{ ml: 1 }}
-                  disabled={!schedule}
-                  onClick={() => handleShowLessonModal(1, false)}
-                >
-                  <Iconify icon="material-symbols:add" width={24} height={24} />
-                </IconButton>
-              </th>
-              <th>
-                Thứ 4
-                <IconButton
-                  color="primary"
-                  size="small"
-                  sx={{ ml: 1 }}
-                  disabled={!schedule}
-                  onClick={() => handleShowLessonModal(2, false)}
-                >
-                  <Iconify icon="material-symbols:add" width={24} height={24} />
-                </IconButton>
-              </th>
-              <th>
-                Thứ 5
-                <IconButton
-                  color="primary"
-                  size="small"
-                  sx={{ ml: 1 }}
-                  disabled={!schedule}
-                  onClick={() => handleShowLessonModal(3, false)}
-                >
-                  <Iconify icon="material-symbols:add" width={24} height={24} />
-                </IconButton>
-              </th>
-              <th>
-                Thứ 6
-                <IconButton
-                  color="primary"
-                  size="small"
-                  sx={{ ml: 1 }}
-                  disabled={!schedule}
-                  onClick={() => handleShowLessonModal(4, false)}
-                >
-                  <Iconify icon="material-symbols:add" width={24} height={24} />
-                </IconButton>
-              </th>
-              <th>
-                Thứ 7
-                <IconButton
-                  color="primary"
-                  size="small"
-                  sx={{ ml: 1 }}
-                  disabled={!schedule}
-                  onClick={() => handleShowLessonModal(5, false)}
-                >
-                  <Iconify icon="material-symbols:add" width={24} height={24} />
-                </IconButton>
-              </th>
-            </tr>
-
-            {schedule &&
-              schedule.lessons.map((lesson, index) => (
+        {loading ? (
+          <Box sx={{ textAlign: 'center', pt: 3 }}>
+            <CircularProgress color="primary" />
+          </Box>
+        ) : (
+          <Card
+            sx={{
+              width: '100%',
+              '& .super-app-theme--header': {
+                backgroundColor: '#5e94ca',
+                color: 'white',
+              },
+              padding: 4,
+              overflowX: 'auto',
+            }}
+          >
+            <table id="schedule">
+              <thead>
                 <tr>
-                  <th>{index + 1}</th>
-                  {lesson.map((cell, cellIndex) => {
-                    return cell ? (
-                      cell.type === 'start' ? (
-                        <td
-                          rowSpan={cell.rowSpan}
-                          className="used h-3 "
-                          onContextMenu={(e) => {
-                            e.preventDefault();
-                          }}
-                        >
-                          <b> {`${cell.subject}`}</b>
-                          <br />
-                          {`${cell.teacher}`}
-                          <Box sx={{ position: 'absolute', top: 0, right: 0 }} className="lesson_actions">
-                            <IconButton
-                              sx={{ fontSize: 20, color: '#55b8ff' }}
-                              onClick={() => {
-                                handleShowLessonModal(cellIndex, true, cell);
+                  <th>Tiết / Thứ</th>
+                  <th>
+                    Thứ 2
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      disabled={!schedule}
+                      onClick={() => handleShowLessonModal(0, false)}
+                    >
+                      <Iconify icon="material-symbols:add" width={24} height={24} />
+                    </IconButton>
+                  </th>
+                  <th>
+                    Thứ 3
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      disabled={!schedule}
+                      onClick={() => handleShowLessonModal(1, false)}
+                    >
+                      <Iconify icon="material-symbols:add" width={24} height={24} />
+                    </IconButton>
+                  </th>
+                  <th>
+                    Thứ 4
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      disabled={!schedule}
+                      onClick={() => handleShowLessonModal(2, false)}
+                    >
+                      <Iconify icon="material-symbols:add" width={24} height={24} />
+                    </IconButton>
+                  </th>
+                  <th>
+                    Thứ 5
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      disabled={!schedule}
+                      onClick={() => handleShowLessonModal(3, false)}
+                    >
+                      <Iconify icon="material-symbols:add" width={24} height={24} />
+                    </IconButton>
+                  </th>
+                  <th>
+                    Thứ 6
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      disabled={!schedule}
+                      onClick={() => handleShowLessonModal(4, false)}
+                    >
+                      <Iconify icon="material-symbols:add" width={24} height={24} />
+                    </IconButton>
+                  </th>
+                  <th>
+                    Thứ 7
+                    <IconButton
+                      color="primary"
+                      size="small"
+                      sx={{ ml: 1 }}
+                      disabled={!schedule}
+                      onClick={() => handleShowLessonModal(5, false)}
+                    >
+                      <Iconify icon="material-symbols:add" width={24} height={24} />
+                    </IconButton>
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {schedule &&
+                  schedule.lessons.map((lesson, index) => (
+                    <tr key={faker.database.mongodbObjectId()}>
+                      <th>{index + 1}</th>
+                      {lesson.map((cell, cellIndex) => {
+                        return cell ? (
+                          cell.type === 'start' ? (
+                            <td
+                              key={faker.database.mongodbObjectId()}
+                              rowSpan={cell.rowSpan}
+                              className="used h-3 "
+                              onContextMenu={(e) => {
+                                e.preventDefault();
                               }}
                             >
-                              <Iconify icon="material-symbols:edit" />
-                            </IconButton>
-                            <IconButton
-                              sx={{ fontSize: 20, color: '#fa5252' }}
-                              onClick={() => deleteLesson(cell, cellIndex)}
-                            >
-                              <Iconify icon="zondicons:close" />
-                            </IconButton>
-                          </Box>
-                        </td>
-                      ) : null
-                    ) : (
-                      <td></td>
-                    );
-                  })}
-                </tr>
-              ))}
-          </table>
-          <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
-            <Button variant="contained" disabled={!schedule} onClick={handleExportExcel}>
-              Xuất Excel
-            </Button>
-          </Box>
-        </Card>
-      )}
-      {showLessonModal && (
-        <LessonModal
-          isModify={showLessonModal.isModify}
-          isOpen={showLessonModal !== null}
-          onUpdateLessons={updateLessons}
-          onClose={handleCloseLessonModal}
-          schedule={schedule}
-          dayOfWeek={showLessonModal.dayOfWeek}
-          cell={showLessonModal.cell}
-        />
-      )}
-    </Container>
+                              <b> {`${cell.subject}`}</b>
+                              <br />
+                              {`${cell.teacher}`}
+                              <Box sx={{ position: 'absolute', top: 0, right: 0 }} className="lesson_actions">
+                                <IconButton
+                                  sx={{ fontSize: 20, color: '#55b8ff' }}
+                                  onClick={() => {
+                                    handleShowLessonModal(cellIndex, true, cell);
+                                  }}
+                                >
+                                  <Iconify icon="material-symbols:edit" />
+                                </IconButton>
+                                <IconButton
+                                  sx={{ fontSize: 20, color: '#fa5252' }}
+                                  onClick={() => deleteLesson(cell, cellIndex)}
+                                >
+                                  <Iconify icon="zondicons:close" />
+                                </IconButton>
+                              </Box>
+                            </td>
+                          ) : null
+                        ) : (
+                          <td key={faker.database.mongodbObjectId()}></td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
+              <Button variant="contained" disabled={!schedule} onClick={handleExportExcel}>
+                Xuất Excel
+              </Button>
+            </Box>
+          </Card>
+        )}
+        {showLessonModal && (
+          <LessonModal
+            isModify={showLessonModal.isModify}
+            isOpen={showLessonModal !== null}
+            onUpdateLessons={updateLessons}
+            onClose={handleCloseLessonModal}
+            schedule={schedule}
+            dayOfWeek={showLessonModal.dayOfWeek}
+            cell={showLessonModal.cell}
+          />
+        )}
+      </Container>
+    </HelmetContainer>
   );
 }

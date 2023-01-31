@@ -17,10 +17,11 @@ import { toast } from 'react-toastify';
 import { createTeacher, updateTeacher } from '~/services/teacherRequest';
 import { useSelector } from 'react-redux';
 import { selectRoles, selectSubjects } from '~/redux/infor';
+import { useNavigate } from 'react-router';
 export default function TeacherForm({ mode, teacher }) {
   const subjects = useSelector(selectSubjects);
   const roles = useSelector(selectRoles);
-  console.log(roles);
+  const navigate = useNavigate();
 
   const StudentSchema = Yup.object().shape({
     name: Yup.string().required('Vui lòng nhập họ và tên'),
@@ -71,15 +72,16 @@ export default function TeacherForm({ mode, teacher }) {
         console.log(res);
         if (res.status === 201) {
           toast.success(res.data.message);
+          navigate(-1);
         }
       } else {
         const res = await createTeacher(enteredTeacher);
         if (res.status === 200) {
           toast.success(res.data.message);
+          navigate(-1);
         }
       }
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message || 'Đã xảy ra lỗi, vui lòng thử lại');
     }
   };

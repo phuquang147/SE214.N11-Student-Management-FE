@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { inforActions, selectUser } from '~/redux/infor';
 import { toast } from 'react-toastify';
+import HelmetContainer from '~/HOC/HelmetContainer';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -31,7 +32,11 @@ export default function Dashboard() {
     };
 
     getCommonData();
-  }, [token, dispatch]);
+
+    // if (token || user.hasOwnProperty()) {
+    //   setLoaded(true);
+    // }
+  }, [dispatch, token]);
 
   if (!loaded) {
     return (
@@ -43,10 +48,12 @@ export default function Dashboard() {
   }
 
   return (
-    <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back
-      </Typography>
-    </Container>
+    <HelmetContainer title="Dashboard | Student Management">
+      <Container maxWidth="xl">
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Hi, Welcome back
+        </Typography>
+      </Container>
+    </HelmetContainer>
   );
 }

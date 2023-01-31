@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import FormProvider from '../hook-form/FormProvider';
 import Iconify from '../Iconify';
 import RHFTextField from '../hook-form/RHFTextField';
-import { createRegulation, updateRegulation } from '~/services/regulationsRequest';
+import { updateRegulation } from '~/services/regulationsRequest';
 import { toast } from 'react-toastify';
 // redux
 
@@ -53,21 +53,11 @@ export default function RegulationsModal({ regulation, isOpen, onClose, onReload
 
   const onSubmit = async (values) => {
     try {
-      if (!regulation) {
-        const res = await createRegulation({ ...values });
-        if (res.status === 201) {
-          toast.success(res.data.message);
-          onClose();
-          onReload();
-        }
-      } else {
-        console.log(values);
-        const res = await updateRegulation(regulation._id, { ...values });
-        if (res.status === 201) {
-          toast.success(res.data.message);
-          onClose();
-          onReload();
-        }
+      const res = await updateRegulation(regulation._id, { ...values });
+      if (res.status === 201) {
+        toast.success(res.data.message);
+        onClose();
+        onReload();
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -83,7 +73,7 @@ export default function RegulationsModal({ regulation, isOpen, onClose, onReload
     >
       <Box sx={style}>
         <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
-          <Typography variant="h4">{regulation ? 'Thay đổi quy định' : 'Thêm quy định'}</Typography>
+          <Typography variant="h4">Thay đổi quy định</Typography>
           <IconButton onClick={onClose}>
             <Iconify icon="ep:close" width={24} height={24} />
           </IconButton>
@@ -102,7 +92,7 @@ export default function RegulationsModal({ regulation, isOpen, onClose, onReload
             </Grid>
             <Grid item xs={12}>
               <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-                {regulation ? 'Cập nhật' : 'Tạo mới'}
+                Cập nhật
               </LoadingButton>
             </Grid>
           </Grid>

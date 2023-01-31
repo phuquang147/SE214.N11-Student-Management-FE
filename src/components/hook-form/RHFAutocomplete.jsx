@@ -10,7 +10,7 @@ export default function RHFAutocomplete({ name, label, handleChange, defaultValu
     <Controller
       name={name}
       control={control}
-      defaultValue={other.options.length > 0 ? other.options[0] : null}
+      defaultValue={other.options && other.options.length > 0 ? other.options[0] : null}
       render={({ field }) => {
         return (
           <Autocomplete

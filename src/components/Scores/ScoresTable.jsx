@@ -191,6 +191,12 @@ export default function ScoresTable({ studentScores, processRowUpdate }) {
         '& .super-app-theme--header': {
           backgroundColor: '#5e94ca',
           color: 'white',
+          '&:first-of-type': {
+            borderTopLeftRadius: '8px',
+          },
+          '&:last-of-type': {
+            borderTopRightRadius: '8px',
+          },
         },
       }}
     >

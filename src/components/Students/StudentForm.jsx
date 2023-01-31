@@ -139,15 +139,17 @@ export default function StudentForm({ mode, student }) {
           <RHFTextField name="address" label="Địa chỉ" />
         </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <RHFAutocomplete
-            name="status"
-            label="Tình trạng"
-            options={studentStatus}
-            getOptionLabel={(option) => option}
-            isOptionEqualToValue={(option, value) => option === value}
-          />
-        </Grid>
+        {mode === 'edit' && (
+          <Grid item xs={12} sm={6} md={4}>
+            <RHFAutocomplete
+              name="status"
+              label="Tình trạng"
+              options={studentStatus}
+              getOptionLabel={(option) => option}
+              isOptionEqualToValue={(option, value) => option === value}
+            />
+          </Grid>
+        )}
 
         {mode === 'edit' && (
           <Grid item xs={12} sm={6} md={4}>

@@ -5,6 +5,8 @@ import { useLocation, useParams } from 'react-router';
 import { toast } from 'react-toastify';
 import Table from '~/components/Table';
 import { studentColumns } from '~/constants/columns';
+import { HOMEROOM_TEACHER, SUBJECT_TEACHER } from '~/constants/roles';
+import HelmetContainer from '~/HOC/HelmetContainer';
 import { selectUser } from '~/redux/infor';
 import { deleteStudent, getStudentsByClassId, rankStudents } from '~/services/studentRequests';
 
@@ -13,6 +15,8 @@ function StudentList() {
   const [list, setList] = useState(location.state);
   const user = useSelector(selectUser);
   const params = useParams();
+
+  console.log(user);
 
   const handleDelete = async (studentId) => {
     const res = await deleteStudent(studentId);
@@ -36,7 +40,7 @@ function StudentList() {
         handleGetStudents();
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err.reponse.data.message);
     }
   };
 
@@ -53,29 +57,40 @@ function StudentList() {
     }
   };
 
-  return (
-    <Container>
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
-        <Typography variant="h4">Danh sách học sinh</Typography>
-        {user?.role?.name === 'Giáo viên chủ nhiệm' && (
-          <Button variant="contained" onClick={handleRankStudents}>
-            Xếp loại học sinh
-          </Button>
-        )}
-      </Stack>
+  let filterColums = studentColumns;
+  if (user?.role?.name === SUBJECT_TEACHER) {
+    filterColums = studentColumns.filter((column) => column.field !== 'Hành động');
+  }
 
-      <Card
-        sx={{
-          width: '100%',
-          '& .super-app-theme--header': {
-            backgroundColor: '#5e94ca',
-            color: 'white',
-          },
-        }}
-      >
-        <Table data={list} columns={studentColumns} onDelete={handleDelete} />
-      </Card>
-    </Container>
+  if (!user?.classes?.find((_class) => _class._id === params.classId)) {
+    filterColums = studentColumns.filter((column) => column.field !== 'Hành động');
+  }
+
+  return (
+    <HelmetContainer title="Danh sách học sinh | Student Management">
+      <Container>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} columnGap={2}>
+          <Typography variant="h4">Danh sách học sinh</Typography>
+          {user?.role?.name === HOMEROOM_TEACHER && (
+            <Button variant="contained" onClick={handleRankStudents}>
+              Xếp loại học sinh
+            </Button>
+          )}
+        </Stack>
+
+        <Card
+          sx={{
+            width: '100%',
+            '& .super-app-theme--header': {
+              backgroundColor: '#5e94ca',
+              color: 'white',
+            },
+          }}
+        >
+          <Table data={list} columns={filterColums} onDelete={handleDelete} />
+        </Card>
+      </Container>
+    </HelmetContainer>
   );
 }
 
