@@ -3,12 +3,15 @@ import { Box, Button, Card, CircularProgress, Container, IconButton, Stack, Typo
 import ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import Filters from '~/components/Filters';
 import Iconify from '~/components/Iconify';
 import LessonModal from '~/components/Schedule/LessonModal';
-import { scheduleFilters } from '~/constants/filters';
+import { scheduleFilters, teacherScheduleFilters } from '~/constants/filters';
+import { PRINCIPAL, STAFF } from '~/constants/roles';
 import HelmetContainer from '~/HOC/HelmetContainer';
+import { selectUser } from '~/redux/infor';
 import * as scheduleRequest from '~/services/scheduleRequest';
 import convertLessons from '~/utils/convert-lessons';
 
@@ -16,6 +19,8 @@ export default function Schedule() {
   const [loading, setLoading] = useState(false);
   const [showLessonModal, setShowLessonModal] = useState(null);
   const [schedule, setSchedule] = useState(null);
+  const user = useSelector(selectUser);
+  const [exportInfor, setExportInfor] = useState(null);
 
   const handleShowLessonModal = (dayOfWeek, isModify, cell) => {
     setShowLessonModal({ dayOfWeek, isModify, cell });
@@ -32,25 +37,44 @@ export default function Schedule() {
   const handleChangeFilter = async (values) => {
     setLoading(true);
     try {
-      const { data, status } = await scheduleRequest.getClassSchedule({
-        classId: values.class.value,
-        semesterId: values.semester.value,
-      });
-
+      const { data, status } =
+        user?.role?.name === STAFF || user?.role?.name === PRINCIPAL
+          ? await scheduleRequest.getClassSchedule({
+              classId: values.class.value,
+              semesterId: values.semester.value,
+            })
+          : await scheduleRequest.getTeacherSchedule({
+              teacherId: user._id,
+              semesterId: values.semester.value,
+              schoolYear: 2023,
+            });
       if (status === 200) {
-        const mappedLessons = convertLessons(data.schedule.lessons);
+        const { schedule } = data;
+        if (user?.role?.name === STAFF || user?.role?.name === PRINCIPAL)
+          setExportInfor({
+            schoolYear: schedule.schoolYear,
+            class: schedule.class.name,
+            semester: schedule.semester.name,
+          });
+        else
+          setExportInfor({
+            teacher: schedule.teacher.name,
+            schoolYear: schedule.schoolYear,
+            semester: schedule.semester.name,
+          });
+        const mappedLessons = convertLessons(schedule.lessons);
         setSchedule({ ...data.schedule, lessons: mappedLessons });
       } else {
         toast.error('Đã có lỗi xảy ra! Vui lòng thử lại');
         setSchedule(null);
+        setExportInfor(null);
       }
     } catch (error) {
       toast.error(error.response.data.message);
       setSchedule(null);
+      setExportInfor(null);
     }
     setLoading(false);
-
-    console.log(schedule);
   };
 
   const deleteLesson = async (cell, cellIndex) => {
@@ -72,7 +96,7 @@ export default function Schedule() {
 
   const handleExportExcel = async () => {
     const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet('Bảng điểm');
+    const sheet = workbook.addWorksheet('Thời khóa biểu');
 
     sheet.columns = [
       { header: 'Tiết / Thứ', key: 'period', width: 10 },
@@ -94,19 +118,17 @@ export default function Schedule() {
       for (let j = 0; j < lessons[i].length; j++) {
         const lesson = lessons[i][j];
         if (lesson && lesson.type === 'start') {
-          convertedLesson[`${j}`] = `${lesson.subject}\n${lesson.teacher}`;
-          merge.push({ sr: i + 2, sc: j + 2, er: i + 1 + lessons[i][j].rowSpan, ec: j + 2 });
+          convertedLesson[`${j}`] =
+            user?.role?.name === STAFF || user?.role?.name === PRINCIPAL
+              ? `${lesson.subject}\n${lesson.teacher}`
+              : `${lesson.className}`;
+          merge.push({ sr: i + 3, sc: j + 2, er: i + 2 + lessons[i][j].rowSpan, ec: j + 2 });
         } else {
           convertedLesson[`${j}`] = '';
         }
       }
 
       sheet.addRow(convertedLesson);
-    }
-
-    for (let mergeItem of merge) {
-      const { sr, sc, er, ec } = mergeItem;
-      sheet.mergeCells(sr, sc, er, ec);
     }
 
     sheet.getRow(1).font = {
@@ -116,6 +138,27 @@ export default function Schedule() {
     sheet.getColumn('A').font = {
       bold: true,
     };
+
+    if (exportInfor !== null) {
+      if (user?.role?.name === STAFF || user?.role?.name === PRINCIPAL)
+        sheet.insertRow(1, {
+          period: `Lớp ${exportInfor.class} - ${exportInfor.semester} - Năm ${exportInfor.schoolYear}`,
+        });
+      else
+        sheet.insertRow(1, {
+          period: `Giáo viên: ${exportInfor.teacher} - ${exportInfor.semester} - Năm ${exportInfor.schoolYear}`,
+        });
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+    }
+
+    for (let mergeItem of merge) {
+      const { sr, sc, er, ec } = mergeItem;
+      sheet.mergeCells(sr, sc, er, ec);
+    }
+
+    sheet.mergeCells(1, 1, 1, 7);
 
     sheet.eachRow({ includeEmpty: true }, function (row) {
       row.fontSize = 12;
@@ -130,8 +173,6 @@ export default function Schedule() {
     );
   };
 
-  console.log(schedule?.lessons);
-
   return (
     <HelmetContainer title="Thời khóa biểu | Student Management">
       <Container>
@@ -139,7 +180,12 @@ export default function Schedule() {
           <Typography variant="h4">Thời khóa biểu</Typography>
         </Stack>
 
-        <Filters filters={scheduleFilters} onChangeFilter={handleChangeFilter} />
+        <Filters
+          filters={
+            user?.role?.name === STAFF || user?.role?.name === PRINCIPAL ? scheduleFilters : teacherScheduleFilters
+          }
+          onChangeFilter={handleChangeFilter}
+        />
 
         {loading ? (
           <Box sx={{ textAlign: 'center', pt: 3 }}>
@@ -158,11 +204,11 @@ export default function Schedule() {
             }}
           >
             <table id="schedule">
-              <thead>
-                <tr>
-                  <th>Tiết / Thứ</th>
-                  <th>
-                    Thứ 2
+              <tr>
+                <th>Tiết / Thứ</th>
+                <th>
+                  Thứ 2
+                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                     <IconButton
                       color="primary"
                       size="small"
@@ -172,9 +218,11 @@ export default function Schedule() {
                     >
                       <Iconify icon="material-symbols:add" width={24} height={24} />
                     </IconButton>
-                  </th>
-                  <th>
-                    Thứ 3
+                  )}
+                </th>
+                <th>
+                  Thứ 3
+                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                     <IconButton
                       color="primary"
                       size="small"
@@ -184,9 +232,11 @@ export default function Schedule() {
                     >
                       <Iconify icon="material-symbols:add" width={24} height={24} />
                     </IconButton>
-                  </th>
-                  <th>
-                    Thứ 4
+                  )}
+                </th>
+                <th>
+                  Thứ 4
+                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                     <IconButton
                       color="primary"
                       size="small"
@@ -196,9 +246,11 @@ export default function Schedule() {
                     >
                       <Iconify icon="material-symbols:add" width={24} height={24} />
                     </IconButton>
-                  </th>
-                  <th>
-                    Thứ 5
+                  )}
+                </th>
+                <th>
+                  Thứ 5
+                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                     <IconButton
                       color="primary"
                       size="small"
@@ -208,9 +260,11 @@ export default function Schedule() {
                     >
                       <Iconify icon="material-symbols:add" width={24} height={24} />
                     </IconButton>
-                  </th>
-                  <th>
-                    Thứ 6
+                  )}
+                </th>
+                <th>
+                  Thứ 6
+                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                     <IconButton
                       color="primary"
                       size="small"
@@ -220,9 +274,11 @@ export default function Schedule() {
                     >
                       <Iconify icon="material-symbols:add" width={24} height={24} />
                     </IconButton>
-                  </th>
-                  <th>
-                    Thứ 7
+                  )}
+                </th>
+                <th>
+                  Thứ 7
+                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                     <IconButton
                       color="primary"
                       size="small"
@@ -232,29 +288,36 @@ export default function Schedule() {
                     >
                       <Iconify icon="material-symbols:add" width={24} height={24} />
                     </IconButton>
-                  </th>
-                </tr>
-              </thead>
+                  )}
+                </th>
+              </tr>
 
-              <tbody>
-                {schedule &&
-                  schedule.lessons.map((lesson, index) => (
-                    <tr key={faker.database.mongodbObjectId()}>
-                      <th>{index + 1}</th>
-                      {lesson.map((cell, cellIndex) => {
-                        return cell ? (
-                          cell.type === 'start' ? (
-                            <td
-                              key={faker.database.mongodbObjectId()}
-                              rowSpan={cell.rowSpan}
-                              className="used h-3 "
-                              onContextMenu={(e) => {
-                                e.preventDefault();
-                              }}
-                            >
-                              <b> {`${cell.subject}`}</b>
-                              <br />
-                              {`${cell.teacher}`}
+              {schedule &&
+                schedule.lessons.map((lesson, index) => (
+                  <tr key={faker.database.mongodbObjectId()}>
+                    <th>{index + 1}</th>
+                    {lesson.map((cell, cellIndex) => {
+                      return cell ? (
+                        cell.type === 'start' ? (
+                          <td
+                            key={faker.database.mongodbObjectId()}
+                            rowSpan={cell.rowSpan}
+                            className="used h-3 "
+                            onContextMenu={(e) => {
+                              e.preventDefault();
+                            }}
+                          >
+                            {user?.role?.name === STAFF || user?.role?.name === PRINCIPAL ? (
+                              <>
+                                <b> {`${cell.subject}`}</b>
+                                <br />
+                                {`${cell.teacher}`}
+                              </>
+                            ) : (
+                              <b>{cell.className}</b>
+                            )}
+
+                            {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
                               <Box sx={{ position: 'absolute', top: 0, right: 0 }} className="lesson_actions">
                                 <IconButton
                                   sx={{ fontSize: 20, color: '#55b8ff' }}
@@ -271,15 +334,15 @@ export default function Schedule() {
                                   <Iconify icon="zondicons:close" />
                                 </IconButton>
                               </Box>
-                            </td>
-                          ) : null
-                        ) : (
-                          <td key={faker.database.mongodbObjectId()}></td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-              </tbody>
+                            )}
+                          </td>
+                        ) : null
+                      ) : (
+                        <td key={faker.database.mongodbObjectId()}></td>
+                      );
+                    })}
+                  </tr>
+                ))}
             </table>
             <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
               <Button variant="contained" disabled={!schedule} onClick={handleExportExcel}>

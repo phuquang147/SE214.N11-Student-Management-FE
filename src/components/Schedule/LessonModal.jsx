@@ -42,10 +42,6 @@ export default function LessonModal({ isModify, schedule, isOpen, onUpdateLesson
   const subjects = useSelector(selectSubjects);
   const [teachers, setTeachers] = useState([]);
   const [periodOptions, setPeriodOptions] = useState([1, 2, 3, 4, 5]);
-  useEffect(() => {
-    if (subjects.length > 0) {
-    }
-  }, [subjects]);
 
   useEffect(() => {
     if (isModify && cell) {
@@ -75,6 +71,7 @@ export default function LessonModal({ isModify, schedule, isOpen, onUpdateLesson
     handleSubmit,
     formState: { isSubmitting },
     getValues,
+
     setValue,
   } = methods;
 
@@ -205,6 +202,9 @@ export default function LessonModal({ isModify, schedule, isOpen, onUpdateLesson
                 options={periodOptions}
                 getOptionLabel={(option) => option.toString()}
                 isOptionEqualToValue={(option, value) => option === value}
+                handleChange={(value) => {
+                  if (getValues().endPeriod < value) setValue('endPeriod', value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -213,6 +213,7 @@ export default function LessonModal({ isModify, schedule, isOpen, onUpdateLesson
                 label="Tiết kết thúc"
                 options={periodOptions}
                 getOptionLabel={(option) => option.toString()}
+                getOptionDisabled={(option) => option < getValues().startPeriod}
                 isOptionEqualToValue={(option, value) => option === value}
               />
             </Grid>

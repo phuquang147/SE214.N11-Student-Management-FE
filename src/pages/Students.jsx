@@ -22,6 +22,7 @@ export default function Students() {
   const [students, setStudents] = useState([]);
   const user = useSelector(selectUser);
   const [loaded, setLoaded] = useState(user.hasOwnProperty());
+  const [exportInfor, setExportInfor] = useState(null);
 
   useEffect(() => {
     const getStudents = async () => {
@@ -47,7 +48,13 @@ export default function Students() {
         Authorization: `Bearer ${Cookies.get('token')}`,
       },
     });
+
     const { classes } = res.data;
+
+    if (classes.length === 1) {
+      setExportInfor({ schoolYear: classes[0].schoolYear, class: classes[0].name });
+    } else setExportInfor({ content: 'Danh sách học sinh toàn trường' });
+
     classes.forEach((_class) => {
       updatedStudents.push(..._class.students);
     });
@@ -109,6 +116,14 @@ export default function Students() {
       });
     }
 
+    if (exportInfor !== null) {
+      if (exportInfor.content) sheet.insertRow(1, { id: exportInfor.content });
+      else sheet.insertRow(1, { id: `Lớp ${exportInfor.class} - Năm ${exportInfor.schoolYear}` });
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+    }
+
     sheet.eachRow({ includeEmpty: true }, function (row) {
       row.border = {
         bottom: { style: 'thin' },
@@ -117,6 +132,9 @@ export default function Students() {
       row.height = 40;
       row.alignment = { vertical: 'middle' };
     });
+
+    sheet.mergeCells(1, 1, 1, 9);
+    sheet.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' };
 
     const buf = await workbook.xlsx.writeBuffer();
     saveAs(new Blob([buf]), `Student.xlsx`);

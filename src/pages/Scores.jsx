@@ -22,6 +22,7 @@ export default function Scores() {
   const [classScore, setClassScore] = useState([]);
   const user = useSelector(selectUser);
   const [loaded, setLoaded] = useState(user.hasOwnProperty());
+  const [exportInfor, setExportInfor] = useState(null);
 
   useEffect(() => {
     const getAllScores = async () => {
@@ -89,9 +90,17 @@ export default function Scores() {
       if (status === 200) {
         const { classScore } = data;
         setClassScore(classScore);
-      }
+        console.log(classScore);
+        setExportInfor({
+          schoolYear: classScore[0].schoolYear,
+          class: classScore[0].class.name,
+          semester: classScore[0].semester.name,
+          subject: classScore[0].subject.name,
+        });
+      } else setExportInfor(null);
     } catch (err) {
       toast.error('Đã xảy ra lỗi! Vui lòng thử lại');
+      setExportInfor(null);
     }
   };
 
@@ -119,10 +128,6 @@ export default function Scores() {
       { header: 'Cuối kỳ', key: 'final', width: 10 },
       { header: 'Trung bình', key: 'average', width: 12 },
     ];
-
-    sheet.mergeCells(1, 3, 1, 7);
-    sheet.mergeCells(1, 8, 1, 12);
-    sheet.mergeCells(1, 13, 1, 17);
 
     sheet.getRow(1).font = {
       bold: true,
@@ -157,6 +162,20 @@ export default function Scores() {
       });
     }
 
+    if (exportInfor !== null) {
+      sheet.insertRow(1, {
+        id: `Môn ${exportInfor.subject} - Lớp ${exportInfor.class} - Kỳ ${exportInfor.semester} - Năm ${exportInfor.schoolYear}`,
+      });
+      sheet.getRow(1).font = {
+        bold: true,
+      };
+    }
+
+    sheet.mergeCells(1, 1, 1, 19);
+    sheet.mergeCells(2, 3, 2, 7);
+    sheet.mergeCells(2, 8, 2, 12);
+    sheet.mergeCells(2, 13, 2, 17);
+
     sheet.eachRow({ includeEmpty: true }, function (row) {
       row.border = {
         bottom: { style: 'thin' },
@@ -167,7 +186,7 @@ export default function Scores() {
     });
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `test.xlsx`);
+    saveAs(new Blob([buf]), `Score.xlsx`);
   };
 
   if (!loaded) {

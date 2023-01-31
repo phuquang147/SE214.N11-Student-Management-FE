@@ -82,3 +82,16 @@ export const scheduleFilters = [
     options: [],
   },
 ];
+
+export const teacherScheduleFilters = [
+  {
+    name: 'schoolYear',
+    label: 'Năm học',
+    options: [],
+  },
+  {
+    name: 'semester',
+    label: 'Học kì',
+    options: [],
+  },
+];
