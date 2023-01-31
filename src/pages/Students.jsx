@@ -30,6 +30,9 @@ export default function Students() {
       if (res.status === 200) {
         setStudents(res.data.students);
         setLoaded(true);
+        setExportInfor({ content: 'Danh sách học sinh toàn trường' });
+      } else {
+        setExportInfor(null);
       }
     };
     getStudents();
@@ -118,7 +121,7 @@ export default function Students() {
 
     if (exportInfor !== null) {
       if (exportInfor.content) sheet.insertRow(1, { id: exportInfor.content });
-      else sheet.insertRow(1, { id: `Lớp ${exportInfor.class} - Năm ${exportInfor.schoolYear}` });
+      else sheet.insertRow(1, { id: `Lớp ${exportInfor.class} - Năm học ${exportInfor.schoolYear}` });
       sheet.getRow(1).font = {
         bold: true,
       };
@@ -137,7 +140,11 @@ export default function Students() {
     sheet.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' };
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `Student.xlsx`);
+    if (exportInfor === null) {
+      saveAs(new Blob([buf]), `Danh sách học sinh toàn trường.xlsx`);
+    } else {
+      saveAs(new Blob([buf]), `DSHS - Lớp ${exportInfor.class} - Năm học ${exportInfor.schoolYear}.xlsx`);
+    }
   };
 
   let filteredColumns = studentColumns;

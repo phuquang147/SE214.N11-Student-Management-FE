@@ -3,8 +3,8 @@ import { Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router';
 // components
-import EmailForm from '~/components/ForgotPassword/EmailForm';
-import ResetForm from '~/components/ForgotPassword/ResetForm';
+import EmailForm from '~/components/Forms/EmailForm';
+import ResetForm from '~/components/Forms/ResetForm';
 import HelmetContainer from '~/HOC/HelmetContainer';
 
 const RootStyle = styled('div')(({ theme }) => ({

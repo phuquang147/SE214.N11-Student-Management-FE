@@ -16,8 +16,6 @@ function StudentList() {
   const user = useSelector(selectUser);
   const params = useParams();
 
-  console.log(user);
-
   const handleDelete = async (studentId) => {
     const res = await deleteStudent(studentId);
 

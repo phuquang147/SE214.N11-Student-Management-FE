@@ -235,7 +235,6 @@ export default function Teachers() {
   }, []);
 
   const handleChangeFilter = async (values) => {
-    console.log(values);
     const { subject, class: _class } = values;
     try {
       const formattedSubject = subject.value !== 'Tất cả' ? `subject=${subject.value}` : '';

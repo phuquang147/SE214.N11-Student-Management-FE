@@ -24,16 +24,16 @@ export default function Scores() {
   const [loaded, setLoaded] = useState(user.hasOwnProperty());
   const [exportInfor, setExportInfor] = useState(null);
 
-  useEffect(() => {
-    const getAllScores = async () => {
-      const { data } = await scoresRequest.getAllScores();
+  // useEffect(() => {
+  //   const getAllScores = async () => {
+  //     const { data } = await scoresRequest.getAllScores();
 
-      setClassScore(data.classScore);
-      setLoaded(true);
-    };
+  //     setClassScore(data.classScore);
+  //     setLoaded(true);
+  //   };
 
-    getAllScores();
-  }, []);
+  //   getAllScores();
+  // }, []);
 
   const processRowUpdate = useCallback(
     (newRow, oldRow) =>
@@ -90,7 +90,6 @@ export default function Scores() {
       if (status === 200) {
         const { classScore } = data;
         setClassScore(classScore);
-        console.log(classScore);
         setExportInfor({
           schoolYear: classScore[0].schoolYear,
           class: classScore[0].class.name,
@@ -164,7 +163,7 @@ export default function Scores() {
 
     if (exportInfor !== null) {
       sheet.insertRow(1, {
-        id: `Môn ${exportInfor.subject} - Lớp ${exportInfor.class} - Kỳ ${exportInfor.semester} - Năm ${exportInfor.schoolYear}`,
+        id: `Môn ${exportInfor.subject} - Lớp ${exportInfor.class} - ${exportInfor.semester} - Năm học ${exportInfor.schoolYear}`,
       });
       sheet.getRow(1).font = {
         bold: true,
@@ -186,17 +185,18 @@ export default function Scores() {
     });
 
     const buf = await workbook.xlsx.writeBuffer();
-    saveAs(new Blob([buf]), `Score.xlsx`);
+    const { class: _class, schoolYear, semester, subject } = exportInfor;
+    saveAs(new Blob([buf]), `Bảng điểm - Lớp ${_class} - Năm học ${schoolYear} - ${semester} - Môn ${subject}.xlsx`);
   };
 
-  if (!loaded) {
-    return (
-      <>
-        <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
-        <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
-      </>
-    );
-  }
+  // if (!loaded) {
+  //   return (
+  //     <>
+  //       <Skeleton variant="rectangular" width="100%" height={80} sx={{ borderRadius: '16px' }} />
+  //       <Skeleton variant="rectangular" width="100%" height={300} sx={{ borderRadius: '16px', mt: 2 }} />
+  //     </>
+  //   );
+  // }
 
   return (
     <HelmetContainer title="Điểm số | Student Management">

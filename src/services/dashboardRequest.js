@@ -11,7 +11,6 @@ export const getStatistics = async () => {
 };
 
 export const getStatisticsByYear = async ({ year }) => {
-  console.log(year);
   const res = await request.post(
     '/statisticsByYear',
     { year },

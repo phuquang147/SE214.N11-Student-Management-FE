@@ -204,145 +204,149 @@ export default function Schedule() {
             }}
           >
             <table id="schedule">
-              <tr>
-                <th>Tiết / Thứ</th>
-                <th>
-                  Thứ 2
-                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                    <IconButton
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      disabled={!schedule}
-                      onClick={() => handleShowLessonModal(0, false)}
-                    >
-                      <Iconify icon="material-symbols:add" width={24} height={24} />
-                    </IconButton>
-                  )}
-                </th>
-                <th>
-                  Thứ 3
-                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                    <IconButton
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      disabled={!schedule}
-                      onClick={() => handleShowLessonModal(1, false)}
-                    >
-                      <Iconify icon="material-symbols:add" width={24} height={24} />
-                    </IconButton>
-                  )}
-                </th>
-                <th>
-                  Thứ 4
-                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                    <IconButton
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      disabled={!schedule}
-                      onClick={() => handleShowLessonModal(2, false)}
-                    >
-                      <Iconify icon="material-symbols:add" width={24} height={24} />
-                    </IconButton>
-                  )}
-                </th>
-                <th>
-                  Thứ 5
-                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                    <IconButton
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      disabled={!schedule}
-                      onClick={() => handleShowLessonModal(3, false)}
-                    >
-                      <Iconify icon="material-symbols:add" width={24} height={24} />
-                    </IconButton>
-                  )}
-                </th>
-                <th>
-                  Thứ 6
-                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                    <IconButton
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      disabled={!schedule}
-                      onClick={() => handleShowLessonModal(4, false)}
-                    >
-                      <Iconify icon="material-symbols:add" width={24} height={24} />
-                    </IconButton>
-                  )}
-                </th>
-                <th>
-                  Thứ 7
-                  {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                    <IconButton
-                      color="primary"
-                      size="small"
-                      sx={{ ml: 1 }}
-                      disabled={!schedule}
-                      onClick={() => handleShowLessonModal(5, false)}
-                    >
-                      <Iconify icon="material-symbols:add" width={24} height={24} />
-                    </IconButton>
-                  )}
-                </th>
-              </tr>
+              <thead>
+                <tr>
+                  <th>Tiết / Thứ</th>
+                  <th>
+                    Thứ 2
+                    {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled={!schedule}
+                        onClick={() => handleShowLessonModal(0, false)}
+                      >
+                        <Iconify icon="material-symbols:add" width={24} height={24} />
+                      </IconButton>
+                    )}
+                  </th>
+                  <th>
+                    Thứ 3
+                    {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled={!schedule}
+                        onClick={() => handleShowLessonModal(1, false)}
+                      >
+                        <Iconify icon="material-symbols:add" width={24} height={24} />
+                      </IconButton>
+                    )}
+                  </th>
+                  <th>
+                    Thứ 4
+                    {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled={!schedule}
+                        onClick={() => handleShowLessonModal(2, false)}
+                      >
+                        <Iconify icon="material-symbols:add" width={24} height={24} />
+                      </IconButton>
+                    )}
+                  </th>
+                  <th>
+                    Thứ 5
+                    {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled={!schedule}
+                        onClick={() => handleShowLessonModal(3, false)}
+                      >
+                        <Iconify icon="material-symbols:add" width={24} height={24} />
+                      </IconButton>
+                    )}
+                  </th>
+                  <th>
+                    Thứ 6
+                    {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled={!schedule}
+                        onClick={() => handleShowLessonModal(4, false)}
+                      >
+                        <Iconify icon="material-symbols:add" width={24} height={24} />
+                      </IconButton>
+                    )}
+                  </th>
+                  <th>
+                    Thứ 7
+                    {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                      <IconButton
+                        color="primary"
+                        size="small"
+                        sx={{ ml: 1 }}
+                        disabled={!schedule}
+                        onClick={() => handleShowLessonModal(5, false)}
+                      >
+                        <Iconify icon="material-symbols:add" width={24} height={24} />
+                      </IconButton>
+                    )}
+                  </th>
+                </tr>
+              </thead>
 
-              {schedule &&
-                schedule.lessons.map((lesson, index) => (
-                  <tr key={faker.database.mongodbObjectId()}>
-                    <th>{index + 1}</th>
-                    {lesson.map((cell, cellIndex) => {
-                      return cell ? (
-                        cell.type === 'start' ? (
-                          <td
-                            key={faker.database.mongodbObjectId()}
-                            rowSpan={cell.rowSpan}
-                            className="used h-3 "
-                            onContextMenu={(e) => {
-                              e.preventDefault();
-                            }}
-                          >
-                            {user?.role?.name === STAFF || user?.role?.name === PRINCIPAL ? (
-                              <>
-                                <b> {`${cell.subject}`}</b>
-                                <br />
-                                {`${cell.teacher}`}
-                              </>
-                            ) : (
-                              <b>{cell.className}</b>
-                            )}
+              <tbody>
+                {schedule &&
+                  schedule.lessons.map((lesson, index) => (
+                    <tr key={faker.database.mongodbObjectId()}>
+                      <th>{index + 1}</th>
+                      {lesson.map((cell, cellIndex) => {
+                        return cell ? (
+                          cell.type === 'start' ? (
+                            <td
+                              key={faker.database.mongodbObjectId()}
+                              rowSpan={cell.rowSpan}
+                              className="used h-3 "
+                              onContextMenu={(e) => {
+                                e.preventDefault();
+                              }}
+                            >
+                              {user?.role?.name === STAFF || user?.role?.name === PRINCIPAL ? (
+                                <>
+                                  <b> {`${cell.subject}`}</b>
+                                  <br />
+                                  {`${cell.teacher}`}
+                                </>
+                              ) : (
+                                <b>{cell.className}</b>
+                              )}
 
-                            {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
-                              <Box sx={{ position: 'absolute', top: 0, right: 0 }} className="lesson_actions">
-                                <IconButton
-                                  sx={{ fontSize: 20, color: '#55b8ff' }}
-                                  onClick={() => {
-                                    handleShowLessonModal(cellIndex, true, cell);
-                                  }}
-                                >
-                                  <Iconify icon="material-symbols:edit" />
-                                </IconButton>
-                                <IconButton
-                                  sx={{ fontSize: 20, color: '#fa5252' }}
-                                  onClick={() => deleteLesson(cell, cellIndex)}
-                                >
-                                  <Iconify icon="zondicons:close" />
-                                </IconButton>
-                              </Box>
-                            )}
-                          </td>
-                        ) : null
-                      ) : (
-                        <td key={faker.database.mongodbObjectId()}></td>
-                      );
-                    })}
-                  </tr>
-                ))}
+                              {(user?.role?.name === STAFF || user?.role?.name === PRINCIPAL) && (
+                                <Box sx={{ position: 'absolute', top: 0, right: 0 }} className="lesson_actions">
+                                  <IconButton
+                                    sx={{ fontSize: 20, color: '#55b8ff' }}
+                                    onClick={() => {
+                                      handleShowLessonModal(cellIndex, true, cell);
+                                    }}
+                                  >
+                                    <Iconify icon="material-symbols:edit" />
+                                  </IconButton>
+                                  <IconButton
+                                    sx={{ fontSize: 20, color: '#fa5252' }}
+                                    onClick={() => deleteLesson(cell, cellIndex)}
+                                  >
+                                    <Iconify icon="zondicons:close" />
+                                  </IconButton>
+                                </Box>
+                              )}
+                            </td>
+                          ) : null
+                        ) : (
+                          <td key={faker.database.mongodbObjectId()}></td>
+                        );
+                      })}
+                    </tr>
+                  ))}
+              </tbody>
             </table>
             <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
               <Button variant="contained" disabled={!schedule} onClick={handleExportExcel}>

@@ -109,8 +109,6 @@ export default function ClassForm({ mode, _class }) {
     getTeachers();
   }, [_class]);
 
-  console.log(mode);
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>

@@ -53,7 +53,6 @@ export default function TeacherForm({ mode, teacher }) {
   } = methods;
 
   const onSubmit = async (values) => {
-    console.log(values);
     const { name, gender, birthdate, address, email, phone, status, subject, role } = values;
     const enteredTeacher = {
       name,
@@ -69,7 +68,6 @@ export default function TeacherForm({ mode, teacher }) {
     try {
       if (mode === 'edit') {
         const res = await updateTeacher(enteredTeacher, teacher._id);
-        console.log(res);
         if (res.status === 201) {
           toast.success(res.data.message);
           navigate(-1);

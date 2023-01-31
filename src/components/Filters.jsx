@@ -93,7 +93,6 @@ export default function Filters({ filters, onChangeFilter }) {
 
   useEffect(() => {
     if (formatedFilters.schoolYear && formatedFilters.schoolYear.options.length > 0 && !getValues().schoolYear) {
-      console.log(formatedFilters.schoolYear.options[0]);
       setValue('schoolYear', formatedFilters.schoolYear.options[0]);
     }
 

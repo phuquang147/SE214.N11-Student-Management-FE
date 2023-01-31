@@ -107,10 +107,6 @@ function Regulations() {
     getAllRegulations();
   }, []);
 
-  const handleDelete = () => {
-    console.log('delete');
-  };
-
   const handleShowModal = () => {
     setIsOpened(true);
   };
@@ -151,7 +147,7 @@ function Regulations() {
             },
           }}
         >
-          <Table data={regulations} columns={columns} onDelete={handleDelete} onUpdate={handleUpdateRegulation} />
+          <Table data={regulations} columns={columns} onUpdate={handleUpdateRegulation} />
         </Card>
       </Container>
       {isOpened && (

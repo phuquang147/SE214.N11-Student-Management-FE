@@ -84,7 +84,6 @@ export default function StudentForm({ mode, student }) {
       }
     } else {
       try {
-        console.log(student);
         const res = await updateStudent(student, params.id);
         if (res.status === 201) {
           navigate('/students');

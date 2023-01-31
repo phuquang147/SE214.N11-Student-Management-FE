@@ -23,7 +23,6 @@ const inforSlice = createSlice({
     },
     setCommonInforSuccess(state, action) {
       const { subjects, classes, roles, role, semesters, grades, user } = action.payload;
-      // console.log(classes);
       state.user = user;
       state.status = 'idle';
       state.semesters = _.map(semesters, (semester) => ({ label: semester.name, value: semester._id }));
