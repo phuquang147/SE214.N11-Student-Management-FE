@@ -90,14 +90,18 @@ export default function Scores() {
       if (status === 200) {
         const { classScore } = data;
         setClassScore(classScore);
-        setExportInfor({
-          schoolYear: classScore[0].schoolYear,
-          class: classScore[0].class.name,
-          semester: classScore[0].semester.name,
-          subject: classScore[0].subject.name,
-        });
+
+        if (classScore.length > 0) {
+          setExportInfor({
+            schoolYear: classScore[0].schoolYear,
+            class: classScore[0].class.name,
+            semester: classScore[0].semester.name,
+            subject: classScore[0].subject.name,
+          });
+        }
       } else setExportInfor(null);
     } catch (err) {
+      console.log(err);
       toast.error('Đã xảy ra lỗi! Vui lòng thử lại');
       setExportInfor(null);
     }
@@ -198,6 +202,8 @@ export default function Scores() {
   //   );
   // }
 
+  console.log(classScore);
+
   return (
     <HelmetContainer title="Điểm số | Student Management">
       <Container sx={{ pb: 2 }}>
@@ -224,11 +230,13 @@ export default function Scores() {
           processRowUpdate={processRowUpdate}
         />
 
-        <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
-          <Button variant="contained" onClick={handleExportExcel}>
-            Xuất Excel
-          </Button>
-        </Box>
+        {classScore.length > 0 && (
+          <Box sx={{ display: 'flex', justifyContent: 'end', p: 2 }}>
+            <Button variant="contained" onClick={handleExportExcel}>
+              Xuất Excel
+            </Button>
+          </Box>
+        )}
       </Container>
     </HelmetContainer>
   );

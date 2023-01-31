@@ -140,7 +140,7 @@ export default function Students() {
     sheet.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' };
 
     const buf = await workbook.xlsx.writeBuffer();
-    if (exportInfor === null) {
+    if (exportInfor.content) {
       saveAs(new Blob([buf]), `Danh sách học sinh toàn trường.xlsx`);
     } else {
       saveAs(new Blob([buf]), `DSHS - Lớp ${exportInfor.class} - Năm học ${exportInfor.schoolYear}.xlsx`);
