@@ -32,9 +32,9 @@ export default function Dashboard() {
       if (token) {
         try {
           const { data, status } = await commonDataRequest.getCommonData();
-          const { classes, subjects, semesters, grades, user } = data;
+          const { classes, subjects, roles, role, semesters, grades, user } = data;
           if (status === 200) {
-            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, semesters, grades, user }));
+            dispatch(inforActions.setCommonInforSuccess({ classes, subjects, roles, role, semesters, grades, user }));
             setLoaded(true);
           }
         } catch (err) {
