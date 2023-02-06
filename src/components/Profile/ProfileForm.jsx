@@ -18,7 +18,6 @@ import { useNavigate } from 'react-router';
 const genders = ['Nam', 'Nữ'];
 
 export default function ProfileForm({ user }) {
-  const { name, email, phone, gender, birthday, address } = user;
   const navigate = useNavigate();
 
   const StudentSchema = Yup.object().shape({
@@ -29,12 +28,12 @@ export default function ProfileForm({ user }) {
   });
 
   const defaultValues = {
-    name,
-    email,
-    phone,
-    gender,
-    birthdate: dayjs(birthday),
-    address,
+    name: user?.name,
+    email: user?.email,
+    phone: user?.phone,
+    gender: user?.gender,
+    birthdate: user ? dayjs(user.birthday) : dayjs(new Date()),
+    address: user?.address,
   };
 
   const methods = useForm({

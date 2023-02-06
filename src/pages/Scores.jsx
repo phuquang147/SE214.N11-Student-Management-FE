@@ -102,7 +102,7 @@ export default function Scores() {
       } else setExportInfor(null);
     } catch (err) {
       console.log(err);
-      toast.error('Đã xảy ra lỗi! Vui lòng thử lại');
+      toast.error(err.response.data.message);
       setExportInfor(null);
     }
   };
