@@ -56,6 +56,13 @@ export default function Dashboard() {
     getStatistics();
   }, [dispatch, token]);
 
+  useEffect(() => {
+    if (schoolYears.length > 0 && !schoolYear) {
+      setSchoolYear(schoolYears[0]);
+      handleChangeYear(schoolYears[0].value);
+    }
+  }, [schoolYear, schoolYears]);
+
   const handleChangeYear = async (year) => {
     setLoading(true);
     try {

@@ -38,10 +38,12 @@ const inforSlice = createSlice({
       state.groupedClasses = _.mapValues(_.groupBy(classes, 'schoolYear'.toString()), (classes) => {
         return _.map(classes, (_class) => ({ label: _class.name, value: _class._id, name: _class.name }));
       });
-      state.schoolYears = _.map(_.keys(state.groupedClasses), (schoolYear) => ({
-        label: schoolYear,
-        value: schoolYear,
-      }));
+      state.schoolYears = _.reverse(
+        _.map(_.keys(state.groupedClasses), (schoolYear) => ({
+          label: schoolYear,
+          value: schoolYear,
+        })),
+      );
       state.grades = _.map(grades, (grade) => ({ label: grade.name.toString(), value: grade._id }));
     },
     setCommonInforFailed(state) {
